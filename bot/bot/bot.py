@@ -30,7 +30,7 @@ class BaseModel(Model):
 		database = db
 
 class User(BaseModel):
-	user_id 	= IntegerField()
+	user_id 	= IntegerField(unique = True)
 	username	= TextField(null = True)
 	first_name 	= TextField(null = True)
 	last_name   = TextField(null = True)
@@ -65,7 +65,7 @@ def cancel(c):
 	u.save()
 	t = bot.send_message(cid(c), s.canceled_course)
 
-def course_entrance(c):
+def confirm_name(c):
 	u = User.get(user_id = cid(c))
 	u.state = s.lets_confirm_name
 	u.save()
@@ -78,6 +78,7 @@ def confirm_last_name(m = None, c = None): # получает имя (текст
 	if m != None:
 		u = User.get(user_id = uid(m))
 		u.first_name = m.text
+		u.state = s.lets_confirm_last_name
 		u.save()
 	else:
 		u = User.get(user_id = cid(c))

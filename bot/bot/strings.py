@@ -11,6 +11,7 @@ default 			= "default"
 course_entrance		= "course_entrance"
 canceled 			= "canceled"
 lets_confirm_name 	= "lets_confirm_name"
+lets_confirm_last_name 	= "lets_confirm_last_name"
 
 
 
