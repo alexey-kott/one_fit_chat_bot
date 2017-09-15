@@ -80,12 +80,35 @@ def confirm_last_name(m = None, c = None): # получает имя (текст
 		u.first_name = m.text
 		u.state = s.lets_confirm_last_name
 		u.save()
+		chat_id = sid(m)
 	else:
 		u = User.get(user_id = cid(c))
+		chat_id = cid(c)
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.my_last_name_is_btn.format(u.last_name), callback_data = s.agree)
 	keyboard.add(agree_btn)
-	bot.send_message(cid(c), s.confirm_last_name.format(u.last_name), reply_markup = keyboard)
+	bot.send_message(chat_id, s.confirm_last_name.format(u.last_name), reply_markup = keyboard)
+
+def select_sex(m = None, c = None):
+	if m != None:
+		u = User.get(user_id = uid(m))
+		u.last_name = m.text
+		u.state = s.lets_confirm_last_name
+		u.save()
+		chat_id = sid(m)
+	else:
+		u = User.get(user_id = cid(c))
+		chat_id = cid(c)
+	keyboard = types.InlineKeyboardMarkup()
+	male_btn = types.InlineKeyboardButton(text = s.male_btn, callback_data = s.male)
+	female_btn = types.InlineKeyboardButton(text = s.female_btn, callback_data = s.female)
+	keyboard.add(male_btn, female_btn)
+	bot.send_message(chat_id,)
+
+
+
+def type_age(m = None, c = None):
+	
 
 
 # _____________ END ACTIONS

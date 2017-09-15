@@ -2,6 +2,8 @@
 agree_btn		= "Да"
 disagree_btn 	= "Нет"
 more_btn		= "Подробнее"
+male_btn		= "Мужчина"
+female_btn		= "Женщина"
 
 my_name_is_btn		= "Меня зовут {}"
 my_last_name_is_btn = "Моя фамилия {}"
@@ -19,6 +21,8 @@ lets_confirm_last_name 	= "lets_confirm_last_name"
 agree 		= "agree"
 disagree 	= "disagree"
 more 		= "more"
+male 		= "male"
+female 		= "female"
 
 
 # messages
