@@ -34,6 +34,8 @@ class User(BaseModel):
 	username	= TextField(null = True)
 	first_name 	= TextField(null = True)
 	last_name   = TextField(null = True)
+	sex 		= TextField(null = True)
+	age			= IntegerField(null = True)
 	email		= TextField(null = True)
 	state		= TextField(default = s.default)
 
@@ -93,7 +95,7 @@ def select_sex(m = None, c = None):
 	if m != None:
 		u = User.get(user_id = uid(m))
 		u.last_name = m.text
-		u.state = s.lets_confirm_last_name
+		u.state = s.select_sex
 		u.save()
 		chat_id = sid(m)
 	else:
@@ -103,11 +105,15 @@ def select_sex(m = None, c = None):
 	male_btn = types.InlineKeyboardButton(text = s.male_btn, callback_data = s.male)
 	female_btn = types.InlineKeyboardButton(text = s.female_btn, callback_data = s.female)
 	keyboard.add(male_btn, female_btn)
-	bot.send_message(chat_id,)
+	bot.send_message(chat_id, s.male_or_female, reply_markup = keyboard)
 
 
 
 def type_age(m = None, c = None):
+	chat_id = cid(c)
+	print(c)
+	u = User.get(user_id = cid(c))
+
 	
 
 
@@ -117,12 +123,14 @@ def type_age(m = None, c = None):
 
 @bot.message_handler(commands = ['init'])
 def init(m):
+	print(m)
 	User.create_table(fail_silently = True)
 	# Routing.create_table(fail_silently = True)
 
 
 @bot.message_handler(commands = ['start'])
 def start(m):
+	print(m)
 	u = User.cog(user_id = uid(m), username = m.from_user.username, first_name = m.from_user.first_name, last_name = m.from_user.last_name)
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.agree_btn, callback_data = s.agree)

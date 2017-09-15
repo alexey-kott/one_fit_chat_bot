@@ -10,10 +10,11 @@ my_last_name_is_btn = "Моя фамилия {}"
 
 # states
 default 			= "default"
-course_entrance		= "course_entrance"
 canceled 			= "canceled"
 lets_confirm_name 	= "lets_confirm_name"
 lets_confirm_last_name 	= "lets_confirm_last_name"
+select_sex			= "select_sex"
+type_age			= "type_age"
 
 
 
@@ -31,6 +32,7 @@ accepted_course 	= ''
 canceled_course 	= 'Cпасибо. Адьос'
 confirm_name		= 'Давайте уточним Ваше имя. Если Вас зовут {}, подтвердите это нажатием на кнопку. Если мы ошиблись, то отправьте Ваше имя в ответ на это сообщение.'
 confirm_last_name 	= 'Теперь уточним фамилию. Если ваша фамилия {}, подтвердите это нажатием на кнопку. Если же нет -- отправьте нам Вашу фамилию в сообщении.'
+male_or_female		= 'Вы мужчина или женщина?'
 
 
 
