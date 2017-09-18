@@ -9,6 +9,7 @@ import strings as s # все строки хранятся здесь
 from actions import *
 import check
 import threading
+from functions import send_mail
 
 
 # README
@@ -41,6 +42,7 @@ class User(BaseModel):
 	age			= IntegerField(null = True)
 	email		= TextField(null = True)
 	state		= TextField(default = s.default)
+	trainer_id  = IntegerField(null = True)
 
 	def cog(user_id, username = None, first_name = None, last_name = None):
 		try:
@@ -66,7 +68,7 @@ class Trainer(BaseModel):
 	photo 		= TextField()
 
 
-	
+
 
 # _____________ FUNCTIONS
 
@@ -76,7 +78,6 @@ def delay(func): # отсылка сообщений с задержкой
         u = User.get(user_id = chat_id)
         u.state = s.stop
         u.save()
-        print(kwargs)
         timer = threading.Timer(kwargs['delay'], func, args=args, kwargs=kwargs)
         timer.start()
     return delayed
@@ -85,9 +86,10 @@ def delay(func): # отсылка сообщений с задержкой
 @delay
 def send_message_delay(chat_id, m, state=None, delay = 0, reply_markup=None, disable_notification=None):
 	u = User.get(user_id = chat_id)
-	u.state = state
+	if state != None:
+		u.state = state
 	u.save()
-	bot.send_message(chat_id, m, reply_markup=reply_markup, parse_mode='Markdown', disable_notification=None)
+	bot.send_message(chat_id, m, reply_markup=reply_markup, parse_mode='Markdown', disable_notification=disable_notification)
 
 
 
@@ -99,7 +101,7 @@ def send_message_delay(chat_id, m, state=None, delay = 0, reply_markup=None, dis
 
 def cancel(chat_id, c):
 	u = User.get(user_id = cid(c))
-	u.state = s.canceled
+	u.state = s.stop
 	u.save()
 	bot.send_message(chat_id, s.canceled_course)
 
@@ -185,10 +187,41 @@ def video_intro(chat_id, m):
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.agree_btn, callback_data = s.agree)			
 	keyboard.add(agree_btn)						
-	send_message_delay(chat_id, s.are_we_continuing, delay = 15, state = s.video_intro, reply_markup = keyboard)
+	send_message_delay(chat_id, s.are_we_continuing, delay = 5, state = s.video_intro, reply_markup = keyboard)
 
 
-def present_trainer(chat_id, m):
+def present_trainer(chat_id, c):
+	u = User.get(user_id = cid(c))
+	tes = Trainer.select().order_by(fn.Random()).limit(1)
+	for t in tes:
+		print(t.first_name)
+
+	u.trainer_id = t.id
+	# u.state = s.trainer
+	u.save()
+	photo = open(t.photo, 'rb')
+	bot.send_photo(chat_id, photo, s.your_trainer.format(t.first_name, t.last_name))
+	send_message_delay(chat_id, s.what_to_do.format(s.next_3_days), delay = 3, state = s.trainer) # присвоен тренер
+
+	keyboard = types.InlineKeyboardMarkup()
+	agree_btn = types.InlineKeyboardButton(text = s.agree_btn, callback_data = s.agree)			
+	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)			
+	keyboard.add(agree_btn, disagree_btn)	
+	send_message_delay(chat_id, s.are_you_ready, delay = 6, state = s.ready, reply_markup = keyboard, disable_notification = True) # "Вы готовы?"
+
+
+def remind(chat_id, c):
+	u = User.get(user_id = uid(m))
+	u.state = s.remind
+	u.save()
+	bot.send_message(chat_id, s.waiting_from_you)
+	send_mail(u.email, s.your_documents, s.your_documents)
+	send_message_delay(chat_id, s.fact_finding_remind, delay=3, state = s.survey)
+	send_message_delay(chat_id, s.begin_survey, delay=6, state = s.begin_survey)
+
+# def survey(chat_id, )
+
+
 
 
 
@@ -204,8 +237,8 @@ def present_trainer(chat_id, m):
 
 @bot.message_handler(commands = ['init'])
 def init(m):
-	# print(m)
 	User.create_table(fail_silently = True)
+	Trainer.create_table(fail_silently = True)
 	# Routing.create_table(fail_silently = True)
 
 

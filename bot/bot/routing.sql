@@ -11,4 +11,13 @@ INSERT INTO routing VALUES
 	('sex','female','type_age'),
 	('age','text','type_email'),
 	('email','text','video_intro'),
-	('video_intro','agree', 'present_trainer')
+	('video_intro','agree', 'present_trainer'),
+	('ready','agree', 'remind'),
+	('remind','agree', 'remind')
+	('remind','disagree', 'cancel')
+
+
+INSERT INTO trainer VALUES
+	(1, 'Мария', 'Гришина', './images/trainers/trainer1.jpg'),
+	(2, 'Владимир', 'Иванов', './images/trainers/trainer2.jpg'),
+	(3, 'Макс', 'Григорьев', './images/trainers/trainer3.jpg');
