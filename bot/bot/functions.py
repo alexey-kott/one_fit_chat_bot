@@ -3,11 +3,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 
-def send_mail(address, theme, text): #onefit.chat@mail.ru : qazwsx123
+def send_mail(toaddr, theme, text): #onefit.chat@mail.ru : qazwsx123
 	fromaddr = "onefit.chat@mail.ru"
 	mypass = "qazwsx123"
-	fromaddr = "test_django_app@mail.ru"
-	toaddr = address
 	 
 	msg = MIMEMultipart()
 	msg['From'] = fromaddr

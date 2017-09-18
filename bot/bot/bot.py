@@ -34,15 +34,27 @@ class BaseModel(Model):
 		database = db
 
 class User(BaseModel):
-	user_id 	= IntegerField(unique = True)
-	username	= TextField(null = True)
-	first_name 	= TextField(null = True)
-	last_name   = TextField(null = True)
-	sex 		= TextField(null = True)
-	age			= IntegerField(null = True)
-	email		= TextField(null = True)
-	state		= TextField(default = s.default)
-	trainer_id  = IntegerField(null = True)
+	user_id 	   = IntegerField(unique = True)
+	username	   = TextField(null = True)
+	first_name 	   = TextField(null = True)
+	last_name      = TextField(null = True)
+	sex 		   = TextField(null = True)
+	age			   = IntegerField(null = True)
+	email		   = TextField(null = True)
+	state		   = TextField(default = s.default)
+	trainer_id     = IntegerField(null = True)
+	city 		   = TextField(null = True)
+	job 		   = TextField(null = True)
+	height 		   = IntegerField(null = True)
+	weight		   = FloatField(null = True)
+	target_weight  = TextField(null = True)
+	methodologies  = TextField(null = True) # какими методиками пользовались
+	most_difficult = TextField(null = True) # что было самое сложное?
+	was_result	   = TextField(null = True) # был ли результат?
+	why_fat_again  = TextField(null = True) # почему вес снова возвращался, как вы думаете?
+
+
+
 
 	def cog(user_id, username = None, first_name = None, last_name = None):
 		try:
@@ -211,15 +223,107 @@ def present_trainer(chat_id, c):
 
 
 def remind(chat_id, c):
-	u = User.get(user_id = uid(m))
-	u.state = s.remind
+	u = User.get(user_id = cid(c))
+	u.state = s.stop
 	u.save()
-	bot.send_message(chat_id, s.waiting_from_you)
+	bot.send_message(chat_id, s.waiting_from_you, parse_mode = 'Markdown')
 	send_mail(u.email, s.your_documents, s.your_documents)
-	send_message_delay(chat_id, s.fact_finding_remind, delay=3, state = s.survey)
-	send_message_delay(chat_id, s.begin_survey, delay=6, state = s.begin_survey)
+	send_message_delay(chat_id, s.fact_finding_remind, delay=3, state = s.stop)
 
-# def survey(chat_id, )
+	keyboard = types.InlineKeyboardMarkup()
+	continue_btn = types.InlineKeyboardButton(text = s.continue_btn, callback_data = s.agree)
+	keyboard.add(continue_btn)
+	send_message_delay(chat_id, s.we_sent_mail, delay=5, state = s.remind, reply_markup = keyboard)
+
+
+def city(chat_id, c):
+	u = User.get(user_id = cid(c))
+	u.state = s.city
+	u.save()
+	bot.send_message(chat_id, s.type_city)
+
+
+def job(chat_id, m):
+	u = User.get(user_id = uid(m))
+	u.city = m.text
+	u.state = s.job
+	u.save()
+	bot.send_message(chat_id, s.type_job)
+
+
+def height(chat_id, m):
+	u = User.get(user_id = uid(m))
+	u.job = m.text
+	u.state = s.height
+	u.save()
+	bot.send_message(chat_id, s.type_height)
+
+
+def incorrect_height(chat_id):
+	bot.send_message(chat_id, s.incorrect_height)
+
+
+def weight(chat_id, m):
+	if not check.height(m.text):
+		incorrect_height(chat_id)
+		return False
+	u = User.get(user_id = uid(m))
+	u.height = check.height(m.text)
+	u.state = s.weight
+	u.save()
+	bot.send_message(chat_id, s.type_weight)
+
+
+def target_weight(chat_id, m):
+	u = User.get(user_id = uid(m))
+	u.state = s.target_weight
+	u.weight = m.text
+	u.save()
+	bot.send_message(chat_id, s.type_target_weight)
+
+
+def methodologies(chat_id, m):
+	u = User.get(user_id = uid(m))
+	# u.state = s.methodologies
+	u.target_weight = m.text
+	u.save()
+	bot.send_message(chat_id, s.thanks_for_answers)
+	send_message_delay(chat_id, s.type_methodologies, delay=5, state = s.methodologies)
+
+
+def most_difficult(chat_id, m):
+	u = User.get(user_id = uid(m))
+	u.methodologies = m.text
+	u.state = s.most_difficult
+	u.save()
+	bot.send_message(chat_id, s.type_most_difficult)
+
+
+def was_result(chat_id, m):
+	u = User.get(user_id = uid(m))
+	u.most_difficult = m.text
+	u.state = s.was_result
+	u.save()
+	bot.send_message(chat_id, s.type_was_result)
+
+
+def why_fat_again(chat_id, m):
+	u = User.get(user_id = uid(m))
+	u.was_result = m.text
+	u.state = s.why_fat_again
+	u.save()
+	bot.send_message(chat_id, s.type_why_fat_again)	
+	send_message_delay(chat_id, s.waiting_from_you, delay = 10)
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -238,7 +342,7 @@ def remind(chat_id, c):
 @bot.message_handler(commands = ['init'])
 def init(m):
 	User.create_table(fail_silently = True)
-	Trainer.create_table(fail_silently = True)
+	# Trainer.create_table(fail_silently = True)
 	# Routing.create_table(fail_silently = True)
 
 
@@ -246,6 +350,7 @@ def init(m):
 def start(m):
 	# print(m)
 	u = User.cog(user_id = uid(m), username = m.from_user.username, first_name = m.from_user.first_name, last_name = m.from_user.last_name)
+	# u.state = s.default
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.agree_btn, callback_data = s.agree)
 	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)
@@ -280,6 +385,7 @@ def clbck(c):
 
 @bot.message_handler(content_types = ['text'])
 def action(m):
+	print(m.from_user.username, m.text)
 	chat_id = sid(m)
 	u = User.cog(user_id = uid(m))
 	if u.state == s.canceled:
