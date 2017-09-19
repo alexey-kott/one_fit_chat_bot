@@ -1,15 +1,18 @@
-import telebot
-from telebot import types
+#_______ системные модули
 import sqlite3 as sqlite
+import telebot
+import threading # для отложенных сообщений
 import re
-import config as cfg
+import datetime
+from telebot import types
 from peewee import *
 from playhouse.sqlite_ext import *
+from playhouse.shortcuts import model_to_dict, dict_to_model # для сериализации peewee-объектов во время логирования ошибок
+# ______ модули приложения
+import config as cfg 
 import strings as s # все строки хранятся здесь
-from actions import *
-import check
-import threading
-from functions import send_mail
+import check # различные проверки: правильно ли юзер ввёл рост/вес/etc
+from functions import send_mail 
 
 
 # README
@@ -54,8 +57,6 @@ class User(BaseModel):
 	why_fat_again  = TextField(null = True) # почему вес снова возвращался, как вы думаете?
 
 
-
-
 	def cog(user_id, username = None, first_name = None, last_name = None):
 		try:
 			with db.atomic():
@@ -78,6 +79,14 @@ class Trainer(BaseModel):
 	first_name	= TextField()
 	last_name 	= TextField()
 	photo 		= TextField()
+
+
+class Error(BaseModel):
+	message 	= TextField()
+	state		= TextField()
+	exception 	= TextField()
+	timestamp	= DateTimeField(default = datetime.datetime.now)
+
 
 
 
@@ -344,6 +353,7 @@ def init(m):
 	User.create_table(fail_silently = True)
 	# Trainer.create_table(fail_silently = True)
 	# Routing.create_table(fail_silently = True)
+	Error.create_table(fail_silently = True)
 
 
 @bot.message_handler(commands = ['start'])
@@ -375,9 +385,11 @@ def clbck(c):
 			if u.state != s.stop:
 				eval(r.action)(chat_id, c = c)
 		except Exception as e:
+			Error.create(message = c.data, state = u.state, exception = e)
 			print(e)
 			print(s.action_not_defined)
 	except Exception as e:
+		Error.create(message = m.text, state = u.state, exception = e)
 		print(e)
 	
 
@@ -397,9 +409,11 @@ def action(m):
 			if u.state != s.stop:
 				eval(r.action)(chat_id, m = m)
 		except Exception as e:
+			Error.create(message = m.text, state = u.state, exception = e)
 			print(e)
 			print(m)
 	except Exception as e:
+		Error.create(message = m.text, state = u.state, exception = e)
 		print(e)
 	
 
