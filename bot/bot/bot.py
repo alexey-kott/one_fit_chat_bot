@@ -45,6 +45,7 @@ class User(BaseModel):
 	age			   = IntegerField(null = True)
 	email		   = TextField(null = True)
 	state		   = TextField(default = s.default)
+	day 		   = IntegerField(default = 1) # день, на котором находится поциент (всего 3 дня)
 	trainer_id     = IntegerField(null = True)
 	city 		   = TextField(null = True)
 	job 		   = TextField(null = True)
@@ -231,7 +232,7 @@ def present_trainer(chat_id, c):
 	send_message_delay(chat_id, s.are_you_ready, delay = 6, state = s.ready, reply_markup = keyboard, disable_notification = True) # "Вы готовы?"
 
 
-def remind(chat_id, c):
+def remind_1(chat_id, c):
 	u = User.get(user_id = cid(c))
 	u.state = s.stop
 	u.save()
@@ -325,6 +326,8 @@ def why_fat_again(chat_id, m):
 	send_message_delay(chat_id, s.waiting_from_you, delay = 10)
 
 
+def remind_2(chat_id, m):
+	
 
 
 

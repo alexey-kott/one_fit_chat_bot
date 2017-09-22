@@ -12,7 +12,7 @@ INSERT INTO routing VALUES
 	('age','text','type_email'),
 	('email','text','video_intro'),
 	('video_intro','agree', 'present_trainer'),
-	('ready','agree', 'remind'),
+	('ready','agree', 'remind_1'),
 	('remind','agree', 'city'),
 	('remind','disagree', 'cancel'),
 	('city','text', 'job'),
@@ -23,7 +23,7 @@ INSERT INTO routing VALUES
 	('methodologies','text', 'most_difficult'),
 	('most_difficult','text', 'was_result'),
 	('was_result','text', 'why_fat_again'),
-	('why_fat_again','text', 'cancel'),
+	('why_fat_again','text', 'cancel')
 
 
 INSERT INTO trainer VALUES
