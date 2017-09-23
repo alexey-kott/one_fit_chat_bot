@@ -1,0 +1,163 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/ru.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+{% load staticfiles %}
+<link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
+
+<div class="row">
+	<div class="col-lg-6 col-md-5 col-sm-5 col-xs-5"></div>
+	<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5">
+		
+	</div>
+	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+		<a href="/deauth">
+			<button class="btn btn-primary input-lg btn-block">Выйти</button>
+		</a>
+	</div>
+
+</div>
+
+<div class="row content">
+	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"></div>
+	<div class="col-lg-5 col-md-4 col-sm-4 col-xs-4"></div>
+	<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" >
+		<ul class="user-list">
+			{% for user in users %}
+			<!--
+			<li>
+				<div class="user-title">
+					<span class="user-name">
+						{{ user.first_name }} {{ user.last_name }},
+					</span>
+					<span class="user-age">
+						39 лет
+					</span>
+				</div>
+				<div class="last-activity">
+					<span>
+						последняя активность 5 часов назад
+					</span>
+				</div>
+			</li>-->
+
+			{% endfor %}
+			<li>
+				<div class="user-title">
+					<span class="user-name">
+						Zssjcos Vnvjdf,
+					</span>
+					<span class="user-age">
+						39 лет
+					</span>
+				</div>
+				<div class="last-activity">
+					<span>
+						последняя активность 5 часов назад
+					</span>
+				</div>
+			</li>
+			
+			
+
+		</ul>
+	</div>
+
+</div>
+
+
+
+<script>
+$(".user-list").on("click", "li", function(){
+	$(this).addClass("current-user").siblings().removeClass("current-user")
+});
+
+
+$(function() {
+    // When we're using HTTPS, use WSS too.
+    var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+    // var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);
+    var chatsock = new WebSocket(ws_scheme + '://' + window.location.host);
+    // var chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
+    
+    chatsock.onmessage = function(message) {
+    	var users = JSON.parse(message.data)
+    	var userList = $(".user-list");
+
+    	users.map(function(item, i){
+    		var el = $("<li></li>");
+    		el.append(
+    			$("<div></div>").addClass("user-title").append(
+    				$("<span></span>").addClass("user-name").text(`${item.first_name} ${item.last_name}, `),
+    				$("<span></span>").addClass("user-age").text(`${age_format(item.age)}`),
+    				$("<span></span>").addClass("user-day").text(` (${item.day}-й день)`)
+    			),
+    			$("<div></div>").addClass("last-activity").append(
+    				$("<span></span>").text(`последняя активность ${moment(item.last_activity).fromNow()}`)
+    			),
+    		)
+    		userList.prepend(el)
+    	})
+
+
+        // var data = JSON.parse(message.data);
+        // var chat = $("#chat")
+        // var ele = $('<tr></tr>')
+
+        // ele.append(
+        //     $("<td></td>").text(data.timestamp)
+        // )
+        // ele.append(
+        //     $("<td></td>").text(data.handle)
+        // )
+        // ele.append(
+        //     $("<td></td>").text(data.message)
+        // )
+        
+        // chat.append(ele)
+    };
+
+    $("#chatform").on("submit", function(event) {
+        var message = {
+            handle: $('#handle').val(),
+            message: $('#message').val(),
+        }
+        chatsock.send(JSON.stringify(message));
+        $("#message").val('').focus();
+        return false;
+    });
+});
+
+
+function age_format(age){
+	if(age == null) return '';
+	var last_number = age - Math.floor(age / 10) * 10;
+	switch(last_number){
+		case 0:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 9:
+			return `${age} лет`;
+			break;
+		case 1:
+			return `${age} год`;
+			break;
+		case 2:
+		case 3:
+		case 4:
+			return `${age} года`;
+			break;
+	}
+}
+
+
+
+
+</script>

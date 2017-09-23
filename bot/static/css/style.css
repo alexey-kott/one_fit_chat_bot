@@ -1,0 +1,62 @@
+body{
+	padding: 30px;
+}
+
+
+.content{
+	margin-top: 20px;
+}
+
+.user-list li:first-child{
+	border-radius: 4px 4px 0 0;
+}
+
+.user-list li:last-child{
+	border-radius: 0 0 4px 4px;
+}
+
+.user-list li{
+	display: block;
+	font-size:1.2em;
+	color: #18406d;
+	padding: 10px;
+	font-family: -apple-system,BlinkMacSystemFont,Roboto,Open Sans,Helvetica Neue,sans-serif;
+	font-style: italic;
+	cursor: pointer;
+}
+
+.user-list li:hover{
+	background: #f0f2f5;
+}
+
+.user-list li.current-user{
+	background: #337ab7;
+	color: #ffffff;
+	font-weight: bold;
+}
+
+.user-age{
+	font-size: 0.8em;
+	color: #8293a7;
+}
+
+.user-day{
+	font-size: 0.9em;
+	color:#8293a7;
+}
+
+.user-list li.current-user .user-age, .user-list li.current-user .user-day{
+	/* color: #e4e9ef; */
+	color: #bbd9f3;
+	font-weight: normal;
+}
+
+.last-activity{
+	font-size: 0.8em;
+	color: #8293a7;
+}
+
+.user-list li.current-user .last-activity{
+	color: #bbd9f3;
+	font-weight: 0;
+}
