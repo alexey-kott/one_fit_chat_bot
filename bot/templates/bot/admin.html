@@ -156,8 +156,8 @@ chatsock.onclose = function(){
 }
 
 function displayUserList(users){
-	var userList = $(".user-list");
 	$(".user-list").empty()
+	var userList = $(".user-list");
 	users.map(function(item, i){
 
 		var el = $(`<li data-user-id="${item.user_id}"></li>`);
