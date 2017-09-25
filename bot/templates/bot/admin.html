@@ -69,7 +69,7 @@
 			</li> -->
 
 			{% endfor %}
-			<li>
+<!-- 			<li>
 				<div>
 					<div class="user-title">
 						<span class="user-name">
@@ -88,7 +88,7 @@
 				<div class="user-info">
 
 				</div>
-			</li>
+			</li> -->
 			
 			
 
@@ -157,7 +157,9 @@ chatsock.onclose = function(){
 
 function displayUserList(users){
 	var userList = $(".user-list");
+	$(".user-list").empty()
 	users.map(function(item, i){
+
 		var el = $(`<li data-user-id="${item.user_id}"></li>`);
 		el.append(
 			$("<div></div>").append(
