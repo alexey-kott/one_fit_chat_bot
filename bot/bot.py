@@ -228,7 +228,8 @@ def present_trainer(chat_id, c):
 	u = User.get(user_id = cid(c))
 	tes = Trainer.select().order_by(fn.Random()).limit(1)
 	for t in tes:
-		print(t.first_name)
+		pass
+		# print(t.first_name)
 
 	u.trainer_id = t.id
 	# u.state = s.trainer

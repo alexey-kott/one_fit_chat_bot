@@ -94,6 +94,24 @@ body{
 	background: #f0f2f5;
 }
 
+.messages-default{
+	display: flex;
+	flex-direction: row;
+	align-items:center;
+	justify-content: center;
+}
+
+.messages-display{
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	align-items:center;
+}
+
+.select-dialog{
+	display: inline-block;
+}
+
 .message-field{
 	padding: 5px;
 	display: flex;

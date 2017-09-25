@@ -27,8 +27,9 @@
 	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"></div>
 	<div class="col-lg-5 col-md-4 col-sm-4 col-xs-4">
 		<div class="chat">
-			<div class="messages">
-				<span>
+			<div class="messages messages-default">
+
+				<span class="select-dialog">
 					Выберите диалог
 				</span>
 			</div>
@@ -117,18 +118,26 @@ var state = {
 
 // When we're using HTTPS, use WSS too.
 var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-// var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);
-
 var chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
 
 chatsock.onmessage = function(message) {
-	var data = JSON.parse(message.data)
-	if(data.type == "userlist"){
-		displayUserList(data.data)
-	}
-	if(data.type == "trainers"){
-		setTrainers(data.data);
-	}
+	var msg = JSON.parse(message.data)
+	console.log("Msg:")
+	console.log(msg)
+	// msg.map(function(msg, i){
+	// 	if(data.type == "sms"){
+	// 		setSms(data.data);
+	// 	}
+	// 	if(data.type == "userlist"){
+	// 		setUserList(data.data)
+	// 	}
+	// 	if(data.type == "trainers"){
+	// 		setTrainers(data.data);
+	// 	}
+	// })
+	
+
+
 
 	
 
@@ -151,11 +160,11 @@ chatsock.onmessage = function(message) {
 };
 
 chatsock.onclose = function(){
-	console.log(moment())
+	console.log(chatsock)
 	chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
 }
 
-function displayUserList(users){
+function setUserList(users){
 	$(".user-list").empty()
 	var userList = $(".user-list");
 	users.map(function(item, i){
@@ -216,6 +225,15 @@ function setTrainers(trainers){
 	console.log(trainer)
 }
 
+var sms = [];
+function setSms(data){
+	// console.log(data)
+	data.map(function(item, i){
+		console.log(item)
+	});
+}
+
+
 $("#chatform").on("submit", function(event) {
     var message = {
         handle: $('#handle').val(),
@@ -226,7 +244,7 @@ $("#chatform").on("submit", function(event) {
     return false;
 });
 
-var messages = {};
+
 
 $("#send-message").on("click", function(){
 	var text = $("#input-message").val();
@@ -240,7 +258,7 @@ $("#send-message").on("click", function(){
 	if(chatsock.readyState == 3){
 		chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
 	}
-	console.log(chatsock)
+	
 	chatsock.send(JSON.stringify(message));
 });
 

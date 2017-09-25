@@ -19,14 +19,20 @@ def datetime_handler(x):
 def ws_connect(message):
     # prefix, label = message['path'].strip('/').split('/')
     print("WS_CONNECT")
-    users = [u for u in User.objects.values()]
     Group('admin', channel_layer=message.channel_layer).add(message.reply_channel)
-    response = dict()
-    response['type'] = 'trainers'
-    response['data'] = [t for t in Trainer.objects.values()]
-    Group('admin', channel_layer=message.channel_layer).send({'text': json.dumps(response, default = datetime_handler)})
-    response['type'] = 'userlist'
-    response['data'] = users
+    response = []
+    item = dict()
+    item['type'] = 'trainers'
+    item['data'] = [t for t in Trainer.objects.values()]
+    response.append(item)
+    item = dict()
+    item['type'] = 'sms'
+    item['data'] = [sms for sms in Message.objects.values()]
+    response.append(item)
+    item = dict()
+    item['type'] = 'userlist'
+    item['data'] = [u for u in User.objects.values()]
+    response.append(item)
     Group('admin', channel_layer=message.channel_layer).send({'text': json.dumps(response, default = datetime_handler)})
 
 
