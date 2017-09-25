@@ -25,41 +25,68 @@
 
 <div class="row content">
 	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"></div>
-	<div class="col-lg-5 col-md-4 col-sm-4 col-xs-4"></div>
+	<div class="col-lg-5 col-md-4 col-sm-4 col-xs-4">
+		<div class="chat">
+			<div class="messages">
+				<span>
+					Выберите диалог
+				</span>
+			</div>
+			<div class="message-field form-group">
+				
+				<textarea id="input-message" class="input-message form-control" style="display: block;" autofocus></textarea>
+
+				<button class="btn input-lg btn-block btn-primary" id="send-message">Отправить</button>
+			</div>
+		</div>
+	</div>
 	<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" >
 		<ul class="user-list">
 			{% for user in users %}
-			<!--
-			<li>
-				<div class="user-title">
-					<span class="user-name">
-						{{ user.first_name }} {{ user.last_name }},
-					</span>
-					<span class="user-age">
-						39 лет
-					</span>
+			
+			<!-- <li data-user-id="{{ user.user_id }}">
+				<div>
+					<div class="user-title">
+						<span class="user-name">
+							{{ user.first_name }} {{ user.last_name }},
+						</span>
+						<span class="user-age">
+							39 лет
+						</span>
+					</div>
+					<div class="last-activity">
+						<span>
+							последняя активность 5 часов назад
+						</span>
+					</div>
 				</div>
-				<div class="last-activity">
-					<span>
-						последняя активность 5 часов назад
-					</span>
+				<div class="user-info">
+					<ul>
+
+
+					</ul>
 				</div>
-			</li>-->
+			</li> -->
 
 			{% endfor %}
 			<li>
-				<div class="user-title">
-					<span class="user-name">
-						Zssjcos Vnvjdf,
-					</span>
-					<span class="user-age">
-						39 лет
-					</span>
+				<div>
+					<div class="user-title">
+						<span class="user-name">
+							Zssjcos Vnvjdf,
+						</span>
+						<span class="user-age">
+							39 лет
+						</span>
+					</div>
+					<div class="last-activity">
+						<span>
+							последняя активность 5 часов назад
+						</span>
+					</div>
 				</div>
-				<div class="last-activity">
-					<span>
-						последняя активность 5 часов назад
-					</span>
+				<div class="user-info">
+
 				</div>
 			</li>
 			
@@ -74,63 +101,145 @@
 
 <script>
 $(".user-list").on("click", "li", function(){
+	var user_id = $(this).data("user-id");
+	$(".user-info li").css("display", "none")
+	$(this).find(".user-info li").css("display", "block")
+	state.current_user = user_id;
 	$(this).addClass("current-user").siblings().removeClass("current-user")
 });
 
+var state = { 
+	current_user: 0,
+	current_admin: 12345
+}
 
-$(function() {
-    // When we're using HTTPS, use WSS too.
-    var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-    // var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);
-    var chatsock = new WebSocket(ws_scheme + '://' + window.location.host);
-    // var chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
+
+
+// When we're using HTTPS, use WSS too.
+var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+// var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);
+
+var chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
+
+chatsock.onmessage = function(message) {
+	var data = JSON.parse(message.data)
+	if(data.type == "userlist"){
+		displayUserList(data.data)
+	}
+	if(data.type == "trainers"){
+		setTrainers(data.data);
+	}
+
+	
+
+
+    // var data = JSON.parse(message.data);
+    // var chat = $("#chat")
+    // var ele = $('<tr></tr>')
+
+    // ele.append(
+    //     $("<td></td>").text(data.timestamp)
+    // )
+    // ele.append(
+    //     $("<td></td>").text(data.handle)
+    // )
+    // ele.append(
+    //     $("<td></td>").text(data.message)
+    // )
     
-    chatsock.onmessage = function(message) {
-    	var users = JSON.parse(message.data)
-    	var userList = $(".user-list");
+    // chat.append(ele)
+};
 
-    	users.map(function(item, i){
-    		var el = $("<li></li>");
-    		el.append(
-    			$("<div></div>").addClass("user-title").append(
-    				$("<span></span>").addClass("user-name").text(`${item.first_name} ${item.last_name}, `),
-    				$("<span></span>").addClass("user-age").text(`${age_format(item.age)}`),
-    				$("<span></span>").addClass("user-day").text(` (${item.day}-й день)`)
-    			),
-    			$("<div></div>").addClass("last-activity").append(
-    				$("<span></span>").text(`последняя активность ${moment(item.last_activity).fromNow()}`)
-    			),
-    		)
-    		userList.prepend(el)
-    	})
+chatsock.onclose = function(){
+	console.log(moment())
+	chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
+}
 
+function displayUserList(users){
+	var userList = $(".user-list");
+	users.map(function(item, i){
+		var el = $(`<li data-user-id="${item.user_id}"></li>`);
+		el.append(
+			$("<div></div>").append(
+				$("<div></div>").addClass("user-title").append(
+					$("<span></span>").addClass("user-name").text(`${item.first_name} ${item.last_name}, `),
+					$("<span></span>").addClass("user-age").text(`${age_format(item.age)}`),
+					$("<span></span>").addClass("user-day").text(` (${item.day}-й день)`)
+				),
+				$("<div></div>").addClass("last-activity").append(
+					$("<span></span>").text(`последняя активность ${moment(item.last_activity).fromNow()}`)
+				),
+			),
+			$("<div></div>").addClass("user-info").append(
+				displayUserInfo(item)
+				)
+			
+		)
+		userList.prepend(el)
+	})
+}
 
-        // var data = JSON.parse(message.data);
-        // var chat = $("#chat")
-        // var ele = $('<tr></tr>')
+function displayUserInfo(item){
+	for(key in item){
+		if(item[key] == null){
+			item[key] = 'нет данных'
+		}
+	}
+	var user_ul = $("<ul></ul>").append(
+					$("<li></li>").addClass("user-info-item").text(`Пол: ${item.sex}`),
+					// $("<li></li>").addClass("user-info-item").text(`Тренер: ${trainer[item.trainer_id].first_name} ${trainer[item.trainer_id].last_name} `),
+					$("<li></li>").addClass("user-info-item").text(`Город: ${item.city}`),
+					$("<li></li>").addClass("user-info-item").text(`Работа: ${item.job}`),
+					$("<li></li>").addClass("user-info-item").text(`Рост: ${item.height}`),
+					$("<li></li>").addClass("user-info-item").text(`Вес: ${item.weight}`),
+					$("<li></li>").addClass("user-info-item").text(`Желаемый вес: ${item.target_weight}`),
+					$("<li></li>").addClass("user-info-item").text(`Какие диеты и методики пробовал: ${item.methodologies}`),
+					$("<li></li>").addClass("user-info-item").text(`Что было самое сложное: ${item.most_difficult}`),
+					$("<li></li>").addClass("user-info-item").text(`Был ли результат: ${item.was_result}`),
+					$("<li></li>").addClass("user-info-item").text(`Почему вес вернулся: ${item.why_fat_again}`),
+					);
+	return user_ul
+}
 
-        // ele.append(
-        //     $("<td></td>").text(data.timestamp)
-        // )
-        // ele.append(
-        //     $("<td></td>").text(data.handle)
-        // )
-        // ele.append(
-        //     $("<td></td>").text(data.message)
-        // )
-        
-        // chat.append(ele)
-    };
+var trainer = [];
+function setTrainers(trainers){
+	trainers.map(function(item, i){
+		id = item.id
+		trainer[id] = {}
+		trainer[id].first_name = item.first_name
+		trainer[id].last_name = item.last_name
+		trainer[id].photo = item.photo
 
-    $("#chatform").on("submit", function(event) {
-        var message = {
-            handle: $('#handle').val(),
-            message: $('#message').val(),
-        }
-        chatsock.send(JSON.stringify(message));
-        $("#message").val('').focus();
-        return false;
-    });
+	})
+	console.log(trainer)
+}
+
+$("#chatform").on("submit", function(event) {
+    var message = {
+        handle: $('#handle').val(),
+        message: $('#message').val(),
+    }
+    chatsock.send(JSON.stringify(message));
+    $("#message").val('').focus();
+    return false;
+});
+
+var messages = {};
+
+$("#send-message").on("click", function(){
+	var text = $("#input-message").val();
+	console.log(state.current_user)
+	var message = {
+		type: 'sms',
+		sender: state.current_admin,
+		receiver: state.current_user,
+	    text: text
+	}
+	if(chatsock.readyState == 3){
+		chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
+	}
+	console.log(chatsock)
+	chatsock.send(JSON.stringify(message));
 });
 
 
@@ -155,6 +264,16 @@ function age_format(age){
 			return `${age} года`;
 			break;
 	}
+}
+
+
+//_______ messenger
+
+
+
+
+function add_message(text){
+	
 }
 
 

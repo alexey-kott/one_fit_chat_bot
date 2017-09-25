@@ -1,5 +1,5 @@
 body{
-	padding: 30px;
+	padding: 20px;
 }
 
 
@@ -7,8 +7,13 @@ body{
 	margin-top: 20px;
 }
 
+.user-list{
+	padding:0;
+}
+
 .user-list li:first-child{
 	border-radius: 4px 4px 0 0;
+
 }
 
 .user-list li:last-child{
@@ -59,4 +64,59 @@ body{
 .user-list li.current-user .last-activity{
 	color: #bbd9f3;
 	font-weight: 0;
+}
+
+
+.user-info{
+	display: block;
+}
+
+.user-info li{
+	display: none;
+	font-size: 0.8em;
+	padding: 0;
+	color: #ffffff;
+	background: inherit; 
+}
+
+.user-info li:hover{
+	background: inherit;
+}
+
+
+
+/* ___ CHAT ____ */
+
+.messages{
+	position:relative;
+	min-height: 400px;
+	width: 100%;
+	background: #f0f2f5;
+}
+
+.message-field{
+	padding: 5px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.message-field textarea{
+	width: 70%;
+}
+
+.message-field button{
+	width: 30%;
+	margin-left: 5px;
+}
+
+
+.messages {
+	padding: 50% 0;
+}
+
+.messages span{
+	display: inline-block;
+	font-size: 1.5em;
 }

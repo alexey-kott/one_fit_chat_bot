@@ -1,4 +1,10 @@
 from django.db import models
+from django.db.utils import DEFAULT_DB_ALIAS
+import telebot
+import bot.config as cfg
+import datetime
+
+bot = telebot.TeleBot(cfg.token)
 
 # Create your models here.
 class Admin(models.Model):
@@ -33,3 +39,32 @@ class User(models.Model):
 
 	class Meta:
 		db_table = "user"
+
+
+class Message(models.Model):
+	sender		= models.IntegerField()
+	receiver	= models.IntegerField()
+	text 		= models.TextField()
+	timestamp	= models.DateTimeField()
+
+	class Meta:
+		db_table = "message"
+
+	def save(self, force_insert=False, force_update=False, using=DEFAULT_DB_ALIAS, update_fields=None):
+		self.timestamp = datetime.datetime.utcnow()
+		super().save(force_insert, force_update, using, update_fields)
+
+	def send_message(self, sender, receiver, text):
+		self.sender = sender
+		self.receiver = receiver
+		self.text = text
+		self.save()
+		bot.send_message(receiver, text)
+
+class Trainer(models.Model):
+	first_name	= models.TextField()
+	last_name 	= models.TextField()
+	photo 		= models.TextField()
+
+	class Meta:
+		db_table = "trainer"

@@ -6,6 +6,8 @@ from channels.sessions import channel_session
 
 
 from .models import User
+from .models import Message
+from .models import Trainer
 
 def datetime_handler(x):
     if isinstance(x, datetime.datetime):
@@ -19,12 +21,23 @@ def ws_connect(message):
     print("WS_CONNECT")
     users = [u for u in User.objects.values()]
     Group('admin', channel_layer=message.channel_layer).add(message.reply_channel)
-    Group('admin', channel_layer=message.channel_layer).send({'text': json.dumps(users, default = datetime_handler)})
+    response = dict()
+    response['type'] = 'trainers'
+    response['data'] = [t for t in Trainer.objects.values()]
+    Group('admin', channel_layer=message.channel_layer).send({'text': json.dumps(response, default = datetime_handler)})
+    response['type'] = 'userlist'
+    response['data'] = users
+    Group('admin', channel_layer=message.channel_layer).send({'text': json.dumps(response, default = datetime_handler)})
+
 
 @channel_session
 def ws_receive(message):
 	print("WS_RECEIVE")
-	print(message)
+	data = json.loads(message['text'])
+	if data['type'] == "sms": # слишком много "сообщений". сообщения от тренера пользователю будем называть sms-ками
+		m = Message()
+		m.send_message(data['sender'], data['receiver'], data['text'])
+	Group('admin', channel_layer=message.channel_layer).send({'text':message['text']})
 
 
 @channel_session
