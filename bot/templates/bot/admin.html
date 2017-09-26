@@ -27,12 +27,15 @@
 
 <div class="row content">
 	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+		{% if request.session.role == 'admin' %}
 		<ul class="trainers">
-			<li class="trainer" data-trainer-id="0">Все тренеры</li>
+			<li class="trainer current-trainer" data-trainer-id="0">Все тренеры</li>
 			{% for trainer in trainers %}
 			<li class="trainer" data-trainer-id="{{ trainer.id }}">{{ trainer.first_name }} {{ trainer.last_name }}</li>
 			{% endfor %}
+			<li> <button class="btn  btn-block btn-primary">Добавить тренера</button> </li>
 		</ul>
+		{% endif %}	
 	</div>
 	<div class="col-lg-5 col-md-4 col-sm-4 col-xs-4">
 		<div class="chat">
@@ -107,6 +110,35 @@
 
 </div>
 
+<div class="row add-trainer">
+	<div class="col-xs-0 col-sm-1 col-md-2 col-lg-2"></div>
+	<div class="col-xs-12 col-sm-10 col-md-8 col-lg-8 add-trainer-form">
+		<form role="form" class="form-horizontal">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="form-group">
+						<lable for="firstname">Имя</lable>
+						<inut type="text" name="firstname" class="form-control" id="firstname" >
+					</div>
+					<div class="form-group">
+						<lable for="lastname">Фамилия</lable>
+						<inut type="text" name="lastname" class="form-control" id="lastname" >
+					</div>
+					<div class="form-group">
+						<lable for="login">Логин</lable>
+						<inut type="text" name="login" class="form-control" id="login" >
+					</div>
+				</div>
+				<div class="col-lg-4 add-trainer-photo">
+					<div class="photo-placeholder">
+
+					</div>
+				</div>
+			</inut>
+		</form>
+	</div>
+	<div class="col-xs-0 col-sm-1 col-md-2 col-lg-2"></div>
+</div>
 
 
 <script>
@@ -125,7 +157,6 @@ function setChat(user_id){
 	$(".msg").remove()
 	$(".messages-default").removeClass("messages-default").addClass("messages-display");
 	sms.map(function(s,i){
-		// console.log
 		if(s.receiver != user_id && s.sender != user_id) return false;
 		var side = ''; // с какой стороны располагать сообщение в блоке
 		if(s.receiver == user_id) side = "msg-right";
@@ -231,7 +262,7 @@ function displayUserInfo(item){
 	}
 	var user_ul = $("<ul></ul>").append(
 					$("<li></li>").addClass("user-info-item").text(`Пол: ${maleFemale(item.sex)}`),
-					// $("<li></li>").addClass("user-info-item").text(`Тренер: ${trainer[item.trainer_id].first_name} ${trainer[item.trainer_id].last_name} `),
+					$("<li></li>").addClass("user-info-item").text(`Тренер: ${trainer[item.trainer_id].first_name} ${trainer[item.trainer_id].last_name} `),
 					$("<li></li>").addClass("user-info-item").text(`Город: ${item.city}`),
 					$("<li></li>").addClass("user-info-item").text(`Работа: ${item.job}`),
 					$("<li></li>").addClass("user-info-item").text(`Рост: ${item.height}`),

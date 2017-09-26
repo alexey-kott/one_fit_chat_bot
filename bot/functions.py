@@ -24,3 +24,4 @@ def send_mail(toaddr, theme, text): #onefit.chat@mail.ru : qazwsx123
 	except:
 		print("Mail send error")
 	server.quit()
+

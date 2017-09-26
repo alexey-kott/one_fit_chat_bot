@@ -96,7 +96,13 @@ class Error(BaseModel):
 	exception 	= TextField()
 	timestamp	= DateTimeField(default = datetime.datetime.now)
 
+class Photo(BaseModel):
+	user_id		= IntegerField()
+	message_id	= IntegerField()
+	note 		= TextField(null = True)
 
+	class Meta:
+		primary_key = CompositeKey('user_id', 'message_id')
 
 
 
@@ -344,7 +350,10 @@ def waiting_from_you(chat_id, m):
 	u.state = s.waiting_from_you
 	u.save()
 	bot.send_message(chat_id, s.waiting_from_you)	
-	send_message_delay(chat_id, s.thanks_for_efforts, delay = 10)
+	send_message_delay(chat_id, s.thanks_for_efforts, delay = 15)
+
+
+
 
 
 
@@ -379,6 +388,8 @@ def init(m):
 	Trainer.create_table(fail_silently = True)
 	Routing.create_table(fail_silently = True)
 	Error.create_table(fail_silently = True)
+	File.create_table(fail_silently = True)
+
 
 
 @bot.message_handler(commands = ['start'])
@@ -425,7 +436,7 @@ def clbck(c):
 
 @bot.message_handler(content_types = ['text'])
 def action(m):
-	print(m.from_user.username, m.text)
+	print(m)
 	chat_id = sid(m)
 	u = User.cog(user_id = uid(m))
 	if u.state == s.canceled:
@@ -444,9 +455,25 @@ def action(m):
 		Error.create(message = m.text, state = u.state, exception = e)
 		print(e)
 	
+
+def save_photo(message): # системная функция, не вызывает отправку сообщения в ТГ
+	user_id = message.from_user.id
+	fileID = message.photo[-1].file_id
+	file_info = bot.get_file(fileID)
+	downloaded_file = bot.download_file(file_info.file_path)
+	photo_name = "{}_{}.jpg".format(user_id, message.message_id)
+	with open("./images/photo/{}".format(photo_name), 'wb') as new_file:
+		new_file.write(downloaded_file)
+		new_file.close()
+	return photo_name
+
+
 @bot.message_handler(content_types = ['photo'])
 def photo(m):
-	pass
+	print(m)
+	photo_name = save_photo(m)
+	photo = Photo.create(user_id = uid(m), message_id = m.message_id)
+
 
 
 

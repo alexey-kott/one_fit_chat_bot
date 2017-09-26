@@ -10,7 +10,7 @@ bot = telebot.TeleBot(cfg.token)
 class Admin(models.Model):
 	username = models.TextField(unique = True)
 	password = models.TextField()
-	user_type = models.TextField()
+	role = models.TextField()
 
 	class Meta:
 		db_table = "admin"
@@ -68,3 +68,12 @@ class Trainer(models.Model):
 
 	class Meta:
 		db_table = "trainer"
+
+class Photo(models.Model):
+	user_id		= models.IntegerField()
+	message_id	= models.IntegerField()
+	note 		= models.TextField(null = True)
+
+	class Meta:
+		db_table = "photo"
+		unique_together = (('user_id', 'message_id'), )

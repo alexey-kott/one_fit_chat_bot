@@ -13,8 +13,8 @@ INSERT INTO routing VALUES
 	('email','text','video_intro'),
 	('video_intro','agree', 'present_trainer'),
 	('ready','agree', 'remind_1'),
-	('remind','agree', 'city'),
-	('remind','disagree', 'cancel'),
+	('remind_1','agree', 'city'),
+	('remind_1','disagree', 'cancel'),
 	('city','text', 'job'),
 	('job','text', 'height'),
 	('height','text', 'weight'),
@@ -24,7 +24,7 @@ INSERT INTO routing VALUES
 	('most_difficult','text', 'was_result'),
 	('was_result','text', 'why_fat_again'),
 	('why_fat_again','text', 'waiting_from_you'),
-	('','text', 'cancel'),
+	('waiting_from_you','text', 'cancel');
 
 
 INSERT INTO trainer VALUES

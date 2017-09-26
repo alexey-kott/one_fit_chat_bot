@@ -172,3 +172,26 @@ body{
 	background: #337ab7 !important;
 	color: #fff;
 }
+
+
+/*_____ ADD TRAINER ____________*/
+
+.add-trainer{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	
+}
+
+.add-trainer-form{
+	background: #fff;
+	border-radius: 20px;
+	border: 1px solid black;
+	padding: 20px 50px;
+}
+
+.photo-placeholder{
+	background: url('{{ STATIC_URL }}');
+	/*background: url('{{ STATIC_URL }}bot/images/img_placeholder.png');*/
+}
