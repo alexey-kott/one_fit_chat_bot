@@ -26,7 +26,7 @@ class User(models.Model):
 	state		   = models.TextField(default = 'default')
 	last_activity  = models.DateTimeField(null = True)
 	day 		   = models.IntegerField(default = 1) # день, на котором находится поциент (всего 3 дня)
-	trainer_id     = models.IntegerField(null = True)
+	trainer_id     = models.IntegerField(null = True, default = 0)
 	city 		   = models.TextField(null = True)
 	job 		   = models.TextField(null = True)
 	height 		   = models.IntegerField(null = True)

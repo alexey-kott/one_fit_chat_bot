@@ -11,7 +11,9 @@
 <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
 
 <div class="row">
-	<div class="col-lg-6 col-md-5 col-sm-5 col-xs-5"></div>
+	<div class="col-lg-6 col-md-5 col-sm-5 col-xs-5">
+		<h3>Вы вошли как {{ request.session.login }}</h3>
+	</div>
 	<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5">
 		
 	</div>
@@ -24,7 +26,14 @@
 </div>
 
 <div class="row content">
-	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"></div>
+	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+		<ul class="trainers">
+			<li class="trainer" data-trainer-id="0">Все тренеры</li>
+			{% for trainer in trainers %}
+			<li class="trainer" data-trainer-id="{{ trainer.id }}">{{ trainer.first_name }} {{ trainer.last_name }}</li>
+			{% endfor %}
+		</ul>
+	</div>
 	<div class="col-lg-5 col-md-4 col-sm-4 col-xs-4">
 		<div class="chat">
 			<div class="messages messages-default">
@@ -37,7 +46,7 @@
 				
 				<textarea id="input-message" class="input-message form-control" style="display: block;" autofocus></textarea>
 
-				<button class="btn input-lg btn-block btn-primary" id="send-message">Отправить</button>
+				<button class="btn input-lg btn-block btn-primary" id="send-message" disabled>Отправить</button>
 			</div>
 		</div>
 	</div>
@@ -106,8 +115,29 @@ $(".user-list").on("click", "li", function(){
 	$(".user-info li").css("display", "none")
 	$(this).find(".user-info li").css("display", "block")
 	state.current_user = user_id;
-	$(this).addClass("current-user").siblings().removeClass("current-user")
+	$(this).addClass("current-user").siblings().removeClass("current-user");
+	setChat(user_id);
+	$("#send-message").prop("disabled", false)
 });
+
+function setChat(user_id){
+	$(".select-dialog").css("display", "none");
+	$(".msg").remove()
+	$(".messages-default").removeClass("messages-default").addClass("messages-display");
+	sms.map(function(s,i){
+		// console.log
+		if(s.receiver != user_id && s.sender != user_id) return false;
+		var side = ''; // с какой стороны располагать сообщение в блоке
+		if(s.receiver == user_id) side = "msg-right";
+		else side = "msg-left";
+		var el = $(`<div class="msg ${side}"></div>`);
+		el.append(
+			$(`<div class="msg-text">${s.text}</div>`)
+			)
+		$(".messages").append(el)
+	});
+	$(".messages").scrollTop(Number.MAX_SAFE_INTEGER)
+}
 
 var state = { 
 	current_user: 0,
@@ -122,25 +152,28 @@ var chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + win
 
 chatsock.onmessage = function(message) {
 	var msg = JSON.parse(message.data)
-	console.log("Msg:")
 	console.log(msg)
-	// msg.map(function(msg, i){
-	// 	if(data.type == "sms"){
-	// 		setSms(data.data);
-	// 	}
-	// 	if(data.type == "userlist"){
-	// 		setUserList(data.data)
-	// 	}
-	// 	if(data.type == "trainers"){
-	// 		setTrainers(data.data);
-	// 	}
-	// })
-	
-
-
-
-	
-
+	msg.map(function(data, i){
+		if(data.type == "sms"){
+			// setSms(data.data);
+			sms = data.data;
+			if(state.current_user != 0){
+				setChat(state.current_user);
+				console.log(state)
+				$(`li[data-user-id="${state.current_user}"]`).trigger("click")
+			}
+		}
+		if(data.type == "userlist"){
+			setUserList(data.data)
+			if(state.current_user != 0){
+				setChat(state.current_user);
+				$(`li[data-user-id="${state.current_user}"]`).trigger("click")
+			}
+		}
+		if(data.type == "trainers"){
+			setTrainers(data.data);
+		}
+	})
 
     // var data = JSON.parse(message.data);
     // var chat = $("#chat")
@@ -169,7 +202,7 @@ function setUserList(users){
 	var userList = $(".user-list");
 	users.map(function(item, i){
 
-		var el = $(`<li data-user-id="${item.user_id}"></li>`);
+		var el = $(`<li class="user" data-user-id="${item.user_id}" data-trainer-id="${item.trainer_id}"></li>`);
 		el.append(
 			$("<div></div>").append(
 				$("<div></div>").addClass("user-title").append(
@@ -197,7 +230,7 @@ function displayUserInfo(item){
 		}
 	}
 	var user_ul = $("<ul></ul>").append(
-					$("<li></li>").addClass("user-info-item").text(`Пол: ${item.sex}`),
+					$("<li></li>").addClass("user-info-item").text(`Пол: ${maleFemale(item.sex)}`),
 					// $("<li></li>").addClass("user-info-item").text(`Тренер: ${trainer[item.trainer_id].first_name} ${trainer[item.trainer_id].last_name} `),
 					$("<li></li>").addClass("user-info-item").text(`Город: ${item.city}`),
 					$("<li></li>").addClass("user-info-item").text(`Работа: ${item.job}`),
@@ -210,6 +243,11 @@ function displayUserInfo(item){
 					$("<li></li>").addClass("user-info-item").text(`Почему вес вернулся: ${item.why_fat_again}`),
 					);
 	return user_ul
+}
+
+function maleFemale(sex){
+	if(sex == 'male') return 'Мужской';
+	return 'Женский';
 }
 
 var trainer = [];
@@ -226,12 +264,12 @@ function setTrainers(trainers){
 }
 
 var sms = [];
-function setSms(data){
-	// console.log(data)
-	data.map(function(item, i){
-		console.log(item)
-	});
-}
+// function setSms(data){
+// 	console.log(data)
+// 	data.map(function(item, i){
+// 		// console.log(item)
+// 	});
+// }
 
 
 $("#chatform").on("submit", function(event) {
@@ -261,6 +299,17 @@ $("#send-message").on("click", function(){
 	
 	chatsock.send(JSON.stringify(message));
 });
+
+$(".trainer").on("click", function(){
+	$(this).addClass("current-trainer").siblings().removeClass("current-trainer");
+	var trainer_id = $(this).data("trainer-id");
+	if(trainer_id == 0){
+		$(".user").css("display", "block");
+		return true;
+	}
+	$(".user-list li").css("display", "none");
+	$(`.user-list li[data-trainer-id=${trainer_id}]`).css("display", "block");
+})
 
 
 function age_format(age){

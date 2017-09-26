@@ -5,6 +5,7 @@ from django.template import RequestContext
 # Create your views here.
 from .models import Admin
 from .models import User
+from .models import Trainer
 
 
 def index(request):
@@ -51,8 +52,10 @@ def admin(request):
 		return redirect('/')
 
 	users = User.objects.all()
+	trainers = Trainer.objects.all()
 	context = {
-		'users' : users
+		'users' : users,
+		'trainers' : trainers
 	}
 		# print(request.session.get('login'))
 		# return render(request, "bot/admin.html")

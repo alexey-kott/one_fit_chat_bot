@@ -89,7 +89,8 @@ body{
 
 .messages{
 	position:relative;
-	min-height: 400px;
+	height: 400px;
+	overflow-y:scroll;
 	width: 100%;
 	background: #f0f2f5;
 }
@@ -101,11 +102,34 @@ body{
 	justify-content: center;
 }
 
-.messages-display{
+.msg-text{ 
+	position: relative;
+	width: 70%;
+	background: white;
+	margin: 3px;
+	padding: 5px;
+	border-radius: 4px;
+}
+
+.msg-right{
 	display: flex;
-	flex-direction: column;
-	justify-content: start;
+	flex-direction: row;
+	justify-content: flex-end;
 	align-items:center;
+}
+
+.msg-left{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items:center;
+}
+
+.messages-display{
+/*	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items:stretch;*/
 }
 
 .select-dialog{
@@ -130,11 +154,21 @@ body{
 }
 
 
-.messages {
-	padding: 50% 0;
+/*____left block _____*/
+
+.trainers{
+	list-style-type: none;
 }
 
-.messages span{
-	display: inline-block;
-	font-size: 1.5em;
+.trainer{
+	padding: 5px;
+}
+
+.trainer:hover{
+	background: #f0f2f5;
+}
+
+.current-trainer{
+	background: #337ab7 !important;
+	color: #fff;
 }
