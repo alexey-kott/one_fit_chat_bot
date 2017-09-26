@@ -336,7 +336,16 @@ def why_fat_again(chat_id, m):
 	u.state = s.why_fat_again
 	u.save()
 	bot.send_message(chat_id, s.type_why_fat_again)	
-	send_message_delay(chat_id, s.waiting_from_you, delay = 10)
+
+
+def waiting_from_you(chat_id, m):
+	u = User.get(user_id = uid(m))
+	u.was_result = m.text
+	u.state = s.waiting_from_you
+	u.save()
+	bot.send_message(chat_id, s.waiting_from_you)	
+	send_message_delay(chat_id, s.thanks_for_efforts, delay = 10)
+
 
 
 # def remind_2(chat_id, m):
@@ -390,7 +399,10 @@ def start(m):
 @bot.callback_query_handler(func=lambda call: True)
 def clbck(c):
 	chat_id = cid(c)
-	u = User.get(user_id = cid(c))
+	try:
+		u = User.get(user_id = cid(c))
+	except:
+		u = User.cog(user_id = cid(c))
 	try:
 		r = Routing.get(state = u.state, decision = c.data)
 		keyboard = types.InlineKeyboardMarkup()
@@ -432,6 +444,9 @@ def action(m):
 		Error.create(message = m.text, state = u.state, exception = e)
 		print(e)
 	
+@bot.message_handler(content_types = ['photo'])
+def photo(m):
+	pass
 
 
 

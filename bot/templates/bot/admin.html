@@ -282,7 +282,14 @@ $("#chatform").on("submit", function(event) {
     return false;
 });
 
+setInterval(function(){
+	if(chatsock.readyState != 1){
 
+		chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
+		chatsock.send(JSON.stringify({}))
+		
+	}
+}, 1000)
 
 $("#send-message").on("click", function(){
 	var text = $("#input-message").val();

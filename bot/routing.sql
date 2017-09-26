@@ -23,7 +23,8 @@ INSERT INTO routing VALUES
 	('methodologies','text', 'most_difficult'),
 	('most_difficult','text', 'was_result'),
 	('was_result','text', 'why_fat_again'),
-	('why_fat_again','text', 'cancel')
+	('why_fat_again','text', 'waiting_from_you'),
+	('','text', 'cancel'),
 
 
 INSERT INTO trainer VALUES
