@@ -8,7 +8,7 @@ bot = telebot.TeleBot(cfg.token)
 
 # Create your models here.
 class Admin(models.Model):
-	username = models.TextField(unique = True)
+	login 	 = models.TextField(unique = True)
 	password = models.TextField()
 	role = models.TextField()
 
@@ -62,6 +62,7 @@ class Message(models.Model):
 		bot.send_message(receiver, text)
 
 class Trainer(models.Model):
+	id 			= models.IntegerField(primary_key=True)
 	first_name	= models.TextField()
 	last_name 	= models.TextField()
 	photo 		= models.TextField()

@@ -12,6 +12,7 @@ urlpatterns = [
     # url(r'^auth/', views.auth, name='auth'),
     url(r'^deauth/', views.deauth, name='deauth'),
     url(r'^admin/', views.admin, name='admin'),
+    url(r'^add-trainer-photo/', views.add_trainer_photo, name='add-trainer-photo'),
     url(r'^add-trainer/', views.add_trainer, name='add-trainer')
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

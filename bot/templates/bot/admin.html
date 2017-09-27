@@ -144,6 +144,7 @@
 				</div>
 				<div class="col-lg-4 add-trainer-photo">
 					<div class="photo-placeholder"></div>
+					<input type="hidden" name="photo_name">
 					<input type="file" name="photo" id="trainer-photo" accept="image/*">
 				</div>
 			</div>
@@ -413,16 +414,14 @@ $(".photo-placeholder").on("click", function(){
 
 var data = new FormData();
 $("#trainer-photo").on("change", function(){
-	console.log(this)
 	$.each(this.files, function(key, value){
 		console.log(value)
 		data.append('photo', value);
 	});
 	var csrf_token = $("input[name=csrfmiddlewaretoken]").val();
 	data.append('csrfmiddlewaretoken', csrf_token);
-	console.log('data', data.get('photo'))
 	$.ajax({
-		url: '/add-trainer/',
+		url: '/add-trainer-photo/',
 		type: 'POST',
 		data: data,
 		cache: false,
@@ -430,12 +429,11 @@ $("#trainer-photo").on("change", function(){
 		processData: false,
 		contentType: false,
 		success: function(respond, textStatus, jqXHR){
-			console.log(respond)
 			$(".photo-placeholder").css("background", "unset");
 			$(".photo-placeholder").empty();
 			var el = $(`<img src="/images/buffer/${respond.name}">`);
-			$(".photo-placeholder").append(el)
-
+			$(".photo-placeholder").append(el);
+			$("input[name=photo_name]").val(respond.name);
 		},
 		error: function(jqXHR, textStatus, errorThrown){
 			console.log(errorThrown)

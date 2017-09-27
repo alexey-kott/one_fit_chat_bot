@@ -9,6 +9,9 @@ from .models import User
 from .models import Trainer
 
 import os
+import hashlib
+import re
+from bot.functions import *
 
 def index(request):
 	print("INDEX")
@@ -28,7 +31,7 @@ def auth(request):
 	else:
 		return render(request, 'bot/auth.html')
 	try:
-		admin = Admin.objects.get(username = login)
+		admin = Admin.objects.get(login = login)
 		if password == admin.password:
 			request.session['login'] = login
 			request.session['role'] = admin.role
@@ -76,7 +79,7 @@ def deauth(request):
 	return redirect('/', request)
 
 
-def add_trainer(request):
+def add_trainer_photo(request):
 	if request.method == 'POST':
 		photo = handle_uploaded_file(request.FILES['photo'])
 	return JsonResponse({'name' : photo.name})
@@ -87,3 +90,27 @@ def handle_uploaded_file(f):
 		for chunk in f.chunks():
 			destination.write(chunk)
 	return f
+
+
+def add_trainer(request):
+	print(os.getcwd())
+	form = request.POST
+	print(form)
+	password = genPassword(form['login'], form['email'])
+	admin = Admin(login = form['login'], password = password, role = form['role'])
+	admin.save()
+	photo_name = password[:7]
+	ext = re.findall(r'\.[^\.]+$', form['photo_name'])[0]
+	photo_name = "{}{}".format(photo_name, ext)
+	text = "Вы зарегистрированы тренером. Логин: {}, пароль: {}".format(form['login'], password)
+	send_mail(form['email'], 'Вы зарегистрированы тренером', text)
+	if form['role'] == 'trainer':
+		trainer = Trainer(id = admin.id, first_name = form['firstname'], last_name = form['lastname'], photo = photo_name)
+		trainer.save()
+	os.rename("bot/images/buffer/{}".format(form['photo_name']), "bot/images/trainers/{}".format(photo_name))
+	return redirect('/admin/', request)
+
+
+def genPassword(login, email):
+	le = "{}{}".format(login, email)
+	return hashlib.sha224(le.encode("utf-8")).hexdigest()

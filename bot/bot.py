@@ -240,7 +240,7 @@ def present_trainer(chat_id, c):
 	u.trainer_id = t.id
 	# u.state = s.trainer
 	u.save()
-	photo = open(t.photo, 'rb')
+	photo = open("images/trainers/{}".format(t.photo), 'rb')
 	bot.send_photo(chat_id, photo, s.your_trainer.format(t.first_name, t.last_name))
 	send_message_delay(chat_id, s.what_to_do.format(s.next_3_days), delay = 3, state = s.trainer) # присвоен тренер
 
