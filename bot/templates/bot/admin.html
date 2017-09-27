@@ -33,7 +33,7 @@
 			{% for trainer in trainers %}
 			<li class="trainer" data-trainer-id="{{ trainer.id }}">{{ trainer.first_name }} {{ trainer.last_name }}</li>
 			{% endfor %}
-			<li> <button class="btn  btn-block btn-primary">Добавить тренера</button> </li>
+			<li> <button  class="btn  btn-block btn-primary add-trainer-btn">Добавить тренера</button> </li>
 		</ul>
 		{% endif %}	
 	</div>
@@ -113,29 +113,40 @@
 <div class="row add-trainer">
 	<div class="col-xs-0 col-sm-1 col-md-2 col-lg-2"></div>
 	<div class="col-xs-12 col-sm-10 col-md-8 col-lg-8 add-trainer-form">
-		<form role="form" class="form-horizontal">
+		<img src="/images/system/close.png" class="close">
+		<form role="form"  id="add-trainer" class="form-horizontal" method="POST" action="/add-trainer/">
 			{% csrf_token %}
 			<div class="row">
 				<div class="col-lg-8">
-					<div class="form-group">
-						<lable for="firstname">Имя</lable>
-						<input type="text" name="firstname" class="form-control" id="firstname" >
+					<div class="form-group row">
+						<input type="text" name="firstname" class="form-control" id="firstname" placeholder="Имя">
 					</div>
 					<div class="form-group"> 
-						<lable for="lastname">Фамилия</lable>
-						<input type="text" name="lastname" class="form-control" id="lastname" >
+						<input type="text" name="lastname" class="form-control" id="lastname" placeholder="Фамилия">
 					</div>
 					<div class="form-group">
-						<lable for="login">Логин</lable>
-						<input type="text" name="login" class="form-control" id="login" >
+						<input type="text" name="login" class="form-control" id="login" placeholder="Логин">
+					</div>
+					<div class="form-group">
+						<input type="email" name="email" class="form-control" id="email" placeholder="Email">
+					</div>
+					<div class="form-group row">
+						<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 ">
+							<select class="form-control" id="role" name="role">
+								<option value="admin">Администратор</option>
+								<option value="trainer" selected>Тренер</option>
+							</select>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 ">
+							<button class="btn btn-primary  btn-block">Добавить</button>
+						</div>
 					</div>
 				</div>
 				<div class="col-lg-4 add-trainer-photo">
-					<div class="photo-placeholder">
-
-					</div>
+					<div class="photo-placeholder"></div>
+					<input type="file" name="photo" id="trainer-photo" accept="image/*">
 				</div>
-			</inut>
+			</div>
 		</form>
 	</div>
 	<div class="col-xs-0 col-sm-1 col-md-2 col-lg-2"></div>
@@ -385,6 +396,77 @@ function add_message(text){
 	
 }
 
+
+//_____________ обработка формы добавления тренера ________________________//
+
+$(".add-trainer-btn").on("click", function(){
+	$(".add-trainer").fadeIn(200);
+});
+
+$("img.close").on("click", function(e){
+	$(".add-trainer").fadeOut(200);
+});
+
+$(".photo-placeholder").on("click", function(){
+	$("#trainer-photo").trigger("click");
+});
+
+var data = new FormData();
+$("#trainer-photo").on("change", function(){
+	console.log(this)
+	$.each(this.files, function(key, value){
+		console.log(value)
+		data.append('photo', value);
+	});
+	var csrf_token = $("input[name=csrfmiddlewaretoken]").val();
+	data.append('csrfmiddlewaretoken', csrf_token);
+	console.log('data', data.get('photo'))
+	$.ajax({
+		url: '/add-trainer/',
+		type: 'POST',
+		data: data,
+		cache: false,
+		dataType: 'json',
+		processData: false,
+		contentType: false,
+		success: function(respond, textStatus, jqXHR){
+			console.log(respond)
+			$(".photo-placeholder").css("background", "unset");
+			$(".photo-placeholder").empty();
+			var el = $(`<img src="/images/buffer/${respond.name}">`);
+			$(".photo-placeholder").append(el)
+
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			console.log(errorThrown)
+		}
+	})
+});
+
+$("input[name=firstname], input[name=lastname]").on("input", function(){
+	var firstname = $("input[name=firstname]").val();
+	var lastname = $("input[name=lastname]").val();
+	var login = `${translit(firstname)[0]}.${translit(lastname)}`;
+	$("input[name=login]").val(login);
+})
+
+function translit(text) {
+    return text.replace(/([а-яё])|([\s_-])|([^a-z\d])/gi,
+        function(all, ch, space, words, i) {
+            if (space || words) {
+                return space ? '-' : '';
+            }
+            var code = ch.charCodeAt(0),
+                index = code == 1025 || code == 1105 ? 0 :
+                code > 1071 ? code - 1071 : code - 1039,
+                t = ['yo', 'a', 'b', 'v', 'g', 'd', 'e', 'zh',
+                    'z', 'i', 'y', 'k', 'l', 'm', 'n', 'o', 'p',
+                    'r', 's', 't', 'u', 'f', 'h', 'c', 'ch', 'sh',
+                    'shch', '', 'y', '', 'e', 'yu', 'ya'
+                ];
+            return t[index];
+        });
+}
 
 
 

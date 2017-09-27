@@ -123,6 +123,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
+MEDIA_ROOT = 'bot/images'
+MEDIA_URL = '/images/'
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "asgi_redis.RedisChannelLayer",

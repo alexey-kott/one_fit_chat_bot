@@ -181,19 +181,36 @@ body{
     top: 50%;
     transform: translateY(-50%);
 	width: 100%;
-	
+	display: none;
+}
+
+.add-trainer .close{
+	position: absolute; 
+	top: 15px; 
+	right:15px;
+	max-height:20px;
 }
 
 .add-trainer-form{
 	background: #fff;
 	border-radius: 20px;
-	border: 1px solid black;
+    box-shadow: 5px 7px 25px 1px;
 	padding: 20px 50px;
 }
 
 .photo-placeholder{
 	background: url('placeholder.png') no-repeat center center;
-	background-size: cover;
+	background-size: contain;
 	width: 100%;
-	min-height: 300px;
+	min-height: 200px;
+}
+
+.photo-placeholder img{
+	max-height: 100%;
+	max-width: 100%;
+	margin: 0 auto;
+}
+
+#trainer-photo{
+	display: none;
 }

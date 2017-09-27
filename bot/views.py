@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, render_to_response
 from django.template import RequestContext
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -7,6 +8,7 @@ from .models import Admin
 from .models import User
 from .models import Trainer
 
+import os
 
 def index(request):
 	print("INDEX")
@@ -74,3 +76,14 @@ def deauth(request):
 	return redirect('/', request)
 
 
+def add_trainer(request):
+	if request.method == 'POST':
+		photo = handle_uploaded_file(request.FILES['photo'])
+	return JsonResponse({'name' : photo.name})
+
+
+def handle_uploaded_file(f):
+	with open('bot/images/buffer/{}'.format(f), 'wb+') as destination:
+		for chunk in f.chunks():
+			destination.write(chunk)
+	return f
