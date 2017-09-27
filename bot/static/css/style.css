@@ -178,8 +178,8 @@ body{
 
 .add-trainer{
 	position: absolute;
-	top: 0;
-	left: 0;
+    top: 50%;
+    transform: translateY(-50%);
 	width: 100%;
 	
 }
@@ -192,6 +192,8 @@ body{
 }
 
 .photo-placeholder{
-	background: url('{{ STATIC_URL }}');
-	/*background: url('{{ STATIC_URL }}bot/images/img_placeholder.png');*/
+	background: url('placeholder.png') no-repeat center center;
+	background-size: cover;
+	width: 100%;
+	min-height: 300px;
 }
