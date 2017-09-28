@@ -3,7 +3,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 
-def send_mail(toaddr, theme, text): #onefit.chat@mail.ru : qazwsx123
+def send_mail(toaddr, theme, text, user_id = 0): #onefit.chat@mail.ru : qazwsx123
 	fromaddr = "onefit.chat@mail.ru"
 	mypass = "qazwsx123"
 	 
@@ -21,7 +21,12 @@ def send_mail(toaddr, theme, text): #onefit.chat@mail.ru : qazwsx123
 	text = msg.as_string()
 	try:
 		server.sendmail(fromaddr, toaddr, text)
+		server.quit()
+		return True
 	except:
 		print("Mail send error")
-	server.quit()
+		server.quit()
+		if user_id != 0:
+			return False
+	
 

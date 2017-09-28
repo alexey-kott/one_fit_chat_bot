@@ -21,7 +21,6 @@ def index(request):
 def auth(request):
 	request.session.modified = True
 	if request.session.get('login', False):
-		print(request.sesion)
 		return redirect('/admin/', request)
 
 	form = request.POST

@@ -15,14 +15,14 @@ def email(m):
 		return False
 
 def height(m):
-	height = 0
+	h = 0
 	try:
-		height = int(re.findall(r'\d{2,3}', m)[0])
-		return height
+		h = int(re.findall(r'\d{2,3}', m)[0])
+		return h
 	except:
 		try:
-			height = int(re.findall(r'\d\.\d{1,2}', m)[0]) * 100
-			return height
+			h = int(re.findall(r'\d\.\d{1,2}', m)[0]) * 100
+			return h
 		except:
 			try:
 				comma_float = re.findall(r'\d,\d{1,2}', m)[0]
@@ -30,3 +30,15 @@ def height(m):
 			except:
 				return False
 
+def weight(m):
+	w = 0 
+	try:
+		w = float(re.findall(r'\d{2,3}', m)[0])
+		return w
+	except:
+		try:
+			w = float(re.findall(r'\d{2,3}[,\.]\d{1,2}', m)[0])
+			return w
+		except Exception as e:
+			print(e)
+			return False

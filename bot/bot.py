@@ -66,8 +66,8 @@ class User(BaseModel):
 			with db.atomic():
 				return User.create(user_id = user_id, username = username, first_name = first_name, last_name = last_name)
 		except Exception as e:
-			print(e)
 			return User.select().where(User.user_id == user_id).get()
+			
 
 	def save(self, force_insert=False, only=None):
 		self.last_activity = datetime.datetime.utcnow()
@@ -153,6 +153,9 @@ def confirm_name(chat_id, c):
 	bot.send_message(chat_id, s.confirm_name.format(u.first_name), reply_markup = keyboard)
 
 
+
+
+
 def confirm_last_name(chat_id, m = None, c = None): # получает имя (текстом) или подтверждение того, что мы правильно записали его имя
 	if m != None:
 		u = User.get(user_id = uid(m))
@@ -167,7 +170,9 @@ def confirm_last_name(chat_id, m = None, c = None): # получает имя (�
 	if u.last_name != None:
 		agree_btn = types.InlineKeyboardButton(text = s.my_last_name_is_btn.format(u.last_name), callback_data = s.agree)
 		keyboard.add(agree_btn)
-	bot.send_message(chat_id, s.confirm_last_name.format(u.last_name), reply_markup = keyboard)
+		bot.send_message(chat_id, s.confirm_last_name.format(u.last_name), reply_markup = keyboard)
+		return
+	bot.send_message(chat_id, s.type_last_name.format(u.last_name), reply_markup = keyboard)
 
 
 def select_sex(chat_id, m = None, c = None):
@@ -263,7 +268,7 @@ def remind_1(chat_id, c):
 	keyboard = types.InlineKeyboardMarkup()
 	continue_btn = types.InlineKeyboardButton(text = s.continue_btn, callback_data = s.agree)
 	keyboard.add(continue_btn)
-	send_message_delay(chat_id, s.we_sent_mail, delay=5, state = s.remind, reply_markup = keyboard)
+	send_message_delay(chat_id, s.we_sent_mail, delay=5, state = s.remind_1, reply_markup = keyboard)
 
 
 def city(chat_id, c):
@@ -304,7 +309,14 @@ def weight(chat_id, m):
 	bot.send_message(chat_id, s.type_weight)
 
 
+def incorrect_weight(chat_id):
+	bot.send_message(chat_id, s.incorrect_weight)
+
+
 def target_weight(chat_id, m):
+	if not check.weight(m.text):
+		incorrect_weight(chat_id)
+		return False
 	u = User.get(user_id = uid(m))
 	u.state = s.target_weight
 	u.weight = m.text
@@ -395,7 +407,7 @@ def init(m):
 
 @bot.message_handler(commands = ['start'])
 def start(m):
-	print(m)
+	# print(m)
 	u = User.cog(user_id = uid(m), username = m.from_user.username, first_name = m.from_user.first_name, last_name = m.from_user.last_name)
 	# u.state = s.default
 	keyboard = types.InlineKeyboardMarkup()
@@ -411,10 +423,7 @@ def start(m):
 @bot.callback_query_handler(func=lambda call: True)
 def clbck(c):
 	chat_id = cid(c)
-	try:
-		u = User.get(user_id = cid(c))
-	except:
-		u = User.cog(user_id = cid(c))
+	u = User.cog(user_id = cid(c))
 	try:
 		r = Routing.get(state = u.state, decision = c.data)
 		keyboard = types.InlineKeyboardMarkup()
@@ -437,7 +446,6 @@ def clbck(c):
 
 @bot.message_handler(content_types = ['text'])
 def action(m):
-	print(m)
 	chat_id = sid(m)
 	u = User.cog(user_id = uid(m))
 	if u.state == s.canceled:
