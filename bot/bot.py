@@ -61,11 +61,12 @@ class User(BaseModel):
 	why_fat_again  = TextField(null = True) # почему вес снова возвращался, как вы думаете?
 
 
-	def cog(user_id, username = None, first_name = None, last_name = None):
+	def cog(user_id, username = '', first_name = '', last_name = ''):
 		try:
 			with db.atomic():
 				return User.create(user_id = user_id, username = username, first_name = first_name, last_name = last_name)
-		except:
+		except Exception as e:
+			print(e)
 			return User.select().where(User.user_id == user_id).get()
 
 	def save(self, force_insert=False, only=None):
@@ -388,13 +389,13 @@ def init(m):
 	Trainer.create_table(fail_silently = True)
 	Routing.create_table(fail_silently = True)
 	Error.create_table(fail_silently = True)
-	File.create_table(fail_silently = True)
+	Photo.create_table(fail_silently = True)
 
 
 
 @bot.message_handler(commands = ['start'])
 def start(m):
-	# print(m)
+	print(m)
 	u = User.cog(user_id = uid(m), username = m.from_user.username, first_name = m.from_user.first_name, last_name = m.from_user.last_name)
 	# u.state = s.default
 	keyboard = types.InlineKeyboardMarkup()

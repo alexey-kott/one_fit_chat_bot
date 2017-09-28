@@ -19,7 +19,7 @@ class User(models.Model):
 	user_id 	   = models.IntegerField(unique = True)
 	username	   = models.TextField(null = True)
 	first_name 	   = models.TextField(null = True)
-	last_name      = models.TextField(default = '')
+	last_name      = models.TextField(default = '', null = True)
 	sex 		   = models.TextField(null = True)
 	age			   = models.IntegerField(null = True)
 	email		   = models.TextField(null = True)
