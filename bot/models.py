@@ -43,6 +43,7 @@ class User(models.Model):
 
 class Message(models.Model):
 	sender		= models.IntegerField()
+	sender_type = models.TextField() # client or trainer
 	receiver	= models.IntegerField()
 	text 		= models.TextField()
 	timestamp	= models.DateTimeField()

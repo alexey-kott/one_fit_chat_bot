@@ -24,7 +24,13 @@ from functions import send_mail
 #	cog 	= create_or_get
 #	c 		= call
 
-bot = telebot.TeleBot(cfg.token)
+class TeleBot(telebot.TeleBot):
+	def send_message(self, chat_id, text, disable_web_page_preview=None, reply_to_message_id=None, reply_markup=None, parse_mode=None, disable_notification=None):
+		print(text)
+		super().send_message(chat_id, text, disable_web_page_preview, reply_to_message_id, reply_markup, parse_mode, disable_notification)
+
+
+bot = TeleBot(cfg.token)
 db = SqliteDatabase('../db.sqlite3')
 # db = SqliteDatabase('bot.db')
 
