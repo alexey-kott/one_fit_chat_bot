@@ -26,11 +26,10 @@ from channels import Group
 
 class TeleBot(telebot.TeleBot):
 	def send_message(self, chat_id, text, disable_web_page_preview=None, reply_to_message_id=None, reply_markup=None, parse_mode=None, disable_notification=None):
-		# print(text)
 		Message.create(sender = bot_id, sender_type = "bot", receiver = chat_id, text = text)
 		response = super().send_message(chat_id, text, disable_web_page_preview, reply_to_message_id, reply_markup, parse_mode, disable_notification)
-		print('RESPONSE:')
-		print(response)
+		# print('RESPONSE:')
+		# print(response)
 
 
 bot = TeleBot(cfg.token)
@@ -388,20 +387,20 @@ def waiting_from_you(chat_id, m):
 	u.save()
 	bot.send_message(chat_id, s.waiting_from_you)	
 	send_message_delay(chat_id, s.thanks_for_efforts, delay = 15)
-	send_message_delay(chat_id, s.food_romance, state = s.pause, delay = 30)
+	send_message_delay(chat_id, s.waiting_photo, state = s.pause, delay = 20)
+	send_message_delay(chat_id, s.food_romance, delay = 25)
+	Schedule.create(user_id = uid(m), action = "day_2")
 
 
 
 
 # _________ Day 2
 
-def waiting_from_you(user_id):
+def day_2(user_id):
 	u = User.get(user_id = user_id)
-	u.state = s.waiting_from_you
-	u.save()
-	bot.send_message(chat_id, s.waiting_from_you)	
-	send_message_delay(chat_id, s.thanks_for_efforts, delay = 15)
-	send_message_delay(chat_id, s.food_romance, state = s.pause, delay = 30)
+	u.state = s.tolerancy
+	bot.send_message(chat_id, s.greeting_2)	
+	send_message_delay(chat_id, s.waiting_photo_2, delay = 5)
 
 
 
@@ -467,6 +466,7 @@ def start(m):
 def clbck(c):
 	chat_id = cid(c)
 	u = User.cog(user_id = cid(c))
+	Message.create(sender = cid(c), sender_type = "user", receiver = bot_id, text = c.data, msg_type = 'text')
 	try:
 		r = Routing.get(state = u.state, decision = c.data)
 		keyboard = types.InlineKeyboardMarkup()
@@ -528,7 +528,9 @@ def photo(m):
 	photo = Photo.create(user_id = uid(m), message_id = m.message_id)
 
 
-
+def watcher():
+	time = datetime.datetime.utcnow()
+	print(time)
 
 
 

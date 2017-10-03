@@ -332,10 +332,16 @@ $("#chatform").on("submit", function(event) {
 });
 
 setInterval(function(){
-	if(chatsock.readyState != 1){
+	// CONNECTING	0	Соединение ещё не открыто.
+	// OPEN			1	Соединение открыто и готово к обмену данными.
+	// CLOSING		2	Соединение в процессе закрытия.
+	// CLOSED		3	Соединение закрыто или не может открыться.
+	if(chatsock.readyState > 1){
 		chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
 	}
-	chatsock.send(JSON.stringify({'type':'ping'}))
+	if(chatsock.readyState == 1){
+		chatsock.send(JSON.stringify({'type':'ping'}))
+	}
 }, 1000)
 
 $("#send-message").on("click", function(){
