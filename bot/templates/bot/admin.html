@@ -29,7 +29,8 @@
 	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
 		{% if request.session.role == 'admin' %}
 		<ul class="trainers">
-			<li class="trainer current-trainer" data-trainer-id="0">Все тренеры</li>
+			<li class="trainer current-trainer" data-trainer-id="-1">Все пользователи</li>
+			<li class="trainer " data-trainer-id="0">Без тренера</li>
 			{% for trainer in trainers %}
 			<li class="trainer" data-trainer-id="{{ trainer.id }}">{{ trainer.first_name }} {{ trainer.last_name }}</li>
 			{% endfor %}
@@ -166,7 +167,9 @@ $(".user-list").on("click", "li", function(){
 	$("#send-message").prop("disabled", false)
 });
 
+var scrollValue = {}
 function setChat(user_id){
+	var scroll = $(".messages").scrollTop();
 	$(".select-dialog").css("display", "none");
 	$(".msg").remove()
 	$(".messages-default").removeClass("messages-default").addClass("messages-display");
@@ -177,12 +180,34 @@ function setChat(user_id){
 		else side = "msg-left";
 		var el = $(`<div class="msg ${side}"></div>`);
 		el.append(
-			$(`<div class="msg-text">${s.text}</div>`)
+			$(`<div class="msg-text">${getMsgData(s)}<span class="msg-time">${truncTime(s.timestamp)}</span></div>`)
 			)
 		$(".messages").append(el)
 	});
-	$(".messages").scrollTop(Number.MAX_SAFE_INTEGER)
+	if(scrollValue[state.current_user] == undefined){
+		$(".messages").scrollTop(Number.MAX_SAFE_INTEGER)
+	} else {
+		$(".messages").scrollTop(scrollValue[state.current_user])
+	}
 }
+
+function getMsgData(s){
+	if(s.msg_type == 'text') return s.text;
+	if(s.msg_type == 'photo') return `<img class="msg-photo" src="/images/photo/${s.text}">`;
+
+}
+
+$(".messages").on("scroll", function(){
+	var scroll = $(this).scrollTop();
+	scrollValue[state.current_user] = scroll;
+})
+
+function truncTime(timestamp){
+	var msg_time = moment(timestamp);
+	return msg_time.format("HH:mm");
+}
+
+
 
 var state = { 
 	current_user: 0,
@@ -197,14 +222,12 @@ var chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + win
 
 chatsock.onmessage = function(message) {
 	var msg = JSON.parse(message.data)
-	console.log(msg)
 	msg.map(function(data, i){
 		if(data.type == "sms"){
 			// setSms(data.data);
 			sms = data.data;
 			if(state.current_user != 0){
 				setChat(state.current_user);
-				console.log(state)
 				$(`li[data-user-id="${state.current_user}"]`).trigger("click")
 			}
 		}
@@ -219,26 +242,9 @@ chatsock.onmessage = function(message) {
 			setTrainers(data.data);
 		}
 	})
-
-    // var data = JSON.parse(message.data);
-    // var chat = $("#chat")
-    // var ele = $('<tr></tr>')
-
-    // ele.append(
-    //     $("<td></td>").text(data.timestamp)
-    // )
-    // ele.append(
-    //     $("<td></td>").text(data.handle)
-    // )
-    // ele.append(
-    //     $("<td></td>").text(data.message)
-    // )
-    
-    // chat.append(ele)
 };
 
 chatsock.onclose = function(){
-	console.log(chatsock)
 	chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
 }
 
@@ -246,7 +252,6 @@ function setUserList(users){
 	$(".user-list").empty()
 	var userList = $(".user-list");
 	users.map(function(item, i){
-
 		var el = $(`<li class="user" data-user-id="${item.user_id}" data-trainer-id="${item.trainer_id}"></li>`);
 		el.append(
 			$("<div></div>").append(
@@ -262,10 +267,10 @@ function setUserList(users){
 			$("<div></div>").addClass("user-info").append(
 				displayUserInfo(item)
 				)
-			
 		)
-		userList.prepend(el)
+		userList.prepend(el);
 	})
+	$(".current-trainer").trigger("click");
 }
 
 function displayUserInfo(item){
@@ -274,9 +279,10 @@ function displayUserInfo(item){
 			item[key] = 'нет данных'
 		}
 	}
+
 	var user_ul = $("<ul></ul>").append(
 					$("<li></li>").addClass("user-info-item").text(`Пол: ${maleFemale(item.sex)}`),
-					$("<li></li>").addClass("user-info-item").text(`Тренер: ${trainer[item.trainer_id].first_name} ${trainer[item.trainer_id].last_name} `),
+					$("<li></li>").addClass("user-info-item").text(`Тренер: ${getTrainerName(item.trainer_id)} `),
 					$("<li></li>").addClass("user-info-item").text(`Город: ${item.city}`),
 					$("<li></li>").addClass("user-info-item").text(`Работа: ${item.job}`),
 					$("<li></li>").addClass("user-info-item").text(`Рост: ${item.height}`),
@@ -287,12 +293,17 @@ function displayUserInfo(item){
 					$("<li></li>").addClass("user-info-item").text(`Был ли результат: ${item.was_result}`),
 					$("<li></li>").addClass("user-info-item").text(`Почему вес вернулся: ${item.why_fat_again}`),
 					);
-	return user_ul
+	return user_ul;
 }
 
 function maleFemale(sex){
 	if(sex == 'male') return 'Мужской';
 	return 'Женский';
+}
+
+function getTrainerName(trainer_id){
+	if(trainer_id == 0) return "Не назначен";
+	return `${trainer[trainer_id].first_name} ${trainer[trainer_id].last_name}`;
 }
 
 var trainer = [];
@@ -305,16 +316,9 @@ function setTrainers(trainers){
 		trainer[id].photo = item.photo
 
 	})
-	console.log(trainer)
 }
 
 var sms = [];
-// function setSms(data){
-// 	console.log(data)
-// 	data.map(function(item, i){
-// 		// console.log(item)
-// 	});
-// }
 
 
 $("#chatform").on("submit", function(event) {
@@ -329,16 +333,13 @@ $("#chatform").on("submit", function(event) {
 
 setInterval(function(){
 	if(chatsock.readyState != 1){
-
 		chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
-		chatsock.send(JSON.stringify({}))
-		
 	}
+	chatsock.send(JSON.stringify({'type':'ping'}))
 }, 1000)
 
 $("#send-message").on("click", function(){
 	var text = $("#input-message").val();
-	console.log(state.current_user)
 	var message = {
 		type: 'sms',
 		sender: state.current_admin,
@@ -356,11 +357,17 @@ $(".trainer").on("click", function(){
 	$(this).addClass("current-trainer").siblings().removeClass("current-trainer");
 	var trainer_id = $(this).data("trainer-id");
 	if(trainer_id == 0){
-		$(".user").css("display", "block");
+		$(".user").fadeOut(0);
+		$(".user[data-trainer-id=0]").fadeIn(0);
 		return true;
 	}
-	$(".user-list li").css("display", "none");
-	$(`.user-list li[data-trainer-id=${trainer_id}]`).css("display", "block");
+	if(trainer_id == -1){
+		$(".user").fadeIn(0);
+		return true;
+	}
+
+	$(".user-list li").fadeOut(0);
+	$(`.user-list li[data-trainer-id="${trainer_id}"]`).fadeIn(0);
 })
 
 
@@ -415,7 +422,6 @@ $(".photo-placeholder").on("click", function(){
 var data = new FormData();
 $("#trainer-photo").on("change", function(){
 	$.each(this.files, function(key, value){
-		console.log(value)
 		data.append('photo', value);
 	});
 	var csrf_token = $("input[name=csrfmiddlewaretoken]").val();

@@ -13,7 +13,7 @@ import config as cfg
 import strings as s # все строки хранятся здесь
 import check # различные проверки: правильно ли юзер ввёл рост/вес/etc
 from functions import send_mail 
-
+from channels import Group
 
 
 # README
@@ -26,11 +26,15 @@ from functions import send_mail
 
 class TeleBot(telebot.TeleBot):
 	def send_message(self, chat_id, text, disable_web_page_preview=None, reply_to_message_id=None, reply_markup=None, parse_mode=None, disable_notification=None):
-		print(text)
-		super().send_message(chat_id, text, disable_web_page_preview, reply_to_message_id, reply_markup, parse_mode, disable_notification)
+		# print(text)
+		Message.create(sender = bot_id, sender_type = "bot", receiver = chat_id, text = text)
+		response = super().send_message(chat_id, text, disable_web_page_preview, reply_to_message_id, reply_markup, parse_mode, disable_notification)
+		print('RESPONSE:')
+		print(response)
 
 
 bot = TeleBot(cfg.token)
+bot_id = cfg.token.split(":")[0]
 db = SqliteDatabase('../db.sqlite3')
 # db = SqliteDatabase('bot.db')
 
@@ -101,7 +105,7 @@ class Error(BaseModel):
 	message 	= TextField()
 	state		= TextField()
 	exception 	= TextField()
-	timestamp	= DateTimeField(default = datetime.datetime.now)
+	timestamp	= DateTimeField(default = datetime.datetime.utcnow)
 
 class Photo(BaseModel):
 	user_id		= IntegerField()
@@ -110,6 +114,20 @@ class Photo(BaseModel):
 
 	class Meta:
 		primary_key = CompositeKey('user_id', 'message_id')
+
+
+class Message(BaseModel):
+	sender		= IntegerField()
+	sender_type = TextField(null = True) # client or trainer
+	receiver	= IntegerField()
+	text 		= TextField()
+	msg_type	= TextField(default = 'text')
+	timestamp	= DateTimeField(default = datetime.datetime.utcnow)
+
+
+class Scedule(BaseModel):
+	user_id 	= IntegerField()
+	action 		= TextField()
 
 
 
@@ -370,14 +388,32 @@ def waiting_from_you(chat_id, m):
 	u.save()
 	bot.send_message(chat_id, s.waiting_from_you)	
 	send_message_delay(chat_id, s.thanks_for_efforts, delay = 15)
+	send_message_delay(chat_id, s.food_romance, state = s.pause, delay = 30)
+
+
+
+
+# _________ Day 2
+
+def waiting_from_you(user_id):
+	u = User.get(user_id = user_id)
+	u.state = s.waiting_from_you
+	u.save()
+	bot.send_message(chat_id, s.waiting_from_you)	
+	send_message_delay(chat_id, s.thanks_for_efforts, delay = 15)
+	send_message_delay(chat_id, s.food_romance, state = s.pause, delay = 30)
+
+
+
+
+
+# _________ Day 3
 
 
 
 
 
 
-# def remind_2(chat_id, m):
-	
 
 
 
@@ -408,6 +444,7 @@ def init(m):
 	Routing.create_table(fail_silently = True)
 	Error.create_table(fail_silently = True)
 	Photo.create_table(fail_silently = True)
+	Schedule.create_table(fail_silently = True)
 
 
 
@@ -454,6 +491,7 @@ def clbck(c):
 def action(m):
 	chat_id = sid(m)
 	u = User.cog(user_id = uid(m))
+	Message.create(sender = uid(m), sender_type = "user", receiver = bot_id, text = m.text)
 	if u.state == s.canceled:
 		return False
 	try:
@@ -485,10 +523,9 @@ def save_photo(message): # системная функция, не вызыва�
 
 @bot.message_handler(content_types = ['photo'])
 def photo(m):
-	print(m)
 	photo_name = save_photo(m)
+	Message.create(sender = uid(m), sender_type = "user", receiver = bot_id, text = photo_name, msg_type = 'photo')
 	photo = Photo.create(user_id = uid(m), message_id = m.message_id)
-
 
 
 

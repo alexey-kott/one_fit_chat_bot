@@ -43,17 +43,18 @@ class User(models.Model):
 
 class Message(models.Model):
 	sender		= models.IntegerField()
-	sender_type = models.TextField() # client or trainer
+	sender_type = models.TextField(null = True) # client or trainer
 	receiver	= models.IntegerField()
 	text 		= models.TextField()
-	timestamp	= models.DateTimeField()
+	msg_type	= models.TextField(default = 'text')
+	timestamp	= models.DateTimeField(default = datetime.datetime.utcnow)
 
 	class Meta:
 		db_table = "message"
 
-	def save(self, force_insert=False, force_update=False, using=DEFAULT_DB_ALIAS, update_fields=None):
-		self.timestamp = datetime.datetime.utcnow()
-		super().save(force_insert, force_update, using, update_fields)
+	# def save(self, force_insert=False, force_update=False, using=DEFAULT_DB_ALIAS, update_fields=None):
+	# 	self.timestamp = datetime.datetime.utcnow()
+	# 	super().save(force_insert, force_update, using, update_fields)
 
 	def send_message(self, sender, receiver, text):
 		self.sender = sender

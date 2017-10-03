@@ -17,16 +17,14 @@ def datetime_handler(x):
 
 @channel_session
 def ws_connect(message):
-    # prefix, label = message['path'].strip('/').split('/')
     print("WS_CONNECT")
     Group('admin', channel_layer=message.channel_layer).add(message.reply_channel)
-    
     Group('admin', channel_layer=message.channel_layer).send({'text': json.dumps(getAppState(), default = datetime_handler)})
 
 
 @channel_session
 def ws_receive(message):
-	print("WS_RECEIVE")
+	# print("WS_RECEIVE")
 	data = json.loads(message['text'])
 	if data['type'] == "sms": # слишком много "сообщений". сообщения от тренера пользователю будем называть sms-ками
 		m = Message()
@@ -38,7 +36,6 @@ def ws_receive(message):
 @channel_session
 def ws_disconnect(message):
 	print("WS_DISCONNECT")
-	print(message)
 
 
 def getAppState():

@@ -111,6 +111,20 @@ body{
 	border-radius: 4px;
 }
 
+.msg-photo{
+	width: 94%;
+}
+
+.msg-time{
+	position: absolute;
+	display: inline-block;
+	right: 0;
+	bottom: 0;
+	margin: 2px;
+	font-size: 0.7em;
+	color: grey;
+}
+
 .msg-right{
 	display: flex;
 	flex-direction: row;
