@@ -434,6 +434,9 @@ def day_2(user_id):
 
 # _____________ END ACTIONS
 
+@bot.message_handler(commands = ['ping'])
+def ping(m):
+	bot.send_message(uid(m), "I'm alive")
 
 
 @bot.message_handler(commands = ['init'])
@@ -451,6 +454,8 @@ def init(m):
 def start(m):
 	# print(m)
 	u = User.cog(user_id = uid(m), username = m.from_user.username, first_name = m.from_user.first_name, last_name = m.from_user.last_name)
+	u.state = s.default
+	u.save()
 	# u.state = s.default
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.agree_btn, callback_data = s.agree)
