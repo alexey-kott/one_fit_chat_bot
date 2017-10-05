@@ -152,6 +152,15 @@ def send_message_delay(chat_id, m, state=None, delay = 0, reply_markup=None, dis
 	bot.send_message(chat_id, m, reply_markup=reply_markup, parse_mode='Markdown', disable_notification=disable_notification)
 
 
+@delay
+def send_photo_delay(chat_id, p, state=None, delay = 0, disable_notification=None):
+	u = User.get(user_id = chat_id)
+	if state != None:
+		u.state = state
+	u.save()
+	bot.send_photo(chat_id, p, disable_notification=disable_notification)
+
+
 
 
 # _____________ END FUNCTIONS
@@ -284,14 +293,20 @@ def remind_1(chat_id, c):
 	u = User.get(user_id = cid(c))
 	u.state = s.stop
 	u.save()
-	bot.send_message(chat_id, s.waiting_from_you, parse_mode = 'Markdown')
+	# bot.send_message(chat_id, s.waiting_from_you, parse_mode = 'Markdown')
+	img = open("images/system/img4.jpeg", "rb")
+	bot.send_photo(chat_id, img)
 	send_mail(u.email, s.your_documents, s.your_documents)
-	send_message_delay(chat_id, s.fact_finding_remind, delay=3, state = s.stop)
+	img = open("images/system/img2.jpeg", "rb")
+	send_photo_delay(chat_id, img, delay=3, state = s.stop)
+	img = open("images/system/img1.jpeg", "rb")
+	send_photo_delay(chat_id, img, delay=6, state = s.stop)
+	# send_message_delay(chat_id, s.fact_finding_remind, delay=3, state = s.stop)
 
 	keyboard = types.InlineKeyboardMarkup()
 	continue_btn = types.InlineKeyboardButton(text = s.continue_btn, callback_data = s.agree)
 	keyboard.add(continue_btn)
-	send_message_delay(chat_id, s.we_sent_mail, delay=5, state = s.remind_1, reply_markup = keyboard)
+	send_message_delay(chat_id, s.we_sent_mail, delay=9, state = s.remind_1, reply_markup = keyboard)
 
 
 def city(chat_id, c):
@@ -456,7 +471,6 @@ def start(m):
 	u = User.cog(user_id = uid(m), username = m.from_user.username, first_name = m.from_user.first_name, last_name = m.from_user.last_name)
 	u.state = s.default
 	u.save()
-	# u.state = s.default
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.agree_btn, callback_data = s.agree)
 	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)
