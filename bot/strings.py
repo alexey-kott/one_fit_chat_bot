@@ -108,7 +108,7 @@ waiting_photo_1		= 'Не забывайте отправлять нам фото
 greeting_2			= 'Добро пожаловать во 2-ой день нашей программы'
 food_romance 		= '''Посмотрите, пожалуйста, фильм и ответьте: есть ли у Вас такой же роман с едой?
 
-https://www.youtube.com/watch?v=xkkZg0BwFjY'''
+https://youtu.be/ysAyjJ7EUis'''
 
 
 
@@ -122,4 +122,4 @@ action_not_defined = "Action has not defined"
 
 # links
 intro_link 		= 'https://www.youtube.com/watch?v=qHwW_ps7874'
-next_3_days		= 'https://www.youtube.com/watch?v=sY1VCBNh0bw'
+next_3_days		= 'https://youtu.be/o_Q5AOBBDj0w'
