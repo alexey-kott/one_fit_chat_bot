@@ -135,19 +135,22 @@ def confirm_last_name(u, m = None, c = None): # получает имя (тек�
 
 def select_sex(u, m = None, c = None):
 	if m != None:
+		chat_id = uid(m)
 		u.last_name = m.text
 		keyboard = types.InlineKeyboardMarkup()
 		try:
 			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
 		except Exception as e:
 			print(e)
+	else:
+		chat_id = cid(c)
 	u.state = s.sex
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	male_btn = types.InlineKeyboardButton(text = s.male_btn, callback_data = s.male)
 	female_btn = types.InlineKeyboardButton(text = s.female_btn, callback_data = s.female)
 	keyboard.add(male_btn, female_btn)
-	bot.send_message(cid(c), s.male_or_female, reply_markup = keyboard)
+	bot.send_message(chat_id, s.male_or_female, reply_markup = keyboard)
 
 
 def type_age(u, c = None):
@@ -548,7 +551,6 @@ def action(m):
 		return False
 	try:
 		r = Routing.get(state = u.state, decision = 'text')
-
 		try: # на случай если action не определён в таблице роутинга
 			if u.state != s.stop:
 				eval(r.action)(u = u, m = m)
