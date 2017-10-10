@@ -6,6 +6,14 @@ male_btn		= "Мужчина"
 female_btn		= "Женщина"
 continue_btn	= "Продолжить"
 looked_btn		= "Посмотрел"
+meat_btn		= "Мясо"
+fish_btn		= "Рыбу"
+seafood_btn		= "Морские продукты"
+milk_btn		= "Молочные продукты"
+fowl_btn		= "Птицу"
+eat_all_btn		= "Ем всё"
+
+
 
 my_name_is_btn		= "Меня зовут {}"
 my_last_name_is_btn = "Моя фамилия {}"
@@ -43,6 +51,7 @@ why_fat 			= "why_fat"
 hormonals			= "hormonals"
 last_analyzes 		= "last_analyzes"
 not_eat				= "not_eat"
+allergy				= "allergy"
 
 
 

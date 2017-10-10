@@ -27,6 +27,7 @@ INSERT INTO routing VALUES
 	('waiting_from_you','text', 'cancel'),
 	('day_2','text', 'tolerancy'),
 	('tolerancy','agree', 'when_start_fat'),
+	('tolerancy','text', 'when_start_fat'),
 	('start_fat','text', 'why_fat_now'),
 	('why_fat','text', 'hormonals'),
 	('hormonals','text', 'last_analyzes'),

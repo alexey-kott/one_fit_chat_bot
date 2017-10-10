@@ -364,10 +364,14 @@ def tolerancy(u, m):
 	keyboard.add(looked_btn)
 	bot.send_message(uid(m), s.tolerancy_movie, reply_markup = keyboard)
 
-def when_start_fat(u, m):
+def when_start_fat(u, m = None, c = None):
+	if m:
+		chat_id = uid(m)
+	else:
+		chat_id = cid(c)
 	u.state = s.start_fat
 	u.save()
-	bot.send_message(uid(m), s.when_start_fat)
+	bot.send_message(chat_id, s.when_start_fat)
 
 def why_fat_now(u, m):
 	u.state = s.why_fat
@@ -386,16 +390,21 @@ def hormonals(u, m):
 
 def last_analyzes(u, m = None, c = None):
 	if m != None:
+		chat_id = uid(m)
 		u.hormonals = m.text
 		keyboard = types.InlineKeyboardMarkup()
 		try:
 			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
 		except Exception as e:
 			print(e)
+	else:
+		chat_id = cid(c)
 	u.state = s.last_analyzes
-	bot.send_message(uid(m), s.last_analyzes_and_what)
+	u.save()
+	bot.send_message(chat_id, s.last_analyzes_and_what)
 
 def not_eat(u, m):
+	u.analyzes = m.text
 	u.state = s.not_eat
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
@@ -425,9 +434,8 @@ def allergy(u, m = None, c = None):
 		u.not_eat = c.data
 	u.state = s.allergy
 	u.save()
-	bot.send_message(uid(m), s.any_allergies)
-	img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
-	send_photo_delay(uid(m), img, delay = 5)
+	bot.send_message(u.user_id, s.any_allergies)
+
 
 def day_2_end(u, m):
 	u.allergy = m.text
@@ -438,6 +446,8 @@ def day_2_end(u, m):
 	dt = dt.replace(hour = 10, minute = 0)
 	delta = timedelta(days = 1)
 	schedule(dt + delta, "day_3", user_id = uid(m))
+	img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
+	send_photo_delay(uid(m), img, state = s.pause, delay = 2)
 
 
 # day 3
