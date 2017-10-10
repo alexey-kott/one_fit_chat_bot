@@ -496,7 +496,7 @@ def day_3(user_id):
 # _____________ END ACTIONS
 
 @bot.message_handler(commands = ['ping'])
-def ping(u, m):
+def ping(m):
 	bot.send_message(uid(m), "I'm alive")
 
 
