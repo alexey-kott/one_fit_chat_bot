@@ -158,10 +158,12 @@
 <script>
 $(".user-list").on("click", "li", function(){
 	var user_id = $(this).data("user-id");
+	// scrollValue[user_id] = Number.MAX_SAFE_INTEGER
 	$(".user-info li").css("display", "none")
 	$(this).find(".user-info li").css("display", "block")
 	state.current_user = user_id;
 	$(this).addClass("current-user").siblings().removeClass("current-user");
+
 	setChat(user_id);
 	$("#send-message").prop("disabled", false)
 });
@@ -198,7 +200,6 @@ function setChat(user_id){
 function getMsgData(s){
 	if(s.msg_type == 'text') return s.text;
 	if(s.msg_type == 'photo') return `<img class="msg-photo" src="/images/photo/${s.text}">`;
-
 }
 
 $(".messages").on("scroll", function(){
@@ -346,7 +347,7 @@ setInterval(function(){
 	if(chatsock.readyState == 1){
 		chatsock.send(JSON.stringify({'type':'ping'}))
 	}
-}, 1000)
+}, 2000)
 
 $("#send-message").on("click", function(){
 	var text = $("#input-message").val();
@@ -406,15 +407,6 @@ function age_format(age){
 	}
 }
 
-
-//_______ messenger
-
-
-
-
-function add_message(text){
-	
-}
 
 
 //_____________ обработка формы добавления тренера ________________________//
