@@ -104,7 +104,8 @@ body{
 
 .msg-text{ 
 	position: relative;
-	width: 70%;
+	max-width: 70%;
+	min-width: 20%;
 	background: white;
 	margin: 3px;
 	padding: 5px;
@@ -176,6 +177,7 @@ body{
 
 .trainer{
 	padding: 5px;
+	cursor: pointer;
 }
 
 .trainer:hover{
@@ -221,7 +223,7 @@ body{
 
 .photo-placeholder img{
 	max-height: 100%;
-	max-width: 100%;
+	max-width: 50%;
 	margin: 0 auto;
 }
 

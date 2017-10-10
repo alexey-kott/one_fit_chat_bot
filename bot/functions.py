@@ -1,19 +1,31 @@
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
+from os.path import basename
 
 
-def send_mail(toaddr, theme, text, user_id = 0): #onefit.chat@mail.ru : qazwsx123
+def send_mail(toaddr, theme, text, files = None, user_id = 0): #onefit.chat@mail.ru : qazwsx123
 	fromaddr = "onefit.chat@mail.ru"
 	mypass = "qazwsx123"
 	 
 	msg = MIMEMultipart()
 	msg['From'] = fromaddr
 	msg['To'] = toaddr
-	msg['Subject'] = "Регистрация"
+	msg['Subject'] = "1FitChat"
 	 
 	body = text
-	msg.attach(MIMEText(body, 'plain'))
+	msg.attach(MIMEText(body))
+
+	for f in files or []:
+		with open(f, "rb") as fil:
+		    part = MIMEApplication(
+		        fil.read(),
+		        Name=basename(f)
+		    )
+		# After the file is closed
+		part['Content-Disposition'] = 'attachment; filename="%s"' % basename(f)
+		msg.attach(part)
 	 
 	server = smtplib.SMTP('smtp.mail.ru', 587)
 	server.starttls()

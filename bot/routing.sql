@@ -24,7 +24,22 @@ INSERT INTO routing VALUES
 	('most_difficult','text', 'was_result'),
 	('was_result','text', 'why_fat_again'),
 	('why_fat_again','text', 'waiting_from_you'),
-	('waiting_from_you','text', 'cancel');
+	('waiting_from_you','text', 'cancel'),
+	('day_2','text', 'tolerancy'),
+	('tolerancy','agree', 'when_start_fat'),
+	('start_fat','text', 'why_fat_now'),
+	('why_fat','text', 'hormonals'),
+	('hormonals','text', 'last_analyzes'),
+	('hormonals','disagree', 'last_analyzes'),
+	('last_analyzes','text', 'not_eat'),
+	('not_eat','text', 'allergy'),
+	('not_eat','meat', 'allergy'),
+	('not_eat','fish', 'allergy'),
+	('not_eat','seafood', 'allergy'),
+	('not_eat','fowl', 'allergy'),
+	('not_eat','milk', 'allergy'),
+	('not_eat','eat_all', 'allergy'),
+	('allergy','text', 'day_2_end');
 
 
 INSERT INTO trainer VALUES

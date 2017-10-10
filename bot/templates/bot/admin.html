@@ -104,8 +104,6 @@
 
 				</div>
 			</li> -->
-			
-			
 
 		</ul>
 	</div>
@@ -189,7 +187,6 @@ function setChat(user_id){
 		$(".messages").scrollTop(Number.MAX_SAFE_INTEGER);
 	} else {
 		var offset = $(".messages").scrollTop();
-		console.log(offset, scrollValue[state.current_user])
 		if(offset - 40 < scrollValue[state.current_user]){ // если чат примерно в самом низу -- сдвигаем. Иначе не трогаем.
 			$(".messages").scrollTop(Number.MAX_SAFE_INTEGER);
 		} else {
@@ -365,6 +362,7 @@ $("#send-message").on("click", function(){
 	
 	chatsock.send(JSON.stringify(message));
 	$(".messages").scrollTop(Number.MAX_SAFE_INTEGER);
+	$("#input-message").val('');
 });
 
 $(".trainer").on("click", function(){
