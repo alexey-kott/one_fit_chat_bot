@@ -32,7 +32,7 @@ class User(BaseModel):
 	start_fat	   = TextField(null = True)
 	why_fat_now	   = TextField(null = True)
 	hormonals	   = TextField(null = True)
-	analyzes	   = TextField(null = True)
+	analyzes 	  = TextField(null = True)
 	not_eat		   = TextField(null = True)
 	allergy		   = TextField(null = True)
 
@@ -65,6 +65,7 @@ class Trainer(BaseModel):
 	first_name	= TextField()
 	last_name 	= TextField()
 	photo 		= TextField()
+	active		= BooleanField(default = False)
 
 
 class Error(BaseModel):

@@ -68,6 +68,7 @@ class Trainer(models.Model):
 	first_name	= models.TextField()
 	last_name 	= models.TextField()
 	photo 		= models.TextField()
+	active		= models.BooleanField(default = False)
 
 	class Meta:
 		db_table = "trainer"

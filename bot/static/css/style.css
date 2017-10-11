@@ -183,6 +183,10 @@ body{
 }
 
 .trainer{
+	display: flex;
+	flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 	padding: 5px;
 	cursor: pointer;
 }
@@ -194,6 +198,30 @@ body{
 .current-trainer{
 	background: #337ab7 !important;
 	color: #fff;
+}
+
+.current-trainer .trainer-status{
+	box-shadow: inset 0 0 1px 1px  #337ab7;
+}
+
+.current-trainer .trainer-status.active{
+	box-shadow: inset 0 0 1px 1px #337ab7;
+}
+
+.trainer-status{
+	display: inline-block;
+	float: right;
+	width:15px;
+	height: 15px;
+	border-radius: 50%;
+	background: #8e8e8e;
+	box-shadow: inset 0 0 1px 1px #fff;
+	margin: 5px;
+}
+
+.trainer-status.active{
+	background: #22b92d;
+	box-shadow: inset 0 0 1px 1px #fff;
 }
 
 

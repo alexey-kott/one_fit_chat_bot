@@ -193,7 +193,7 @@ def video_intro(u, m):
 
 
 def present_trainer(u, c):
-	tes = Trainer.select().order_by(fn.Random()).limit(1)
+	tes = Trainer.select().where(Trainer.active == True).order_by(fn.Random()).limit(1)
 	for t in tes:
 		pass
 		# print(t.first_name)
