@@ -213,10 +213,19 @@ function truncTime(timestamp){
 }
 
 
-
 var state = { 
 	current_user: 0,
-	current_admin: 12345
+	current_admin: 12345,
+	block: false, // указывает можно ли приложению в данный момент обновляться
+	block_on: function(){
+		this.block = true;
+	},
+	block_off: function(){
+		// разблокировка происходит не сразу, а через секунду
+		setTimeout(function(){
+			state.block = false;
+		}, 1000)
+	}
 }
 
 
@@ -287,7 +296,8 @@ function displayUserInfo(item){
 
 	var user_ul = $("<ul></ul>").append(
 					$("<li></li>").addClass("user-info-item").text(`Пол: ${maleFemale(item.sex)}`),
-					$("<li></li>").addClass("user-info-item").text(`Тренер: ${getTrainerName(item.trainer_id)} `),
+					$("<li></li>").addClass("user-info-item").text("Тренер: ").append(getTrainer(item.trainer_id)),
+					// $("<li></li>").addClass("user-info-item").text(`Тренер: ${getTrainer(item.trainer_id)} `),
 					$("<li></li>").addClass("user-info-item").text(`Город: ${item.city}`),
 					$("<li></li>").addClass("user-info-item").text(`Работа: ${item.job}`),
 					$("<li></li>").addClass("user-info-item").text(`Рост: ${item.height}`),
@@ -306,10 +316,40 @@ function maleFemale(sex){
 	return 'Женский';
 }
 
-function getTrainerName(trainer_id){
+function getTrainer(trainer_id){
+	var trainer_list = $("<select></select>").addClass("change-trainer").append(
+		$("<option></option>").text("Не назначен")
+		)
+	trainer.map(function(item, i){
+		var selected = trainer_id == i ? "selected" : "";
+		trainer_list.append(
+			$(`<option value="${i}" ${selected}></option>`).text(`${item.first_name} ${item.last_name}`)
+			)	
+	})
+	return trainer_list;
 	if(trainer_id == 0) return "Не назначен";
 	return `${trainer[trainer_id].first_name} ${trainer[trainer_id].last_name}`;
 }
+
+$(".user-list").on("focus", ".change-trainer", function(){
+	state.block_on()
+})
+
+$(".user-list").on("blur", ".change-trainer", function(){
+	state.block_off()
+})
+
+$(".user-list").on("change", ".change-trainer", function(){
+	var message = {
+		type: 'change_trainer',
+		user_id: state.current_user,
+		trainer_id: $(this).val()
+	}
+	if(chatsock.readyState > 1){
+		chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
+	}
+	chatsock.send(JSON.stringify(message));
+})
 
 var trainer = [];
 function setTrainers(trainers){
@@ -345,9 +385,11 @@ setInterval(function(){
 		chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
 	}
 	if(chatsock.readyState == 1){
-		chatsock.send(JSON.stringify({'type':'ping'}))
+		if(!state.block){
+			chatsock.send(JSON.stringify({'type':'ping'}))
+		}
 	}
-}, 2000)
+}, 2500)
 
 $("#send-message").on("click", function(){
 	var text = $("#input-message").val();

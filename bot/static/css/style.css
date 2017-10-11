@@ -83,6 +83,11 @@ body{
 	background: inherit;
 }
 
+.change-trainer{
+	background: #337ab7;
+	border: 1px solid #fff;
+}
+
 
 
 /* ___ CHAT ____ */
