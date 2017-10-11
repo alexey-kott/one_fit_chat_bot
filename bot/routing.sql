@@ -34,12 +34,6 @@ INSERT INTO routing VALUES
 	('hormonals','disagree', 'last_analyzes'),
 	('last_analyzes','text', 'not_eat'),
 	('not_eat','text', 'allergy'),
-	('not_eat','meat', 'allergy'),
-	('not_eat','fish', 'allergy'),
-	('not_eat','seafood', 'allergy'),
-	('not_eat','fowl', 'allergy'),
-	('not_eat','milk', 'allergy'),
-	('not_eat','eat_all', 'allergy'),
 	('allergy','text', 'day_2_end');
 
 

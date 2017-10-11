@@ -39,7 +39,8 @@ from bot_models import Schedule
 class TeleBot(telebot.TeleBot):
 	def send_message(self, chat_id, text, disable_web_page_preview=None, reply_to_message_id=None, reply_markup=None, parse_mode=None, disable_notification=None):
 		Message.create(sender = bot_id, sender_type = "bot", receiver = chat_id, text = text)
-		response = super().send_message(chat_id, text, disable_web_page_preview, reply_to_message_id, reply_markup, parse_mode, disable_notification)
+		super().send_message(chat_id, text, disable_web_page_preview, reply_to_message_id, reply_markup, parse_mode, disable_notification)
+
 		# print('RESPONSE:')
 		# print(response)
 
@@ -407,34 +408,14 @@ def not_eat(u, m):
 	u.analyzes = m.text
 	u.state = s.not_eat
 	u.save()
-	keyboard = types.InlineKeyboardMarkup()
-	meat_btn = types.InlineKeyboardButton(text = s.meat_btn, callback_data = s.meat)
-	fish_btn = types.InlineKeyboardButton(text = s.fish_btn, callback_data = s.fish)
-	seafood_btn = types.InlineKeyboardButton(text = s.seafood_btn, callback_data = s.seafood)
-	milk_btn = types.InlineKeyboardButton(text = s.milk_btn, callback_data = s.milk)
-	fowl_btn = types.InlineKeyboardButton(text = s.fowl_btn, callback_data = s.fowl)
-	eat_all_btn = types.InlineKeyboardButton(text = s.eat_all_btn, callback_data = s.eat_all)
-	keyboard.add(meat_btn)
-	keyboard.add(fish_btn)
-	keyboard.add(seafood_btn)
-	keyboard.add(milk_btn)
-	keyboard.add(fowl_btn)
-	keyboard.add(eat_all_btn)
-	bot.send_message(uid(m), s.not_eat_products, reply_markup=keyboard)
+	bot.send_message(uid(m), s.not_eat_products)
 
-def allergy(u, m = None, c = None):
-	if m != None:
-		u.not_eat = m.text
-		keyboard = types.InlineKeyboardMarkup()
-		try:
-			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
-		except Exception as e:
-			print(e)
-	else:
-		u.not_eat = c.data
+def allergy(u, m):
+	u.not_eat = m.text
+
 	u.state = s.allergy
 	u.save()
-	bot.send_message(u.user_id, s.any_allergies)
+	bot.send_message(uid(m), s.any_allergies)
 
 
 def day_2_end(u, m):
@@ -453,8 +434,6 @@ def day_2_end(u, m):
 # day 3
 def day_3(user_id):
 	bot.send_message(user_id, s.greeting_3)
-	send
-
 	img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
 	send_photo_delay(uid(m), img, delay = 15)
 
@@ -604,11 +583,6 @@ class Watcher:
 			sleep(1)
 
 
-# t = time(5, 8)
-# schedule(t, "kek", name = "Alex", surname = "Kott")
-
-def kek(name = False, surname = False):
-	print("KEK {} {}".format(name, surname))
 
 if __name__ == '__main__':
 	watcher = Watcher()
