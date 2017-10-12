@@ -406,7 +406,6 @@ def not_eat(u, m):
 
 def allergy(u, m):
 	u.not_eat = m.text
-
 	u.state = s.allergy
 	u.save()
 	bot.send_message(uid(m), s.any_allergies)

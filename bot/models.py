@@ -16,26 +16,38 @@ class Admin(models.Model):
 		db_table = "admin"
 
 class User(models.Model):
-	user_id 	   = models.IntegerField(unique = True)
-	username	   = models.TextField(null = True)
-	first_name 	   = models.TextField(null = True)
-	last_name      = models.TextField(null = True)
-	sex 		   = models.TextField(null = True)
-	age			   = models.IntegerField(null = True)
-	email		   = models.TextField(null = True)
-	state		   = models.TextField(default = 'default')
-	last_activity  = models.DateTimeField(null = True)
-	day 		   = models.IntegerField(default = 1) # день, на котором находится поциент (всего 3 дня)
-	trainer_id     = models.IntegerField(null = True, default = 0)
-	city 		   = models.TextField(null = True)
-	job 		   = models.TextField(null = True)
-	height 		   = models.IntegerField(null = True)
-	weight		   = models.FloatField(null = True)
-	target_weight  = models.TextField(null = True)
-	methodologies  = models.TextField(null = True) # какими методиками пользовались
-	most_difficult = models.TextField(null = True) # что было самое сложное?
-	was_result	   = models.TextField(null = True) # был ли результат?
-	why_fat_again  = models.TextField(null = True) # почему вес снова возвращался, как вы думаете?
+	user_id 	   		= models.IntegerField(unique = True)
+	username	   		= models.TextField(null = True)
+	first_name 	   		= models.TextField(null = True)
+	last_name      		= models.TextField(null = True)
+	sex 		   		= models.TextField(null = True)
+	age			   		= models.IntegerField(null = True)
+	email		   		= models.TextField(null = True)
+	state		   		= models.TextField(default = 'default')
+	last_activity  		= models.DateTimeField(null = True)
+	day 		   		= models.IntegerField(default = 1) # день, на котором находится поциент (всего 3 дня)
+	trainer_id     		= models.IntegerField(null = True, default = 0)
+	city 		   		= models.TextField(null = True)
+	job 		   		= models.TextField(null = True)
+	height 		   		= models.IntegerField(null = True)
+	weight		   		= models.FloatField(null = True)
+	target_weight  		= models.TextField(null = True)
+	methodologies  		= models.TextField(null = True) # какими методиками пользовались
+	most_difficult 		= models.TextField(null = True) # что было самое сложное?
+	was_result	   		= models.TextField(null = True) # был ли результат?
+	why_fat_again  		= models.TextField(null = True) # почему вес снова возвращался, как вы думаете?
+	start_fat	   		= models.TextField(null = True)
+	why_fat_now	   		= models.TextField(null = True)
+	hormonals	   		= models.TextField(null = True)
+	analyzes 	   		= models.TextField(null = True)
+	not_eat		   		= models.TextField(null = True)
+	allergy		   		= models.TextField(null = True)
+	fats_in_family 		= models.TextField(null = True)
+	fat_children   		= models.TextField(null = True)
+	relatives_attitude  = models.TextField(null = True)
+	amount_of_walking   = models.TextField(null = True)
+	any_injuries   		= models.TextField(null = True)
+	motivation	   		= models.TextField(null = True)
 
 	class Meta:
 		db_table = "user"

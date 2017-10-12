@@ -9,32 +9,38 @@ class BaseModel(Model):
 		database = db
 
 class User(BaseModel):
-	user_id 	   = IntegerField(unique = True)
-	username	   = TextField(null = True)
-	first_name 	   = TextField(null = True)
-	last_name      = TextField(null = True)
-	sex 		   = TextField(null = True)
-	age			   = IntegerField(null = True)
-	email		   = TextField(null = True)
-	state		   = TextField(default = s.default)
-	last_activity  = DateTimeField(null = True)
-	day 		   = IntegerField(default = 1) # день, на котором находится поциент (всего 3 дня)
-	trainer_id     = IntegerField(null = True, default = 0)
-	city 		   = TextField(null = True)
-	job 		   = TextField(null = True)
-	height 		   = IntegerField(null = True)
-	weight		   = FloatField(null = True)
-	target_weight  = TextField(null = True)
-	methodologies  = TextField(null = True) # какими методиками пользовались
-	most_difficult = TextField(null = True) # что было самое сложное?
-	was_result	   = TextField(null = True) # был ли результат?
-	why_fat_again  = TextField(null = True) # почему вес снова возвращался, как вы думаете?
-	start_fat	   = TextField(null = True)
-	why_fat_now	   = TextField(null = True)
-	hormonals	   = TextField(null = True)
-	analyzes 	  = TextField(null = True)
-	not_eat		   = TextField(null = True)
-	allergy		   = TextField(null = True)
+	user_id 	   		= IntegerField(unique = True)
+	username	   		= TextField(null = True)
+	first_name 	   		= TextField(null = True)
+	last_name      		= TextField(null = True)
+	sex 		   		= TextField(null = True)
+	age			   		= IntegerField(null = True)
+	email		   		= TextField(null = True)
+	state		   		= TextField(default = s.default)
+	last_activity  		= DateTimeField(null = True)
+	day 		   		= IntegerField(default = 1) # день, на котором находится поциент (всего 3 дня)
+	trainer_id     		= IntegerField(null = True, default = 0)
+	city 		   		= TextField(null = True)
+	job 		   		= TextField(null = True)
+	height 		   		= IntegerField(null = True)
+	weight		   		= FloatField(null = True)
+	target_weight  		= TextField(null = True)
+	methodologies  		= TextField(null = True) # какими методиками пользовались
+	most_difficult 		= TextField(null = True) # что было самое сложное?
+	was_result	   		= TextField(null = True) # был ли результат?
+	why_fat_again  		= TextField(null = True) # почему вес снова возвращался, как вы думаете?
+	start_fat	   		= TextField(null = True)
+	why_fat_now	   		= TextField(null = True)
+	hormonals	   		= TextField(null = True)
+	analyzes 	   		= TextField(null = True)
+	not_eat		   		= TextField(null = True)
+	allergy		   		= TextField(null = True)
+	fats_in_family 		= TextField(null = True)
+	fat_children   		= TextField(null = True)
+	relatives_attitude  = TextField(null = True)
+	amount_of_walking   = TextField(null = True)
+	any_injuries   		= TextField(null = True)
+	motivation	   		= TextField(null = True)
 
 
 	def cog(user_id, username = '', first_name = '', last_name = ''):
