@@ -96,6 +96,9 @@ def schedule(dt, action, **kwargs):
 
 # _____________ ACTIONS
 
+def idle(u, m = None, c = None):
+	pass
+
 
 def cancel(u, c):
 	u.state = s.stop
@@ -517,7 +520,7 @@ def any_injuries(u, m = None, c = None):
 	keyboard = types.InlineKeyboardMarkup()
 	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)
 	keyboard.add(disagree_btn)
-	bot.send_message(u.user_id, s.your_fat_children, reply_markup = keyboard)
+	bot.send_message(u.user_id, s.your_injuries, reply_markup = keyboard)
 
 def motivation(u, m = None, c = None):
 	if m != None:
@@ -536,7 +539,7 @@ def final_reminder(u, m):
 	u.state = s.final
 	u.save()
 	bot.send_message(uid(m), s.fill_table)
-	send_message_delay(uid(m), s.reminder, state = s.final, delay = 5)
+	send_message_delay(uid(m), s.reminder, state = s.pause, delay = 5)
 
 	
 

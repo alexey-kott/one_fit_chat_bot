@@ -1,4 +1,5 @@
 INSERT INTO routing VALUES 
+	('pause','text','idle'),
 	('default','agree','confirm_name'),
 	('default','disagree','cancel'),
 	('lets_confirm_name','agree','confirm_last_name'),
@@ -49,4 +50,5 @@ INSERT INTO routing VALUES
 	('amount_of_walking','middling', 'any_injuries'),
 	('any_injuries','text', 'motivation'),
 	('any_injuries','disagree', 'motivation'),
-	('motivation','text', 'final_reminder');
+	('motivation','text', 'final_reminder'),
+	('final','text','idle');
