@@ -546,8 +546,8 @@ def final_reminder(u, m):
 	bot.send_message(uid(m), s.fill_table)
 	send_message_delay(uid(m), s.reminder, state = s.pause, delay = 5)
 
-	
-
+def bye_day_3(user_id):
+	bot.send_message(user_id, s.bye_day_3)
 
 
 
