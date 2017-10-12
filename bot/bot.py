@@ -348,9 +348,6 @@ def waiting_sticker(user_id):
 # _________ Day 2
 
 def day_2(user_id):
-	# u = User.get(user_id = user_id)
-	# u.state = s.day_2
-	# u.save()
 	bot.send_message(user_id, s.greeting_2)	
 	img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
 	bot.send_photo(user_id, img)
@@ -391,18 +388,15 @@ def hormonals(u, m):
 
 def last_analyzes(u, m = None, c = None):
 	if m != None:
-		chat_id = uid(m)
 		u.hormonals = m.text
 		keyboard = types.InlineKeyboardMarkup()
 		try:
 			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
 		except Exception as e:
 			print(e)
-	else:
-		chat_id = cid(c)
 	u.state = s.last_analyzes
 	u.save()
-	bot.send_message(chat_id, s.last_analyzes_and_what)
+	bot.send_message(u.user_id, s.last_analyzes_and_what)
 
 def not_eat(u, m):
 	u.analyzes = m.text
@@ -431,26 +425,121 @@ def day_2_end(u, m):
 	send_photo_delay(uid(m), img, state = s.pause, delay = 2)
 
 
-# day 3
-def day_3(user_id):
-	bot.send_message(user_id, s.greeting_3)
-	img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
-	send_photo_delay(uid(m), img, delay = 15)
-
-
-
-
-	
-
-
-
-
-
 # _________ Day 3
 
 
+def day_3(user_id):
+	u = User.get(user_id = user_id)
+	bot.send_message(user_id, s.greeting_3.format(u.first_name))
+	img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
+	send_photo_delay(user_id, img, state = s.day_3, delay = 5)
 
+def miron_story(u, m): # "КАКОЙ-ТО ФИЛЬМ (история Мирона или ещё что-то)"
+	u.state = s.miron_story
+	u.save()
+	keyboard = types.InlineKeyboardMarkup()
+	looked_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
+	keyboard.add(looked_btn)
+	bot.send_message(uid(m), s.look_at_miron_story, reply_markup = keyboard)
 
+def fats_in_family(u, m = None, c = None):
+	u.state = s.fats_in_family
+	u.save()
+	keyboard = types.InlineKeyboardMarkup()
+	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)
+	keyboard.add(disagree_btn)
+	bot.send_message(u.user_id, s.fats_in_your_family, reply_markup = keyboard)
+
+def fat_children(u, m = None, c = None):
+	if m != None:
+		u.fats_in_family = m.text
+		keyboard = types.InlineKeyboardMarkup()
+		try:
+			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
+		except Exception as e:
+			print(e)
+	u.state = s.fat_children
+	u.save()
+	keyboard = types.InlineKeyboardMarkup()
+	no_children_btn = types.InlineKeyboardButton(text = s.no_children_btn, callback_data = s.disagree)
+	keyboard.add(no_children_btn)
+	bot.send_message(u.user_id, s.your_fat_children, reply_markup = keyboard)
+
+def relatives_attitude(u, m = None, c = None):
+	if m != None:
+		u.fat_children = m.text
+		keyboard = types.InlineKeyboardMarkup()
+		try:
+			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
+		except Exception as e:
+			print(e)
+	u.state = s.relatives_attitude
+	u.save()
+	keyboard = types.InlineKeyboardMarkup()
+	support_btn = types.InlineKeyboardButton(text = s.support_btn, callback_data = s.support)
+	dissuade_btn = types.InlineKeyboardButton(text = s.dissuade_btn, callback_data = s.dissuade)
+	keyboard.add(support_btn)
+	keyboard.add(dissuade_btn)
+	bot.send_message(u.user_id, s.your_relatives_attitude, reply_markup = keyboard)
+
+def amount_of_walking(u, m = None, c = None):
+	if m != None:
+		u.relatives_attitude = m.text
+		keyboard = types.InlineKeyboardMarkup()
+		try:
+			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
+		except Exception as e:
+			print(e)
+	else:
+		u.relatives_attitude = c.data
+	u.state = s.amount_of_walking
+	u.save()
+	keyboard = types.InlineKeyboardMarkup()
+	many_btn = types.InlineKeyboardButton(text = s.many_btn, callback_data = s.many)
+	few_btn = types.InlineKeyboardButton(text = s.few_btn, callback_data = s.few)
+	middling_btn = types.InlineKeyboardButton(text = s.middling_btn, callback_data = s.middling)
+	keyboard.add(many_btn)
+	keyboard.add(few_btn)
+	keyboard.add(middling_btn)
+	bot.send_message(u.user_id, s.your_amount_of_walking, reply_markup = keyboard)
+
+def any_injuries(u, m = None, c = None):
+	if m != None:
+		u.amount_of_walking = m.text
+		keyboard = types.InlineKeyboardMarkup()
+		try:
+			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
+		except Exception as e:
+			print(e)
+	else:
+		u.amount_of_walking = c.data
+	u.state = s.any_injuries
+	u.save()
+	keyboard = types.InlineKeyboardMarkup()
+	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)
+	keyboard.add(disagree_btn)
+	bot.send_message(u.user_id, s.your_fat_children, reply_markup = keyboard)
+
+def motivation(u, m = None, c = None):
+	if m != None:
+		u.any_injuries = m.text
+		keyboard = types.InlineKeyboardMarkup()
+		try:
+			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
+		except Exception as e:
+			print(e)
+	u.state = s.motivation
+	u.save()
+	bot.send_message(u.user_id, s.your_motivation)
+
+def final_reminder(u, m):
+	u.motivation = m.text
+	u.state = s.final
+	u.save()
+	bot.send_message(uid(m), s.fill_table)
+	send_message_delay(uid(m), s.reminder, state = s.final, delay = 5)
+
+	
 
 
 

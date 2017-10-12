@@ -1,5 +1,3 @@
-
-
 INSERT INTO routing VALUES 
 	('default','agree','confirm_name'),
 	('default','disagree','cancel'),
@@ -34,10 +32,21 @@ INSERT INTO routing VALUES
 	('hormonals','disagree', 'last_analyzes'),
 	('last_analyzes','text', 'not_eat'),
 	('not_eat','text', 'allergy'),
-	('allergy','text', 'day_2_end');
-
-
-INSERT INTO trainer VALUES
-	(1, 'Мария', 'Гришина', './images/trainers/trainer1.jpg'),
-	(2, 'Владимир', 'Иванов', './images/trainers/trainer2.jpg'),
-	(3, 'Макс', 'Григорьев', './images/trainers/trainer3.jpg');
+	('allergy','text', 'day_2_end'),
+	('day_3','text', 'miron_story'),
+	('miron_story','text', 'fats_in_family'),
+	('miron_story','agree', 'fats_in_family'),
+	('fats_in_family','text', 'fat_children'),
+	('fats_in_family','disagree', 'fat_children'),
+	('fat_children','disagree', 'relatives_attitude'),
+	('fat_children','text', 'relatives_attitude'),
+	('relatives_attitude','text', 'amount_of_walking'),
+	('relatives_attitude','support', 'amount_of_walking'),
+	('relatives_attitude','dissuade', 'amount_of_walking'),
+	('amount_of_walking','text', 'any_injuries'),
+	('amount_of_walking','many', 'any_injuries'),
+	('amount_of_walking','few', 'any_injuries'),
+	('amount_of_walking','middling', 'any_injuries'),
+	('any_injuries','text', 'motivation'),
+	('any_injuries','disagree', 'motivation'),
+	('motivation','text', 'final_reminder');

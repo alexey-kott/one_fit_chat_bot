@@ -4,19 +4,20 @@ disagree_btn 	= "Нет"
 more_btn		= "Подробнее"
 male_btn		= "Мужчина"
 female_btn		= "Женщина"
-continue_btn	= "Продолжить"
-looked_btn		= "Посмотрел"
-meat_btn		= "Мясо"
-fish_btn		= "Рыбу"
-seafood_btn		= "Морские продукты"
-milk_btn		= "Молочные продукты"
-fowl_btn		= "Птицу"
-eat_all_btn		= "Ем всё"
-
-
-
 my_name_is_btn		= "Меня зовут {}"
 my_last_name_is_btn = "Моя фамилия {}"
+continue_btn	= "Продолжить"
+looked_btn		= "Посмотрел"
+no_children_btn = "У меня нет детей"
+support_btn		= "Поддержат"
+dissuade_btn	= "Будут подшучивать/отговаривать"
+many_btn		= "Много"
+few_btn 		= "Мало"
+middling_btn 	= "Средне"
+
+
+
+
 
 # states
 default 			= "default"
@@ -53,6 +54,20 @@ last_analyzes 		= "last_analyzes"
 not_eat				= "not_eat"
 allergy				= "allergy"
 
+	#___ day_3
+day_3				= 'day_3'
+miron_story			= 'miron_story'
+fats_in_family 		= 'fats_in_family'
+fat_children		= 'fat_children'
+relatives_attitude  = 'relatives_attitude'
+amount_of_walking 	= 'amount_of_walking'
+any_injuries		= 'any_injuries'
+motivation			= 'motivation'
+final 				= 'final'
+
+
+
+
 
 
 
@@ -66,12 +81,12 @@ disagree 	= "disagree"
 more 		= "more"
 male 		= "male"
 female 		= "female"
-meat 		= "meat"
-fish 		= "fish"
-seafood 	= "seafood"
-milk 	 	= "milk"
-fowl 	 	= "fowl"
-eat_all	 	= "eat_all"
+support 	= "support"
+dissuade 	= "dissuade"
+many		= "many"
+few 		= "few"
+middling	= "middling"
+
 
 
 # messages
@@ -147,6 +162,24 @@ greeting_3			= '''{}, доброе утро!
 Мы продолжаем работу. Спасибо за материалы, которые Вы выслали. Я продолжаю задавать Вам вопросы, постарайтесь отвечать как можно более развёрнуто и подробно. Сегодня заключительный день нашего исследования.
 Завтра наш Тренер сообщит вам результаты наших исследований, даст первые рекомендации.
  '''
+look_at_miron_story = 'Посмотрите фильм "История Мирона"     https://www.youtube.com/watch?v=hLr0hTfgbWo'
+fats_in_your_family = 'Есть ли в Вашей семье люди с лишним весом? Кто это?'
+your_fat_children	= 'Есть ли у Ваших детей лишний вес?'
+your_relatives_attitude = 'Как близкие отнесутся к Вашей попытке похудеть?'
+your_amount_of_walking = 'Как Вы сами считаете -- в течение дня Вы ходите:'
+your_injuries		= 'Есть ли у вас травмы или противопоказания, мешающие ходить больше?'
+your_motivation 	= 'Какая у Вас мотивация к похудению? Зачем Вам худеть?'
+fill_table			= 'Пожалуйста, заполните таблицу, иначе мы не сможем провести достоверный анализ'
+reminder			= '''
+Напоминаю, что жду от вас (если не прислали):
+
+1. Фото фигуры в 3-ёх ракурсах 
+2. Фото в детстве и юности 
+3. Заполненная Анкета
+4. Результаты анализов
+'''
+
+
 
 
 
