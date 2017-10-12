@@ -351,6 +351,9 @@ def waiting_sticker(user_id):
 # _________ Day 2
 
 def day_2(user_id):
+	u = User.get(user_id = user_id)
+	u.day = 2
+	u.save()
 	bot.send_message(user_id, s.greeting_2)	
 	img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
 	bot.send_photo(user_id, img)
@@ -432,6 +435,8 @@ def day_2_end(u, m):
 
 def day_3(user_id):
 	u = User.get(user_id = user_id)
+	u.day = 3
+	u.save()
 	bot.send_message(user_id, s.greeting_3.format(u.first_name))
 	img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
 	send_photo_delay(user_id, img, state = s.day_3, delay = 5)
