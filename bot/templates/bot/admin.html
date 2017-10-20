@@ -36,7 +36,7 @@
 		</ul>
 		{% endif %}	
 	</div>
-	<div class="col-lg-7">
+	<div class="col-lg-6">
 		<div class="chat">
 			<div class="messages messages-default">
 
@@ -52,8 +52,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-lg-3" >
-		<ul class="user-list">
+	<div class="col-lg-4" >
+		<ul class="user-list" style="overflow-y: scroll; height: 700px;">
 		</ul>
 	</div>
 
@@ -256,17 +256,28 @@ function displayUserInfo(item){
 
 	var user_ul = $("<ul></ul>").append(
 					$("<li></li>").addClass("user-info-item").text(`Пол: ${maleFemale(item.sex)}`),
-					$("<li></li>").addClass("user-info-item").text("Тренер: ").append(getTrainer(item.trainer_id)),
-					// $("<li></li>").addClass("user-info-item").text(`Тренер: ${getTrainer(item.trainer_id)} `),
+					$("<li></li>").addClass("user-info-item").text(`Тренер: `).append(getTrainer(item.trainer_id)),
 					$("<li></li>").addClass("user-info-item").text(`Город: ${item.city}`),
 					$("<li></li>").addClass("user-info-item").text(`Работа: ${item.job}`),
 					$("<li></li>").addClass("user-info-item").text(`Рост: ${item.height}`),
 					$("<li></li>").addClass("user-info-item").text(`Вес: ${item.weight}`),
 					$("<li></li>").addClass("user-info-item").text(`Желаемый вес: ${item.target_weight}`),
-					$("<li></li>").addClass("user-info-item").text(`Какие диеты и методики пробовал: ${item.methodologies}`),
-					$("<li></li>").addClass("user-info-item").text(`Что было самое сложное: ${item.most_difficult}`),
-					$("<li></li>").addClass("user-info-item").text(`Был ли результат: ${item.was_result}`),
-					$("<li></li>").addClass("user-info-item").text(`Почему вес вернулся: ${item.why_fat_again}`),
+					$("<li></li>").addClass("user-info-item").text(`Какие диеты и методики пробовал? ${item.methodologies}`),
+					$("<li></li>").addClass("user-info-item").text(`Что было самое сложное? ${item.most_difficult}`),
+					$("<li></li>").addClass("user-info-item").text(`Был ли результат? ${item.was_result}`),
+					$("<li></li>").addClass("user-info-item").text(`Почему вес вернулся? ${item.why_fat_again}`),
+					$("<li></li>").addClass("user-info-item").text(`Когда Вы начали набирать вес? Какие были для этого причины? ${item.start_fat}`),
+					$("<li></li>").addClass("user-info-item").text(`Как Вы думаете, какова причина Вашего лишнего веса на данный момент? ${item.why_fat_now}`),
+					$("<li></li>").addClass("user-info-item").text(`Принимаете ли Вы какие-нибудь гормональные препараты? ${item.hormonals}`),
+					$("<li></li>").addClass("user-info-item").text(`Когда последний раз вы сдавали анализы? Какие? ${item.analyzes}`),
+					$("<li></li>").addClass("user-info-item").text(`Какие продукты Вы НЕ едите? ${item.not_eat}`),
+					$("<li></li>").addClass("user-info-item").text(`Есть ли у вас аллергии на какие-нибудь продукты питания, непереносимости, запреты врачей? ${item.allergy}`),
+					$("<li></li>").addClass("user-info-item").text(`Есть ли в Вашей семье люди с лишним весом? Кто это? ${item.fats_in_family}`),
+					$("<li></li>").addClass("user-info-item").text(`Есть ли у Ваших детей лишний вес? ${item.fat_children}`),
+					$("<li></li>").addClass("user-info-item").text(`Как близкие отнесутся к Вашей попытке похудеть? ${item.relatives_attitude}`),
+					$("<li></li>").addClass("user-info-item").text(`Как Вы сами считаете -- в течение дня Вы ходите: ${item.amount_of_walking}`),
+					$("<li></li>").addClass("user-info-item").text(`Есть ли у вас травмы или противопоказания, мешающие ходить больше?${item.any_injuries}`),
+					$("<li></li>").addClass("user-info-item").text(`Какая у Вас мотивация к похудению? Зачем Вам худеть? ${item.motivation}`),
 					);
 	return user_ul;
 }

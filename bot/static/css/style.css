@@ -83,6 +83,10 @@ body{
 	background: inherit;
 }
 
+.answer{
+	font-weight: normal;
+}
+
 .change-trainer{
 	background: #337ab7;
 	border: 1px solid #fff;
@@ -114,7 +118,7 @@ body{
 	background: white;
 	margin: 3px;
 	padding: 5px;
-	padding-right: 30px;
+	padding-right: 35px;
 	border-radius: 4px;
 }
 
@@ -128,8 +132,8 @@ body{
 	display: inline-block;
 	right: 0;
 	bottom: 0;
-	margin: 2px;
-	font-size: 0.7em;
+	margin: 2px 4px;
+	font-size: 0.9em;
 	color: grey;
 }
 
