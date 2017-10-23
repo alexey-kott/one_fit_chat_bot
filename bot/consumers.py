@@ -42,6 +42,11 @@ def ws_receive(message):
 		trainer.active = data['trainer_status']
 		trainer.save()
 
+	if data['type'] == 'remove_trainer':
+		trainer = Trainer.objects.get(id = data['trainer_id'])
+		trainer.delete()
+
+
 
 	Group('admin', channel_layer=message.channel_layer).send({'text':json.dumps(getAppState(), default = datetime_handler)})
 

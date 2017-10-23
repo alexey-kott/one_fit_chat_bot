@@ -30,7 +30,12 @@
 			<li class="trainer current-trainer" data-trainer-id="-1">Все пользователи</li>
 			<li class="trainer " data-trainer-id="0">Без тренера</li>
 			{% for trainer in trainers %}
-			<li class="trainer" data-trainer-id="{{ trainer.id }}">{{ trainer.first_name }} {{ trainer.last_name }}<div class="trainer-status {{ trainer.active|yesno:'active,' }}"></div></li>
+			<li class="trainer" data-trainer-id="{{ trainer.id }}">{{ trainer.first_name }} {{ trainer.last_name }}
+				<div class="trainer-mng-buttons">
+					<div class="trainer-status {{ trainer.active|yesno:'active,' }}"></div>
+					<div class="trainer-remove">×</div>
+				</div>
+			</li>
 			{% endfor %}
 			<li> <button  class="btn  btn-block btn-primary add-trainer-btn">Добавить тренера</button> </li>
 		</ul>
@@ -335,7 +340,7 @@ function setTrainers(trainers){
 }
 
 $(".trainer-status").on("click", function(){
-	var trainer_id = $(this).parent(".trainer").data("trainer-id");
+	var trainer_id = $(this).parents(".trainer").data("trainer-id");
 	var trainer_status;
 	if($(this).hasClass("active")){
 		$(this).removeClass("active");
@@ -348,6 +353,24 @@ $(".trainer-status").on("click", function(){
 		type: 'change_trainer_status',
 		trainer_id: trainer_id,
 		trainer_status: trainer_status
+	}
+	if(chatsock.readyState > 1){
+		chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
+	}
+	chatsock.send(JSON.stringify(message));
+})
+
+$(".trainer-remove").on("click", function(){
+	var trainer_id = $(this).parents(".trainer").data("trainer-id");
+	var trainer_status;
+
+	var do_remove = confirm("Удалить тренера?")
+	if(do_remove == false) return false;
+	$(this).parents(".trainer").remove()	
+
+	var message = {
+		type: 'remove_trainer',
+		trainer_id: trainer_id
 	}
 	if(chatsock.readyState > 1){
 		chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
