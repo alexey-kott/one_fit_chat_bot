@@ -45,6 +45,8 @@ def ws_receive(message):
 	if data['type'] == 'remove_trainer':
 		trainer = Trainer.objects.get(id = data['trainer_id'])
 		trainer.delete()
+		admin = Trainer.objects.get(id = data['trainer_id'])
+		admin.delete()
 
 
 
