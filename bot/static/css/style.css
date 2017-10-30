@@ -9,6 +9,8 @@ body{
 
 .user-list{
 	padding:0;
+	overflow-y: scroll;
+	height: 700px;
 }
 
 .user-list li:first-child{

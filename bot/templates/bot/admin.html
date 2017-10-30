@@ -57,8 +57,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-lg-4" style="overflow-y: scroll;">
-		<ul class="user-list" style=" height: 700px;">
+	<div class="col-lg-4">
+		<ul class="user-list">
 		</ul>
 	</div>
 
@@ -172,9 +172,10 @@ $(".messages").on("scroll", function(){
 	}, 100)
 })
 
-$(".user-list").on("scroll", function(){
-	var scroll = $(this).scrollTop();
-	state.user_list_scroll = scroll;
+$(".user-list").on("scroll", function(e){
+	var user_list_scroll = $(this).scrollTop();
+	state.user_list_scroll = user_list_scroll;
+	state.block_on(); 
 })
 
 function truncTime(timestamp){
@@ -234,7 +235,6 @@ chatsock.onclose = function(){
 }
 
 function setUserList(users){
-	state.user_list_scroll = $(".user-list").scrollTop()
 	$(".user-list").empty()
 	var userList = $(".user-list");
 	users.map(function(item, i){
@@ -257,8 +257,6 @@ function setUserList(users){
 		userList.prepend(el);
 	})
 	$(".current-trainer").trigger("click");
-	$(".user-list").scrollTop(state.user_list_scroll);
-	
 }
 
 
@@ -444,19 +442,31 @@ $("#send-message").on("click", function(){
 
 $(".trainer").on("click", function(){
 	$(this).addClass("current-trainer").siblings().removeClass("current-trainer");
+
 	var trainer_id = $(this).data("trainer-id");
 	if(trainer_id == 0){
 		$(".user").fadeOut(0);
 		$(".user[data-trainer-id=0]").fadeIn(0);
-		return true;
-	}
-	if(trainer_id == -1){
+	}else if(trainer_id == -1){
 		$(".user").fadeIn(0);
-		return true;
+	} else {
+		$(".user-list li").fadeOut(0);
+		$(`.user-list li[data-trainer-id="${trainer_id}"]`).fadeIn(0);
 	}
+	$(".user-list").scrollTop(state.user_list_scroll)
+})
 
-	$(".user-list li").fadeOut(0);
-	$(`.user-list li[data-trainer-id="${trainer_id}"]`).fadeIn(0);
+
+$("div").on("mouseover", ".user-list", function(e){
+	state.block_on();
+})
+
+$("div").on("mousemove", ".user-list", function(e){
+	state.block_on();
+})
+
+$("div").on("mouseout", ".user-list", function(e){
+	// state.block_off();
 })
 
 
