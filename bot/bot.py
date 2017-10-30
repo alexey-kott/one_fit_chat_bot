@@ -665,6 +665,18 @@ def photo(m):
 	photo_name = save_photo(m)
 	Message.create(sender = uid(m), sender_type = "user", receiver = bot_id, text = photo_name, msg_type = 'photo')
 	photo = Photo.create(user_id = uid(m), message_id = m.message_id)
+	u = User.cog(user_id = uid(m))
+	try:
+		r = Routing.get(state = u.state, decision = 'photo')
+		try: # на случай если action не определён в таблице роутинга
+			if u.state != s.stop:
+				eval(r.action)(u = u, m = m)
+		except Exception as e:
+			Error.create(message = m.text, state = u.state, exception = e)
+			print(e)
+			print(m)
+	except Exception as e:
+		print(e)
 
 
 
