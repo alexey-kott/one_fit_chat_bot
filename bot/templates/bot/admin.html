@@ -57,8 +57,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-lg-4" >
-		<ul class="user-list" style="overflow-y: scroll; height: 700px;">
+	<div class="col-lg-4" style="overflow-y: scroll;">
+		<ul class="user-list" style=" height: 700px;">
 		</ul>
 	</div>
 
@@ -172,6 +172,11 @@ $(".messages").on("scroll", function(){
 	}, 100)
 })
 
+$(".user-list").on("scroll", function(){
+	var scroll = $(this).scrollTop();
+	state.user_list_scroll = scroll;
+})
+
 function truncTime(timestamp){
 	var msg_time = moment(timestamp);
 	return msg_time.format("HH:mm");
@@ -181,6 +186,7 @@ function truncTime(timestamp){
 var state = { 
 	current_user: 0,
 	current_admin: 12345,
+	user_list_scroll: 0,
 	block: false, // указывает можно ли приложению в данный момент обновляться
 	block_on: function(){
 		this.block = true;
@@ -228,6 +234,7 @@ chatsock.onclose = function(){
 }
 
 function setUserList(users){
+	state.user_list_scroll = $(".user-list").scrollTop()
 	$(".user-list").empty()
 	var userList = $(".user-list");
 	users.map(function(item, i){
@@ -250,7 +257,10 @@ function setUserList(users){
 		userList.prepend(el);
 	})
 	$(".current-trainer").trigger("click");
+	$(".user-list").scrollTop(state.user_list_scroll);
+	
 }
+
 
 function displayUserInfo(item){
 	for(key in item){
@@ -260,31 +270,41 @@ function displayUserInfo(item){
 	}
 
 	var user_ul = $("<ul></ul>").append(
-					$("<li></li>").addClass("user-info-item").text(`Пол: ${maleFemale(item.sex)}`),
-					$("<li></li>").addClass("user-info-item").text(`Тренер: `).append(getTrainer(item.trainer_id)),
-					$("<li></li>").addClass("user-info-item").text(`Город: ${item.city}`),
-					$("<li></li>").addClass("user-info-item").text(`Работа: ${item.job}`),
-					$("<li></li>").addClass("user-info-item").text(`Рост: ${item.height}`),
-					$("<li></li>").addClass("user-info-item").text(`Вес: ${item.weight}`),
-					$("<li></li>").addClass("user-info-item").text(`Желаемый вес: ${item.target_weight}`),
-					$("<li></li>").addClass("user-info-item").text(`Какие диеты и методики пробовал? ${item.methodologies}`),
-					$("<li></li>").addClass("user-info-item").text(`Что было самое сложное? ${item.most_difficult}`),
-					$("<li></li>").addClass("user-info-item").text(`Был ли результат? ${item.was_result}`),
-					$("<li></li>").addClass("user-info-item").text(`Почему вес вернулся? ${item.why_fat_again}`),
-					$("<li></li>").addClass("user-info-item").text(`Когда Вы начали набирать вес? Какие были для этого причины? ${item.start_fat}`),
-					$("<li></li>").addClass("user-info-item").text(`Как Вы думаете, какова причина Вашего лишнего веса на данный момент? ${item.why_fat_now}`),
-					$("<li></li>").addClass("user-info-item").text(`Принимаете ли Вы какие-нибудь гормональные препараты? ${item.hormonals}`),
-					$("<li></li>").addClass("user-info-item").text(`Когда последний раз вы сдавали анализы? Какие? ${item.analyzes}`),
-					$("<li></li>").addClass("user-info-item").text(`Какие продукты Вы НЕ едите? ${item.not_eat}`),
-					$("<li></li>").addClass("user-info-item").text(`Есть ли у вас аллергии на какие-нибудь продукты питания, непереносимости, запреты врачей? ${item.allergy}`),
-					$("<li></li>").addClass("user-info-item").text(`Есть ли в Вашей семье люди с лишним весом? Кто это? ${item.fats_in_family}`),
-					$("<li></li>").addClass("user-info-item").text(`Есть ли у Ваших детей лишний вес? ${item.fat_children}`),
-					$("<li></li>").addClass("user-info-item").text(`Как близкие отнесутся к Вашей попытке похудеть? ${item.relatives_attitude}`),
-					$("<li></li>").addClass("user-info-item").text(`Как Вы сами считаете -- в течение дня Вы ходите: ${item.amount_of_walking}`),
-					$("<li></li>").addClass("user-info-item").text(`Есть ли у вас травмы или противопоказания, мешающие ходить больше?${item.any_injuries}`),
-					$("<li></li>").addClass("user-info-item").text(`Какая у Вас мотивация к похудению? Зачем Вам худеть? ${item.motivation}`),
+					$("<li></li>").append(getUserListItem("Пол", maleFemale(item.sex))),
+					$("<li></li>").append(getUserListItem("Тренер", getTrainer(item.trainer_id))),
+					$("<li></li>").append(getUserListItem("Город", item.city)),
+					$("<li></li>").append(getUserListItem("Работа", item.job)),
+					$("<li></li>").append(getUserListItem("Рост", item.height)),
+					$("<li></li>").append(getUserListItem("Вес", item.weight)),
+					$("<li></li>").append(getUserListItem("Желаемый вес", item.target_weight)),
+					$("<li></li>").append(getUserListItem("Какие диеты и методики пробовал?", item.methodologies)),
+					$("<li></li>").append(getUserListItem("Что было самое сложное?", item.most_difficult)),
+					$("<li></li>").append(getUserListItem("Был ли результат?", item.was_result)),
+					$("<li></li>").append(getUserListItem("Почему вес вернулся?", item.why_fat_again)),
+					$("<li></li>").append(getUserListItem("Когда Вы начали набирать вес? Какие были для этого причины?", item.start_fat)),
+					$("<li></li>").append(getUserListItem("Как Вы думаете, какова причина Вашего лишнего веса на данный момент?", item.why_fat_now)),
+					$("<li></li>").append(getUserListItem("Принимаете ли Вы какие-нибудь гормональные препараты?", item.hormonals)),
+					$("<li></li>").append(getUserListItem("Когда последний раз вы сдавали анализы? Какие?", item.analyzes)),
+					$("<li></li>").append(getUserListItem("Какие продукты Вы не едите?", item.not_eat)),
+					$("<li></li>").append(getUserListItem("Есть ли у вас аллергии на какие-нибудь продукты питания, непереносимости, запреты врачей?", item.allergy)),
+					$("<li></li>").append(getUserListItem("Есть ли в Вашей семье люди с лишним весом? Кто это?", item.fats_in_family)),
+					$("<li></li>").append(getUserListItem("Есть ли у Ваших детей лишний вес?", item.fat_children)),
+					$("<li></li>").append(getUserListItem("Как близкие отнесутся к Вашей попытке похудеть?", item.relatives_attitude)),
+					$("<li></li>").append(getUserListItem("Как Вы сами считаете -- в течение дня Вы ходите:", item.amount_of_walking)),
+					$("<li></li>").append(getUserListItem("Есть ли у вас травмы или противопоказания, мешающие ходить больше?", item.any_injuries)),
+					$("<li></li>").append(getUserListItem("Какая у Вас мотивация к похудению? Зачем Вам худеть?", item.motivation)),
 					);
 	return user_ul;
+}
+
+function getUserListItem(question, answer){
+	var q = $("<span></span>").addClass("user-question").text(question);
+	if(typeof(answer) == 'string' || typeof(answer) == 'number'){
+		var ans = $("<p></p>").addClass("user-answer").text(answer);
+	} else {
+		var ans = $("<div></div>").append(answer);
+	}
+	return [q, ans];
 }
 
 function maleFemale(sex){

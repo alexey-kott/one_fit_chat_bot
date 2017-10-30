@@ -37,7 +37,7 @@ body{
 .user-list li.current-user{
 	background: #337ab7;
 	color: #ffffff;
-	font-weight: bold;
+	/*font-weight: bold;*/
 }
 
 .user-age{
@@ -83,13 +83,21 @@ body{
 	background: inherit;
 }
 
-.answer{
-	font-weight: normal;
+.user-question{
+	font-weight: bold;
+	text-decoration: underline;
+	display: block;
+}
+
+.user-answer{
+	text-indent: 30px;
+	margin: 0;
 }
 
 .change-trainer{
 	background: #337ab7;
 	border: 1px solid #fff;
+	margin-left: 30px;
 }
 
 
