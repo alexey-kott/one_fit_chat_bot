@@ -100,10 +100,10 @@ def idle(u, m = None, c = None):
 	pass
 
 
-def cancel(u, c):
+def cancel(u, c = None, m = None):
 	u.state = s.stop
 	u.save()
-	bot.send_message(chat_id, s.canceled_course)
+	bot.send_message(u.user_id, s.canceled_course)
 
 
 def confirm_name(u, c):
@@ -186,13 +186,21 @@ def video_intro(u, m):
 		incorrect_email(m)
 		return False
 	u.email = check.email(m.text)
+	u.state = s.video_intro
 	u.save()
-	bot.send_message(uid(m), s.who_we_are.format(s.intro_link)) # отправим видео
+	keyboard = types.InlineKeyboardMarkup()
+	agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
+	keyboard.add(agree_btn)
+	bot.send_message(uid(m), s.who_we_are.format(s.intro_link), reply_markup = keyboard) # отправим видео
 																 # и через 5 минут -- продолжаем
+
+def are_we_continue(u, c):
+	u.state = s.after_intro	
+	u.save()											 
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.agree_btn, callback_data = s.agree)			
 	keyboard.add(agree_btn)						
-	send_message_delay(uid(m), s.are_we_continuing, delay = 5, state = s.video_intro, reply_markup = keyboard)
+	bot.send_message(cid(c), s.are_we_continue, reply_markup = keyboard)
 
 
 def present_trainer(u, c):
@@ -202,23 +210,28 @@ def present_trainer(u, c):
 		# print(t.first_name)
 
 	u.trainer_id = t.id
-	# u.state = s.trainer
 	u.save()
 	photo = open("images/trainers/{}".format(t.photo), 'rb')
 	bot.send_photo(cid(c), photo, s.your_trainer.format(t.first_name, t.last_name))
-	send_message_delay(cid(c), s.what_to_do.format(s.next_3_days_link), delay = 3, state = s.trainer, parse_mode = 'HTML') # присвоен тренер
+	keyboard = types.InlineKeyboardMarkup()
+	agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
+	keyboard.add(agree_btn)
+	send_message_delay(cid(c), s.what_to_do.format(s.next_3_days_link), delay = 3, reply_markup = keyboard, state = s.trainer, parse_mode = 'HTML') # присвоен тренер
 
+
+def are_you_ready(u, c):
+	u.state = s.ready
+	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.agree_btn, callback_data = s.agree)			
 	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)			
 	keyboard.add(agree_btn, disagree_btn)	
-	send_message_delay(cid(c), s.are_you_ready, delay = 6, state = s.ready, reply_markup = keyboard, disable_notification = True) # "Вы готовы?"
+	bot.send_message(cid(c), s.are_you_ready, reply_markup = keyboard, disable_notification = True) # "Вы готовы?"
 
 
 def remind_1(u, c):
 	u.state = s.stop
 	u.save()
-	# bot.send_message(chat_id, s.waiting_from_you, parse_mode = 'Markdown')
 	img = open("images/system/img4.jpeg", "rb")
 	bot.send_photo(cid(c), img)
 
@@ -316,7 +329,7 @@ def why_fat_again(u, m):
 
 def waiting_from_you(u, m):
 	u.why_fat_again = m.text
-	u.state = s.waiting_from_you
+	# u.state = s.waiting_from_you
 	u.save()
 
 	img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
@@ -330,14 +343,24 @@ def waiting_from_you(u, m):
 	schedule(dt, "waiting_sticker", user_id = uid(m))
 	# send_message_delay(uid(m), s.thanks_for_efforts, delay = 15)
 
-	send_message_delay(uid(m), s.food_romance, delay = 15)
-	send_message_delay(uid(m), s.measurements_link, delay = 25)
+	keyboard = types.InlineKeyboardMarkup()
+	agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
+	keyboard.add(agree_btn)
+	send_message_delay(uid(m), s.food_romance, delay = 15, state = s.waiting_materials, reply_markup = keyboard)
+
+def measurements(u, c):
+	u.state = s.measurements
+	u.save()
+	keyboard = types.InlineKeyboardMarkup()
+	agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
+	keyboard.add(agree_btn)
+	bot.send_message(u.user_id, s.measurements_link, reply_markup = keyboard)
 	send_mail(u.email, "Замеры тела", s.measurements_link)
 
 	dt = datetime.now()
 	dt = dt.replace(hour = 10, minute = 0)
 	delta = timedelta(days = 1)
-	schedule(dt + delta, "day_2", user_id = uid(m))
+	schedule(dt + delta, "day_2", user_id = cid(c))
 	
 
 def thanks_for_efforts(user_id):
