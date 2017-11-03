@@ -55,6 +55,36 @@ class User(BaseModel):
 		self.last_activity = datetime.datetime.utcnow()
 		super().save(force_insert, only)
 
+	def clear(self):
+		self.day = 1
+		self.sex = None 		   		
+		self.age = None			   		
+		self.email = None		   		
+		self.last_activity = None  		
+		self.trainer_id = None     		
+		self.city = None 		   		
+		self.job = None 		   		
+		self.height = None 		   		
+		self.weight = None		   		
+		self.target_weight = None  		
+		self.methodologies = None  		
+		self.most_difficult = None 		
+		self.was_result = None	   		
+		self.why_fat_again = None  		
+		self.start_fat = None	   		
+		self.why_fat_now = None	   		
+		self.hormonals = None	   		
+		self.analyzes = None 	   		
+		self.not_eat = None		   		
+		self.allergy = None		   		
+		self.fats_in_family = None 		
+		self.fat_children = None   		
+		self.relatives_attitude = None  
+		self.amount_of_walking = None   
+		self.any_injuries = None   		
+		self.motivation = None	   		
+		super().save()
+
 
 
 class Routing(BaseModel):
