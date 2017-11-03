@@ -58,6 +58,10 @@
 		</div>
 	</div>
 	<div class="col-lg-4">
+		<div class="active-archive-btn">
+			<div class="active-users-btn current-btn">Активные</div>
+			<div class="archive-users-btn">Архив</div>
+		</div>
 		<ul class="user-list">
 		</ul>
 	</div>
@@ -189,6 +193,7 @@ var state = {
 	current_admin: 12345,
 	user_list_scroll: 0,
 	block: false, // указывает можно ли приложению в данный момент обновляться
+	current_users: "active",
 	block_on: function(){
 		this.block = true;
 	},
@@ -238,13 +243,16 @@ function setUserList(users){
 	$(".user-list").empty()
 	var userList = $(".user-list");
 	users.map(function(item, i){
-		var el = $(`<li class="user" data-user-id="${item.user_id}" data-trainer-id="${item.trainer_id}"></li>`);
+		var el = $(`<li class="user" 
+						data-user-id="${item.user_id}" 
+						data-trainer-id="${item.trainer_id}" 
+						data-day="${item.day}"></li>`);
 		el.append(
 			$("<div></div>").append(
 				$("<div></div>").addClass("user-title").append(
 					$("<span></span>").addClass("user-name").text(`${item.first_name} ${item.last_name}, `),
 					$("<span></span>").addClass("user-age").text(`${age_format(item.age)}`),
-					$("<span></span>").addClass("user-day").text(` (${item.day}-й день)`)
+					$("<span></span>").addClass("user-day").text(getDay(item.day))
 				),
 				$("<div></div>").addClass("last-activity").append(
 					$("<span></span>").text(`последняя активность ${moment(item.last_activity).fromNow()}`)
@@ -257,6 +265,11 @@ function setUserList(users){
 		userList.prepend(el);
 	})
 	$(".current-trainer").trigger("click");
+	if(state.current_users == 'active'){
+		$(".active-users-btn").trigger("click");
+	} else {
+		$(".archive-users-btn").trigger("click");
+	}
 }
 
 
@@ -323,6 +336,14 @@ function getTrainer(trainer_id){
 	return trainer_list;
 	if(trainer_id == 0) return "Не назначен";
 	return `${trainer[trainer_id].first_name} ${trainer[trainer_id].last_name}`;
+}
+
+function getDay(n){
+	if(n > 0){
+		return ` (${n}-й день)`
+	} else {
+		return ''
+	}
 }
 
 $(".user-list").on("focus", ".change-trainer", function(){
@@ -561,6 +582,20 @@ function translit(text) {
             return t[index];
         });
 }
+
+$(".active-archive-btn div").on("click", function(){
+	$(this).addClass("current-btn").siblings().removeClass("current-btn");
+})
+
+$(".active-users-btn").on("click", function(){
+	$(".user[data-day=0]").fadeOut(0).siblings().fadeIn(0);
+	state.current_users = 'active';
+})
+
+$(".archive-users-btn").on("click", function(){
+	$(".user[data-day=0]").fadeIn(0).siblings().fadeOut(0);
+	state.current_users = 'archive';
+})
 
 
 

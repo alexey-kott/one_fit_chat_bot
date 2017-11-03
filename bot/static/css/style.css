@@ -7,6 +7,22 @@ body{
 	margin-top: 20px;
 }
 
+.active-archive-btn{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+
+}
+
+.active-users-btn, .archive-users-btn{
+	position: relative;
+	width: 50%;
+	text-align: center;
+	padding: 10px;
+}
+
+
 .user-list{
 	padding:0;
 	overflow-y: scroll;
@@ -31,6 +47,8 @@ body{
 	font-style: italic;
 	cursor: pointer;
 }
+
+
 
 .user-list li:hover{
 	background: #f0f2f5;
@@ -209,7 +227,7 @@ body{
 	background: #f0f2f5;
 }
 
-.current-trainer{
+.current-trainer, .current-btn{
 	background: #337ab7 !important;
 	color: #fff;
 }
