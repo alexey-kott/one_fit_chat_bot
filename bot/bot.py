@@ -101,7 +101,7 @@ def idle(u, m = None, c = None):
 
 
 def cancel(u, c = None, m = None):
-	u.state = s.stop
+	u.state = s.canceled
 	u.save()
 	bot.send_message(u.user_id, s.canceled_course)
 
