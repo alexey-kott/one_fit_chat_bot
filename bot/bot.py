@@ -660,6 +660,8 @@ def clbck(c):
 
 @bot.message_handler(content_types = ['text'])
 def action(m):
+	print(m)
+	return
 	chat_id = sid(m)
 	u = User.cog(user_id = uid(m))
 	Message.create(sender = uid(m), sender_type = "user", receiver = bot_id, text = m.text)
