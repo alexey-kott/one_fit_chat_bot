@@ -246,13 +246,15 @@ function setUserList(users){
 		var el = $(`<li class="user" 
 						data-user-id="${item.user_id}" 
 						data-trainer-id="${item.trainer_id}" 
+						data-archive="${item.archive}"
 						data-day="${item.day}"></li>`);
 		el.append(
 			$("<div></div>").append(
 				$("<div></div>").addClass("user-title").append(
 					$("<span></span>").addClass("user-name").text(`${item.first_name} ${item.last_name}, `),
 					$("<span></span>").addClass("user-age").text(`${age_format(item.age)}`),
-					$("<span></span>").addClass("user-day").text(getDay(item.day))
+					$("<span></span>").addClass("user-day").text(getDay(item.day)),
+					$("<a href='#'></a>").addClass("change-user-state").text(getChangeUserState(item.archive))
 				),
 				$("<div></div>").addClass("last-activity").append(
 					$("<span></span>").text(`последняя активность ${moment(item.last_activity).fromNow()}`)
@@ -343,6 +345,14 @@ function getDay(n){
 		return ` (${n}-й день)`
 	} else {
 		return ''
+	}
+}
+
+function getChangeUserState(s){
+	if(s == false){
+		return "В архив"
+	} else {
+		return "Из архива"
 	}
 }
 
@@ -588,13 +598,38 @@ $(".active-archive-btn div").on("click", function(){
 })
 
 $(".active-users-btn").on("click", function(){
-	$(".user[data-day=0]").fadeOut(0).siblings().fadeIn(0);
+	$(".user[data-archive=FALSE]").fadeIn(0);
+	$(".user[data-archive=TRUE]").fadeOut(0);
 	state.current_users = 'active';
 })
 
 $(".archive-users-btn").on("click", function(){
-	$(".user[data-day=0]").fadeIn(0).siblings().fadeOut(0);
+	$(".user[data-archive=FALSE]").fadeOut(0);
+	$(".user[data-archive=TRUE]").fadeIn(0);
 	state.current_users = 'archive';
+})
+
+$(".user-list").on("click", ".change-user-state", function(e){
+	e.preventDefault();
+	var user_id = $(this).parents(".user").data("user-id");
+	var user_archive = $(this).parents(".user").data("archive");
+	var archive;
+	if(user_archive == false){
+		archive = true;
+	} else {
+		archive = false;
+	}
+
+	var message = {
+		type: 'change_user_status',
+		user_id: user_id,
+		user_status: archive
+	}
+	if(chatsock.readyState > 1){
+		chatsock = new WebSocket(ws_scheme + '://' + window.location.host + "" + window.location.pathname);
+	}
+	chatsock.send(JSON.stringify(message));
+	
 })
 
 

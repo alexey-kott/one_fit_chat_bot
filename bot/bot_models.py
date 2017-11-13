@@ -19,6 +19,7 @@ class User(BaseModel):
 	state		   		= TextField(default = s.default)
 	last_activity  		= DateTimeField(null = True)
 	day 		   		= IntegerField(default = 1) # день, на котором находится поциент (всего 3 дня)
+	archive				= BooleanField(default=False)
 	trainer_id     		= IntegerField(null = True, default = 0)
 	city 		   		= TextField(null = True)
 	job 		   		= TextField(null = True)
