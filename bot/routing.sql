@@ -1,6 +1,7 @@
 INSERT INTO routing VALUES 
 	('pause','text','idle'),
-	('default','agree','confirm_name'),
+	('default','agree','three_days_importance'),
+	('three_days_importance','agree','confirm_name'),
 	('default','disagree','cancel'),
 	('lets_confirm_name','agree','confirm_last_name'),
 	('lets_confirm_name','text','confirm_last_name'),

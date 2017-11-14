@@ -25,6 +25,7 @@ canceled 			= "canceled"
 stop				= "stop"
 pause				= "pause"
 	#____ day_1
+three_days_importance = "three_days_importance"
 lets_confirm_name 	= "lets_confirm_name"
 lets_confirm_last_name 	= "lets_confirm_last_name"
 sex					= "sex"

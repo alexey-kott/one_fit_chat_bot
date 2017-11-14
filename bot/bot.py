@@ -106,6 +106,19 @@ def cancel(u, c = None, m = None):
 	bot.send_message(u.user_id, s.canceled_course)
 
 
+def three_days_importance(u, c):
+	u.state = s.three_days_importance
+	u.save()
+	video = open('videos/three_days_importance.mp4', 'rb')
+	keyboard = types.InlineKeyboardMarkup()
+	agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
+	keyboard.add(agree_btn)
+	bot.send_chat_action(cid(c), 'upload_video')
+	bot.send_video(cid(c), video, reply_markup=keyboard)
+	# bot.send_message(uid(m), s.who_we_are.format(s.intro_link), reply_markup = keyboard)
+
+
+
 def confirm_name(u, c):
 	u.state = s.lets_confirm_name
 	u.save()
@@ -113,9 +126,6 @@ def confirm_name(u, c):
 	agree_btn = types.InlineKeyboardButton(text = s.my_name_is_btn.format(u.first_name), callback_data = s.agree)
 	keyboard.add(agree_btn)
 	bot.send_message(cid(c), s.confirm_name.format(u.first_name), reply_markup = keyboard)
-
-
-
 
 
 def confirm_last_name(u, m = None, c = None): # получает имя (текстом) или подтверждение того, что мы правильно записали его имя
@@ -660,8 +670,6 @@ def clbck(c):
 
 @bot.message_handler(content_types = ['text'])
 def action(m):
-	print(m)
-	return
 	chat_id = sid(m)
 	u = User.cog(user_id = uid(m))
 	Message.create(sender = uid(m), sender_type = "user", receiver = bot_id, text = m.text)
