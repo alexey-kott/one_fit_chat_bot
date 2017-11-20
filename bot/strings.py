@@ -29,6 +29,7 @@ three_days_importance = "three_days_importance"
 lets_confirm_name 	= "lets_confirm_name"
 lets_confirm_last_name 	= "lets_confirm_last_name"
 sex					= "sex"
+acquaintance		= "acquaintance"
 age					= "age"
 email 				= "email"
 video_intro			= "video_intro"
@@ -108,7 +109,7 @@ incorrect_email		= 'Не похоже, чтобы это был ваш E-mail. �
 who_we_are			= 'А сейчас посмотрите кто мы и что мы предлагаем: \n\n\n {}'
 are_we_continue		= 'Ну что, продолжаем?'
 your_trainer		= 'Вам назначен тренер {} {}'
-what_to_do			= 'Что делать в эти 3 дня:\n\n\n{}'
+what_to_do			= 'Что делать в эти 3 дня:'
 are_you_ready 		= 'Вы готовы эти 3 дня поработать с нами? Отсылать фото, замеры, анкеты?'
 waiting_from_you	= '''
 *Напоминаем, что мы ждём от вас:*

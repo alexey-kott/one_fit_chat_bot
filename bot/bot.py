@@ -167,6 +167,22 @@ def select_sex(u, m = None, c = None):
 	bot.send_message(chat_id, s.male_or_female, reply_markup = keyboard)
 
 
+def get_acquainted(u, c):
+	u.sex = c.data
+	u.state = s.acquaintance
+	u.save()
+	keyboard = types.InlineKeyboardMarkup()
+	agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
+	keyboard.add(agree_btn)
+	if u.sex == 'female':
+		video = open('videos/acquaintance_women.mp4', 'rb')
+	else:
+		video = open('videos/acquaintance_men.mp4', 'rb')
+	bot.send_chat_action(cid(c), 'upload_video')
+	bot.send_video(cid(c), video, reply_markup=keyboard)
+
+
+
 def type_age(u, c = None):
 	u.sex = c.data
 	u.state = s.age
@@ -220,13 +236,18 @@ def present_trainer(u, c):
 		# print(t.first_name)
 
 	u.trainer_id = t.id
+	u.state = s.trainer
 	u.save()
 	photo = open("images/trainers/{}".format(t.photo), 'rb')
 	bot.send_photo(cid(c), photo, s.your_trainer.format(t.first_name, t.last_name))
+	bot.send_message(cid(c), s.what_to_do) # присвоен тренер
+	video = open('videos/first_three_days.mp4', 'rb')
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
 	keyboard.add(agree_btn)
-	send_message_delay(cid(c), s.what_to_do.format(s.next_3_days_link), delay = 3, reply_markup = keyboard, state = s.trainer, parse_mode = 'HTML') # присвоен тренер
+	bot.send_chat_action(cid(c), 'upload_video')
+	bot.send_video(cid(c), video, reply_markup=keyboard)
+
 
 
 def are_you_ready(u, c):
