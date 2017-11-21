@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #_______ системные модули
 import sqlite3 as sqlite
 import telebot
@@ -15,7 +16,7 @@ from playhouse.shortcuts import model_to_dict, dict_to_model # для сериа
 import config as cfg 
 import strings as s # все строки хранятся здесь
 import check # различные проверки: правильно ли юзер ввёл рост/вес/etc
-from functions import send_mail 
+from functions import send_mail, init_routing
 from channels import Group
 
 # импорт моделей
@@ -44,7 +45,7 @@ class TeleBot(telebot.TeleBot):
 		# print('RESPONSE:')
 		# print(response)
 
-
+init_routing()
 bot = TeleBot(cfg.token)
 bot_id = cfg.token.split(":")[0]
 # db = SqliteDatabase('../db.sqlite3')

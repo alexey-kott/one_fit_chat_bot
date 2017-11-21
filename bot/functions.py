@@ -3,6 +3,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 from os.path import basename
+import re
+
+import sqlite3
 
 
 def send_mail(toaddr, theme, text, files = None, user_id = 0): #onefit.chat@mail.ru : qazwsx123
@@ -42,3 +45,16 @@ def send_mail(toaddr, theme, text, files = None, user_id = 0): #onefit.chat@mail
 			return False
 	
 
+def init_routing():
+	with open("routing.sql", "r") as f:
+		route = f.read()
+		route = re.sub(r'\n', '', route)
+		route = re.sub(r'\s+', ' ', route)
+		conn = sqlite3.connect('../db.sqlite3')
+		cursor = conn.cursor()
+		cursor.execute("DELETE FROM routing;") # сначала очистим таблицу роутинга
+		conn.commit() 
+
+		cursor.execute(route)
+		conn.commit()
+		conn.close()

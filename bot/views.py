@@ -93,7 +93,7 @@ def handle_uploaded_file(f):
 
 def add_trainer(request):
 	form = request.POST
-	password = genPassword(form['login'], form['email'])
+	password = gen_password(form['login'], form['email'])
 	admin = Admin(login = form['login'], password = password, role = form['role'])
 	admin.save()
 	photo_name = password[:7]
@@ -108,6 +108,12 @@ def add_trainer(request):
 	return redirect('/admin/', request)
 
 
-def genPassword(login, email):
+def gen_password(login, email):
 	le = "{}{}".format(login, email)
 	return hashlib.sha224(le.encode("utf-8")).hexdigest()
+
+
+def reset_password(request):
+	user = request.GET['user']
+	Admin.objects.get()
+	return redirect('/', request)
