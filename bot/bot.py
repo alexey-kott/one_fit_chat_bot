@@ -758,10 +758,10 @@ if __name__ == '__main__':
 	watcher = Watcher()
 	w = Process(target = watcher)
 	w.start()
-	# bot.polling(none_stop=True)
-	while True:
-		try:
-			bot.polling(none_stop=True)
-		except Exception as e:
-			print(e)
-			sleep(3.5)
+	bot.polling(none_stop=True)
+	# while True:
+	# 	try:
+	# 		bot.polling(none_stop=True)
+	# 	except Exception as e:
+	# 		print(e)
+	# 		sleep(3.5)

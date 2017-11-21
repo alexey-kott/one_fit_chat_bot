@@ -92,9 +92,7 @@ def handle_uploaded_file(f):
 
 
 def add_trainer(request):
-	print(os.getcwd())
 	form = request.POST
-	print(form)
 	password = genPassword(form['login'], form['email'])
 	admin = Admin(login = form['login'], password = password, role = form['role'])
 	admin.save()
