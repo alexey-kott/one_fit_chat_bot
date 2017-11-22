@@ -89,7 +89,8 @@ def schedule(dt, action, **kwargs):
 	try:
 		Schedule.create(timestamp = dt, action = action, arguments = json.dumps(kwargs))
 	except Exception as e:
-		print(e)
+		# print(e)
+		pass
 
 
 # _____________ END FUNCTIONS
@@ -155,7 +156,8 @@ def select_sex(u, m = None, c = None):
 		try:
 			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
 		except Exception as e:
-			print(e)
+			# print(e)
+			pass
 	else:
 		chat_id = cid(c)
 	u.state = s.sex
@@ -452,7 +454,8 @@ def last_analyzes(u, m = None, c = None):
 		try:
 			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
 		except Exception as e:
-			print(e)
+			# print(e)
+			pass
 	u.state = s.last_analyzes
 	u.save()
 	bot.send_message(u.user_id, s.last_analyzes_and_what)
@@ -517,7 +520,8 @@ def fat_children(u, m = None, c = None):
 		try:
 			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
 		except Exception as e:
-			print(e)
+			# print(e)
+			pass
 	u.state = s.fat_children
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
@@ -762,5 +766,5 @@ if __name__ == '__main__':
 		try:
 			bot.polling(none_stop=True)
 		except Exception as e:
-			print(e)
+			# print(e)
 			sleep(3.5)
