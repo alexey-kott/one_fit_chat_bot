@@ -17,7 +17,6 @@ import config as cfg
 import strings as s # все строки хранятся здесь
 import check # различные проверки: правильно ли юзер ввёл рост/вес/etc
 from functions import send_mail, init_routing
-from channels import Group
 
 # импорт моделей
 from bot_models import User
@@ -204,6 +203,7 @@ def type_email(u, m):
 	u.save()
 	bot.send_message(uid(m), s.type_email)
 
+
 def incorrect_email(m):
 	bot.send_message(uid(m), s.incorrect_email)
 
@@ -215,10 +215,19 @@ def video_intro(u, m):
 	u.email = check.email(m.text)
 	u.state = s.video_intro
 	u.save()
+
+	bot.send_message(uid(m), s.what_to_do) 
+	video = open('videos/first_three_days.mp4', 'rb')
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
 	keyboard.add(agree_btn)
-	bot.send_message(uid(m), s.who_we_are.format(s.intro_link), reply_markup = keyboard) # отправим видео
+	bot.send_chat_action(uid(m), 'upload_video')
+	bot.send_video(uid(m), video, reply_markup=keyboard)
+
+	# keyboard = types.InlineKeyboardMarkup()
+	# agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
+	# keyboard.add(agree_btn)
+	# bot.send_message(uid(m), s.who_we_are.format(s.intro_link), reply_markup = keyboard) # отправим видео
 																 # и через 5 минут -- продолжаем
 
 def are_we_continue(u, c):
@@ -241,17 +250,7 @@ def present_trainer(u, c):
 	u.save()
 	photo = open("images/trainers/{}".format(t.photo), 'rb')
 	bot.send_photo(cid(c), photo, s.your_trainer.format(t.first_name, t.last_name))
-	bot.send_message(cid(c), s.what_to_do) # присвоен тренер
-	video = open('videos/first_three_days.mp4', 'rb')
-	keyboard = types.InlineKeyboardMarkup()
-	agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
-	keyboard.add(agree_btn)
-	bot.send_chat_action(cid(c), 'upload_video')
-	bot.send_video(cid(c), video, reply_markup=keyboard)
 
-
-
-def are_you_ready(u, c):
 	u.state = s.ready
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
@@ -274,7 +273,6 @@ def remind_1(u, c):
 	send_photo_delay(cid(c), img, delay=3, state = s.stop)
 	img = open("images/system/img1.jpeg", "rb")
 	send_photo_delay(cid(c), img, delay=6, state = s.stop)
-	# send_message_delay(chat_id, s.fact_finding_remind, delay=3, state = s.stop)
 
 	keyboard = types.InlineKeyboardMarkup()
 	continue_btn = types.InlineKeyboardButton(text = s.continue_btn, callback_data = s.agree)
@@ -759,10 +757,10 @@ if __name__ == '__main__':
 	watcher = Watcher()
 	w = Process(target = watcher)
 	w.start()
-	bot.polling(none_stop=True)
-	# while True:
-	# 	try:
-	# 		bot.polling(none_stop=True)
-	# 	except Exception as e:
-	# 		print(e)
-	# 		sleep(3.5)
+	# bot.polling(none_stop=True)
+	while True:
+		try:
+			bot.polling(none_stop=True)
+		except Exception as e:
+			print(e)
+			sleep(3.5)
