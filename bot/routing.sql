@@ -27,6 +27,7 @@ INSERT INTO routing VALUES
 	('was_result','text', 'why_fat_again'),
 	('why_fat_again','text', 'waiting_from_you'),
 	('waiting_materials','agree', 'measurements'),
+	('measurements','agree', 'idle'),
 	('day_2','text', 'tolerancy'),
 	('day_2','photo', 'tolerancy'),
 	('tolerancy','agree', 'when_start_fat'),

@@ -265,8 +265,9 @@ def present_trainer(u, c):
 def remind_1(u, c):
 	u.state = s.stop
 	u.save()
-	img = open("images/system/img4.jpeg", "rb")
-	bot.send_photo(cid(c), img)
+	# img = open("images/system/img4.jpeg", "rb")
+	# bot.send_photo(cid(c), img)
+	bot.send_message(u.user_id, s.waiting_from_you)
 
 	files = ['files/Анализы.pdf', 'files/Анкета.docx', 'files/Анкета физактивность.docx']
 	send_mail(u.email, s.your_documents, s.your_documents, files = files)
@@ -364,8 +365,10 @@ def waiting_from_you(u, m):
 	# u.state = s.waiting_from_you
 	u.save()
 
-	img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
-	bot.send_photo(uid(m), img)
+	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
+	# bot.send_photo(uid(m), img)
+	# поменяли напоминалку на картинке на текстовую
+	bot.send_message(u.user_id, s.waiting_from_you)
 
 	# устанавливаем отправку сообщения на 21.00
 	dt = datetime.now()
@@ -399,8 +402,9 @@ def thanks_for_efforts(user_id):
 	bot.send_message(user_id, s.thanks_for_efforts)
 
 def waiting_sticker(user_id):
-	img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
-	bot.send_photo(user_id, img)
+	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
+	# bot.send_photo(user_id, img)
+	bot.send_message(u.user_id, s.waiting_from_you)
 
 
 # _________ Day 2
@@ -410,8 +414,9 @@ def day_2(user_id):
 	u.day = 2
 	u.save()
 	bot.send_message(user_id, s.greeting_2)	
-	img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
-	bot.send_photo(user_id, img)
+	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
+	# bot.send_photo(user_id, img)
+	send_message_delay(user_id, s.waiting_from_you, delay = 5)
 	send_message_delay(user_id, s.day_2_start, state = s.day_2, delay = 10)
 	send_message_delay(user_id, "Продолжайте присылать фото всего, что Вы едите и пьёте", delay = 20)
 
@@ -482,8 +487,9 @@ def day_2_end(u, m):
 	dt = dt.replace(hour = 10, minute = 0)
 	delta = timedelta(days = 1)
 	schedule(dt + delta, "day_3", user_id = uid(m))
-	img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
-	send_photo_delay(uid(m), img, state = s.pause, delay = 2)
+	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
+	# send_photo_delay(uid(m), img, state = s.pause, delay = 2)
+	bot.send_message(u.user_id, s.waiting_from_you)
 
 
 # _________ Day 3
@@ -494,8 +500,10 @@ def day_3(user_id):
 	u.day = 3
 	u.save()
 	bot.send_message(user_id, s.greeting_3.format(u.first_name))
-	img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
-	send_photo_delay(user_id, img, state = s.day_3, delay = 5)
+	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
+	# send_photo_delay(user_id, img, state = s.day_3, delay = 5)
+	send_message_delay(user_id, s.waiting_from_you)
+
 
 def miron_story(u, m): # "КАКОЙ-ТО ФИЛЬМ (история Мирона или ещё что-то)"
 	u.state = s.miron_story
@@ -738,8 +746,8 @@ def photo(m):
 				eval(r.action)(u = u, m = m)
 		except Exception as e:
 			Error.create(message = m.text, state = u.state, exception = e)
-			print(e)
-			print(m)
+			# print(e)
+			# print(m)
 	except Exception as e:
 		print(e)
 
