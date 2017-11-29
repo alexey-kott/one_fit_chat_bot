@@ -502,7 +502,7 @@ def day_3(user_id):
 	bot.send_message(user_id, s.greeting_3.format(u.first_name))
 	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
 	# send_photo_delay(user_id, img, state = s.day_3, delay = 5)
-	send_message_delay(user_id, s.waiting_from_you)
+	send_message_delay(user_id, s.waiting_from_you, state = s.day_3, delay = 5)
 
 
 def miron_story(u, m): # "КАКОЙ-ТО ФИЛЬМ (история Мирона или ещё что-то)"
