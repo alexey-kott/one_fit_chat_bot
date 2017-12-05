@@ -262,6 +262,12 @@ def present_trainer(u, c):
 	bot.send_message(cid(c), s.are_you_ready, reply_markup = keyboard, disable_notification = True) # "Вы готовы?"
 
 
+def not_ready(u, c):
+	u.state = s.canceled
+	u.save()
+	bot.send_message(u.user_id, s.canceled_course)
+
+
 def remind_1(u, c):
 	u.state = s.stop
 	u.save()
@@ -362,8 +368,8 @@ def why_fat_again(u, m):
 
 def waiting_from_you(u, m):
 	u.why_fat_again = m.text
-	# u.state = s.waiting_from_you
-	u.save()
+	# u.state = s.waiting_materials
+	# u.save()
 
 	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
 	# bot.send_photo(uid(m), img)
@@ -378,18 +384,18 @@ def waiting_from_you(u, m):
 	schedule(dt, "waiting_sticker", user_id = uid(m))
 	# send_message_delay(uid(m), s.thanks_for_efforts, delay = 15)
 
-	keyboard = types.InlineKeyboardMarkup()
-	agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
-	keyboard.add(agree_btn)
-	send_message_delay(uid(m), s.food_romance, delay = 15, state = s.waiting_materials, reply_markup = keyboard)
+	# keyboard = types.InlineKeyboardMarkup()
+	# agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
+	# keyboard.add(agree_btn)
+	# send_message_delay(uid(m), s.food_romance, delay = 15, state = s.waiting_materials, reply_markup = keyboard)
 
-def measurements(u, c):
-	u.state = s.measurements
+# def measurements(u, c):
+	# u.state = s.measurements
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
 	keyboard.add(agree_btn)
-	bot.send_message(u.user_id, s.measurements_link, reply_markup = keyboard)
+	send_message_delay(u.user_id, s.measurements_link, delay = 10, state = s.measurements, reply_markup = keyboard)
 	send_mail(u.email, "Замеры тела", s.measurements_link)
 
 	dt = datetime.now()
@@ -417,7 +423,7 @@ def day_2(user_id):
 	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
 	# bot.send_photo(user_id, img)
 	send_message_delay(user_id, s.waiting_from_you, delay = 5)
-	send_message_delay(user_id, s.day_2_start, state = s.day_2, delay = 10)
+	send_message_delay(user_id, s.day_2_start.format(u.first_name), state = s.day_2, delay = 10)
 	send_message_delay(user_id, "Продолжайте присылать фото всего, что Вы едите и пьёте", delay = 20)
 
 def tolerancy(u, m):
