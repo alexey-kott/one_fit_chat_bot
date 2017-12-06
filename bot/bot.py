@@ -401,7 +401,7 @@ def waiting_from_you(u, m):
 	dt = datetime.now()
 	dt = dt.replace(hour = 10, minute = 0)
 	delta = timedelta(days = 1)
-	schedule(dt + delta, "day_2", user_id = cid(c))
+	schedule(dt + delta, "day_2", user_id = u.user_id)
 	
 
 def thanks_for_efforts(user_id):
