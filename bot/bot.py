@@ -69,7 +69,7 @@ async def handle(request):
         return web.Response()
     else:
         return web.Response(status=403)
-        
+
 
 def delay(func): # отсылка сообщений с задержкой
     def delayed(*args, **kwargs):
@@ -434,12 +434,12 @@ def day_2(user_id):
 	u = User.get(user_id = user_id)
 	u.day = 2
 	u.save()
-	bot.send_message(user_id, s.greeting_2)	
+	# bot.send_message(user_id, s.greeting_2)	
 	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
 	# bot.send_photo(user_id, img)
-	send_message_delay(user_id, s.waiting_from_you, delay = 5)
-	send_message_delay(user_id, s.day_2_start.format(u.first_name), state = s.day_2, delay = 10)
-	send_message_delay(user_id, "Продолжайте присылать фото всего, что Вы едите и пьёте", delay = 20)
+	send_message_delay(user_id, s.day_2_start.format(u.first_name), state = s.day_2, delay = 1)
+	# send_message_delay(user_id, s.waiting_from_you, delay = 6)
+	send_message_delay(user_id, "Продолжайте присылать фото всего, что Вы едите и пьёте", delay = 6)
 
 def tolerancy(u, m):
 	u.state = s.tolerancy
