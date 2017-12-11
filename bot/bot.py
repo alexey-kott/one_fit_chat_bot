@@ -6,6 +6,8 @@ import threading # для отложенных сообщений
 from multiprocessing import Process
 from time import sleep
 import re
+import ssl
+from aiohttp import web
 from datetime import datetime, date, time, timedelta
 import json
 from telebot import types
@@ -13,7 +15,7 @@ from peewee import *
 from playhouse.sqlite_ext import *
 from playhouse.shortcuts import model_to_dict, dict_to_model # для сериализации peewee-объектов во время логирования ошибок
 # ______ модули приложения
-import config as cfg 
+from config import *
 import strings as s # все строки хранятся здесь
 import check # различные проверки: правильно ли юзер ввёл рост/вес/etc
 from functions import send_mail, init_routing
@@ -45,8 +47,8 @@ class TeleBot(telebot.TeleBot):
 		# print(response)
 
 init_routing()
-bot = TeleBot(cfg.token)
-bot_id = cfg.token.split(":")[0]
+bot = TeleBot(API_TOKEN)
+bot_id = API_TOKEN.split(":")[0]
 # db = SqliteDatabase('../db.sqlite3')
 # db = SqliteDatabase('bot.db')
 
@@ -55,6 +57,19 @@ uid = lambda m: m.from_user.id
 cid = lambda c: c.message.chat.id
 
 # _____________ FUNCTIONS
+
+
+
+# Process webhook calls
+async def handle(request):
+    if request.match_info.get('token') == bot.token:
+        request_body_dict = await request.json()
+        update = types.Update.de_json(request_body_dict)
+        bot.process_new_updates([update])
+        return web.Response()
+    else:
+        return web.Response(status=403)
+        
 
 def delay(func): # отсылка сообщений с задержкой
     def delayed(*args, **kwargs):
@@ -775,10 +790,30 @@ if __name__ == '__main__':
 	watcher = Watcher()
 	w = Process(target = watcher)
 	w.start()
-	# bot.polling(none_stop=True)
-	while True:
-		try:
-			bot.polling(none_stop=True)
-		except Exception as e:
-			# print(e)
-			sleep(3.5)
+
+	# Remove webhook, it fails sometimes the set if there is a previous webhook
+	bot.remove_webhook()
+
+
+	if LAUNCH_MODE == "DEV":
+		bot.polling(none_stop=True)
+	elif LAUNCH_MODE == "PROD":
+		app = web.Application()
+		app.router.add_post('/{token}/', handle)
+
+		
+		# Set webhook
+		bot.set_webhook(url=WEBHOOK_URL_BASE+WEBHOOK_URL_PATH,
+		                certificate=open(WEBHOOK_SSL_CERT, 'r'))
+
+		# Build ssl context
+		context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+		context.load_cert_chain(WEBHOOK_SSL_CERT, WEBHOOK_SSL_PRIV)
+
+		# Start aiohttp server
+		web.run_app(
+		    app,
+		    host=WEBHOOK_LISTEN,
+		    port=WEBHOOK_PORT,
+		    ssl_context=context,
+		)
