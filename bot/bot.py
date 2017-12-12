@@ -499,18 +499,27 @@ def allergy(u, m):
 	bot.send_message(uid(m), s.any_allergies)
 
 
-def day_2_end(u, m):
+def last_2_day_answer(u, m):
 	u.allergy = m.text
 	u.state = s.pause 
 	u.save()
+	bot.send_message(uid(m), s.waiting_photo_1)
+
+	dt = datetime.now()
+	dt = dt.replace(hour = 21, minute = 0)
+	schedule(dt, "day_2_end", user_id = u.user_id)
+
+
+
+def day_2_end(user_id):
 
 	dt = datetime.now()
 	dt = dt.replace(hour = 10, minute = 0)
 	delta = timedelta(days = 1)
-	schedule(dt + delta, "day_3", user_id = uid(m))
+	schedule(dt + delta, "day_3", user_id = user_id)
 	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
 	# send_photo_delay(uid(m), img, state = s.pause, delay = 2)
-	bot.send_message(u.user_id, s.waiting_from_you)
+	bot.send_message(user_id, s.day_2_end)
 
 
 # _________ Day 3
@@ -534,6 +543,7 @@ def miron_story(u, m): # "КАКОЙ-ТО ФИЛЬМ (история Мирон�
 	keyboard.add(looked_btn)
 	bot.send_message(uid(m), s.look_at_miron_story, reply_markup = keyboard)
 
+
 def fats_in_family(u, m = None, c = None):
 	u.state = s.fats_in_family
 	u.save()
@@ -541,6 +551,7 @@ def fats_in_family(u, m = None, c = None):
 	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)
 	keyboard.add(disagree_btn)
 	bot.send_message(u.user_id, s.fats_in_your_family, reply_markup = keyboard)
+
 
 def fat_children(u, m = None, c = None):
 	if m != None:
@@ -558,6 +569,7 @@ def fat_children(u, m = None, c = None):
 	keyboard.add(no_children_btn)
 	bot.send_message(u.user_id, s.your_fat_children, reply_markup = keyboard)
 
+
 def relatives_attitude(u, m = None, c = None):
 	if m != None:
 		u.fat_children = m.text
@@ -574,6 +586,7 @@ def relatives_attitude(u, m = None, c = None):
 	keyboard.add(support_btn)
 	keyboard.add(dissuade_btn)
 	bot.send_message(u.user_id, s.your_relatives_attitude, reply_markup = keyboard)
+
 
 def amount_of_walking(u, m = None, c = None):
 	if m != None:
@@ -596,6 +609,7 @@ def amount_of_walking(u, m = None, c = None):
 	keyboard.add(middling_btn)
 	bot.send_message(u.user_id, s.your_amount_of_walking, reply_markup = keyboard)
 
+
 def any_injuries(u, m = None, c = None):
 	if m != None:
 		u.amount_of_walking = m.text
@@ -613,6 +627,7 @@ def any_injuries(u, m = None, c = None):
 	keyboard.add(disagree_btn)
 	bot.send_message(u.user_id, s.your_injuries, reply_markup = keyboard)
 
+
 def motivation(u, m = None, c = None):
 	if m != None:
 		u.any_injuries = m.text
@@ -625,34 +640,25 @@ def motivation(u, m = None, c = None):
 	u.save()
 	bot.send_message(u.user_id, s.your_motivation)
 
+
 def final_reminder(u, m):
 	u.motivation = m.text
 	u.state = s.final
 	u.save()
 	bot.send_message(uid(m), s.fill_table)
-	send_message_delay(uid(m), s.reminder, state = s.pause, delay = 5)
+	send_message_delay(uid(m), s.reminder, delay = 5)
+	send_message_delay(uid(m), s.thanks_for_day_3, state = s.pause, delay = 10)
 
 	dt = datetime.now()
 	dt = dt.replace(hour = 21, minute = 0)
 	schedule(dt, "bye_day_3", user_id = u.user_id)
+
 
 def bye_day_3(user_id):
 	u = User(user_id = user_id).get()
 	u.day = 0
 	u.save()
 	bot.send_message(user_id, s.bye_day_3)
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -735,8 +741,8 @@ def action(m):
 				eval(r.action)(u = u, m = m)
 		except Exception as e:
 			Error.create(message = m.text, state = u.state, exception = e)
-			print(e)
-			print(m)
+			# print(e)
+			# print(m)
 	except Exception as e:
 		Error.create(message = m.text, state = u.state, exception = e)
 		print(e)

@@ -36,11 +36,9 @@ INSERT INTO routing VALUES
 	('hormonals','disagree', 'last_analyzes'),
 	('last_analyzes','text', 'not_eat'),
 	('not_eat','text', 'allergy'),
-	('allergy','text', 'day_2_end'),
-	('day_3','text', 'miron_story'),
-	('day_3','photo', 'miron_story'),
-	('miron_story','text', 'fats_in_family'),
-	('miron_story','agree', 'fats_in_family'),
+	('allergy','text', 'last_2_day_answer'),
+	('day_3','text', 'fats_in_family'),
+	('day_3','photo', 'fats_in_family'),
 	('fats_in_family','text', 'fat_children'),
 	('fats_in_family','disagree', 'fat_children'),
 	('fat_children','disagree', 'relatives_attitude'),
@@ -55,4 +53,5 @@ INSERT INTO routing VALUES
 	('any_injuries','text', 'motivation'),
 	('any_injuries','disagree', 'motivation'),
 	('motivation','text', 'final_reminder'),
-	('final','text','idle');
+	('final','text','last_3_day_answer'),
+	('day_3_end','text','idle');
