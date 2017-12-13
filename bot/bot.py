@@ -647,7 +647,6 @@ def final_reminder(u, m):
 	u.save()
 	bot.send_message(uid(m), s.fill_table)
 	send_message_delay(uid(m), s.reminder, delay = 5)
-	send_message_delay(uid(m), s.thanks_for_day_3, state = s.pause, delay = 10)
 
 	dt = datetime.now()
 	dt = dt.replace(hour = 21, minute = 0)
