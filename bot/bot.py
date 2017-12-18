@@ -383,6 +383,7 @@ def why_fat_again(u, m):
 
 def waiting_from_you(u, m):
 	u.why_fat_again = m.text
+	u.save()
 	# u.state = s.waiting_materials
 	# u.save()
 
@@ -406,7 +407,6 @@ def waiting_from_you(u, m):
 
 # def measurements(u, c):
 	# u.state = s.measurements
-	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
 	keyboard.add(agree_btn)
@@ -425,7 +425,7 @@ def thanks_for_efforts(user_id):
 def waiting_sticker(user_id):
 	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
 	# bot.send_photo(user_id, img)
-	bot.send_message(u.user_id, s.waiting_from_you)
+	bot.send_message(user_id, s.waiting_from_you)
 
 
 # _________ Day 2
