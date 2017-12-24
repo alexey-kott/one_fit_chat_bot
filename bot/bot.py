@@ -422,10 +422,6 @@ def waiting_from_you(u, m):
 def thanks_for_efforts(user_id):
 	bot.send_message(user_id, s.thanks_for_efforts)
 
-def waiting_sticker(user_id):
-	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
-	# bot.send_photo(user_id, img)
-	bot.send_message(user_id, s.waiting_from_you)
 
 
 # _________ Day 2
