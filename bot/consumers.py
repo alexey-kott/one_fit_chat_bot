@@ -8,6 +8,7 @@ from channels.sessions import channel_session
 from .models import User
 from .models import Message
 from .models import Trainer
+from .models import Admin
 
 def datetime_handler(x):
     if isinstance(x, datetime.datetime):
@@ -45,7 +46,7 @@ def ws_receive(message):
 	if data['type'] == 'remove_trainer':
 		trainer = Trainer.objects.get(id = data['trainer_id'])
 		trainer.delete()
-		admin = Trainer.objects.get(id = data['trainer_id'])
+		admin = Admin.objects.get(id = data['trainer_id'])
 		admin.delete()
 
 	if data['type'] == 'change_user_status':

@@ -1,10 +1,10 @@
 from django.db import models
 from django.db.utils import DEFAULT_DB_ALIAS
 import telebot
-import bot.config as cfg
+from bot.config import *
 import datetime
 
-bot = telebot.TeleBot(cfg.token)
+bot = telebot.TeleBot(API_TOKEN)
 
 # Create your models here.
 class Admin(models.Model):
