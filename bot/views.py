@@ -31,6 +31,7 @@ def auth(request):
 		return render(request, 'bot/auth.html')
 	try:
 		admin = Admin.objects.get(login = login)
+		print("password", admin.password)
 		if password == admin.password:
 			request.session['login'] = login
 			request.session['role'] = admin.role
@@ -95,7 +96,11 @@ def add_trainer(request):
 	form = request.POST
 	password = gen_password(form['login'], form['email'])
 	admin = Admin(login = form['login'], password = password, role = form['role'])
-	admin.save()
+	try:
+		admin.save()
+	except:
+		return redirect('/admin/', request)
+
 	photo_name = password[:7]
 	ext = re.findall(r'\.[^\.]+$', form['photo_name'])[0]
 	photo_name = "{}{}".format(photo_name, ext)
@@ -114,6 +119,6 @@ def gen_password(login, email):
 
 
 def reset_password(request):
-	user = request.GET['user']
-	Admin.objects.get()
+	login = request.GET['login']
+	user = Admin.objects.get(login = login)
 	return redirect('/', request)

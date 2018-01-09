@@ -2,4 +2,4 @@ config.py
 __pycache__/
 bot/images/photo/
 db.sqlite3
-venv
+venv/
