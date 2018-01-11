@@ -352,6 +352,7 @@ function getChangeUserState(s){
 	if(s == false){
 		return "В архив"
 	} else {
+
 		return "Из архива"
 	}
 }
@@ -598,14 +599,14 @@ $(".active-archive-btn div").on("click", function(){
 })
 
 $(".active-users-btn").on("click", function(){
-	$(".user[data-archive=FALSE]").fadeIn(0);
-	$(".user[data-archive=TRUE]").fadeOut(0);
+	$(".user[data-archive=false]").fadeIn(0);
+	$(".user[data-archive=true]").fadeOut(0);
 	state.current_users = 'active';
 })
 
 $(".archive-users-btn").on("click", function(){
-	$(".user[data-archive=FALSE]").fadeOut(0);
-	$(".user[data-archive=TRUE]").fadeIn(0);
+	$(".user[data-archive=false]").fadeOut(0);
+	$(".user[data-archive=true]").fadeIn(0);
 	state.current_users = 'archive';
 })
 
