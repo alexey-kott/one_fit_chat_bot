@@ -11,7 +11,7 @@
 <link rel="shortcut icon" href="{% static 'fitchat.ico' %}" >
 <div class="row">
 	<div class="col-lg-6 col-md-5 col-sm-5 col-xs-5">
-		<h3>Вы вошли как {{ request.session.login }}</h3>
+		<h3>Вы вошли как {{ request.session.login }} </h3>
 	</div>
 	<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5">
 		
@@ -194,6 +194,8 @@ var state = {
 	user_list_scroll: 0,
 	block: false, // указывает можно ли приложению в данный момент обновляться
 	current_users: "active",
+	current_role: '{{request.session.role}}',
+	current_trainer: {{request.session.trainer_id}},
 	block_on: function(){
 		this.block = true;
 	},
@@ -204,7 +206,6 @@ var state = {
 		}, 1000)
 	}
 }
-
 
 
 // When we're using HTTPS, use WSS too.
@@ -243,6 +244,8 @@ function setUserList(users){
 	$(".user-list").empty()
 	var userList = $(".user-list");
 	users.map(function(item, i){
+		if(state.current_role === 'trainer' && item.trainer_id !== state.current_trainer)
+			return false
 		var el = $(`<li class="user" 
 						data-user-id="${item.user_id}" 
 						data-trainer-id="${item.trainer_id}" 

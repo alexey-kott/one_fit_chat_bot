@@ -31,13 +31,14 @@ def auth(request):
 		return render(request, 'bot/auth.html')
 	try:
 		admin = Admin.objects.get(login = login)
-		print("password", admin.password)
 		if password == admin.password:
 			request.session['login'] = login
 			request.session['role'] = admin.role
+			request.session['trainer_id'] = admin.id
 			context = {
 				'login' 			: login,
-				'role'		   		: admin.role
+				'role'		   		: admin.role,
+				'trainer_id'		: admin.id
 			}
 			return redirect('/admin/', request, context)
 		else:
