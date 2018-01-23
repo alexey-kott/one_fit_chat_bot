@@ -195,7 +195,7 @@ var state = {
 	block: false, // указывает можно ли приложению в данный момент обновляться
 	current_users: "active",
 	current_role: '{{request.session.role}}',
-	current_trainer: {{request.session.trainer_id}},
+	current_trainer: '{{request.session.trainer_id}}',
 	block_on: function(){
 		this.block = true;
 	},
@@ -244,7 +244,7 @@ function setUserList(users){
 	$(".user-list").empty()
 	var userList = $(".user-list");
 	users.map(function(item, i){
-		if(state.current_role === 'trainer' && item.trainer_id !== state.current_trainer)
+		if(state.current_role === 'trainer' && item.trainer_id != state.current_trainer)
 			return false
 		var el = $(`<li class="user" 
 						data-user-id="${item.user_id}" 
