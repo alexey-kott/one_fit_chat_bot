@@ -780,9 +780,17 @@ class Watcher:
 		while True:
 			now = datetime.now()
 			now = now.replace(microsecond = 0)
-			for row in Schedule.select():
+
+			# проверка на запланированное действие в расписании
+			for row in Schedule.select(Schedule.timestamp == now):
 				if row.timestamp == now:
 					eval(row.action)(**json.loads(row.arguments))
+
+			# проверка на last_activity
+			hour_ago = now - timedelta(hours=1)
+			users = User.select(User.last_activity == hour_ago)
+			for user in users:
+				print(user.last_activity)
 			sleep(1)
 
 
