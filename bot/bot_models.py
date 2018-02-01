@@ -53,7 +53,7 @@ class User(BaseModel):
 			
 
 	def save(self, force_insert=False, only=None):
-		self.last_activity = datetime.datetime.utcnow()
+		self.last_activity = datetime.datetime.now()
 		super().save(force_insert, only)
 
 	def clear(self):
