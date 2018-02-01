@@ -780,6 +780,7 @@ class Watcher:
 		while True:
 			now = datetime.now()
 			now = now.replace(microsecond = 0)
+			hour_ago = now - timedelta(hours=1)
 
 			# проверка на запланированное действие в расписании
 			for row in Schedule.select(Schedule.timestamp == now):
@@ -787,10 +788,9 @@ class Watcher:
 					eval(row.action)(**json.loads(row.arguments))
 
 			# проверка на last_activity
-			hour_ago = now - timedelta(hours=1)
-			users = User.select(User.last_activity == hour_ago)
+			users = User.select().where((User.last_activity == hour_ago) & (User.state != s.canceled))
 			for user in users:
-				print(user.last_activity)
+				bot.send_message(user.user_id, s.one_hour_reminder)
 			sleep(1)
 
 
