@@ -788,7 +788,10 @@ class Watcher:
 					eval(row.action)(**json.loads(row.arguments))
 
 			# проверка на last_activity
-			users = User.select().where((User.last_activity == hour_ago) & (User.state != s.canceled))
+			users = User.select().where(
+				(User.last_activity >= hour_ago) & 
+				(User.last_activity < hour_ago + timedelta(seconds=1)) & 
+				(User.state != s.canceled))
 			for user in users:
 				bot.send_message(user.user_id, s.one_hour_reminder)
 			sleep(1)
