@@ -40,5 +40,5 @@ def weight(m):
 			w = float(re.findall(r'\d{2,3}[,\.]\d{1,2}', m)[0])
 			return w
 		except Exception as e:
-			print(e)
+			# print(e)
 			return False

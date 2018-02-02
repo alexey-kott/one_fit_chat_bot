@@ -352,12 +352,22 @@ def target_weight(u, m):
 	bot.send_message(uid(m), s.type_target_weight)
 
 
-def methodologies(u, m):
+def any_methodologies(u, m):
 	# u.state = s.methodologies
 	u.target_weight = m.text
 	u.save()
 	bot.send_message(uid(m), s.thanks_for_answers)
-	send_message_delay(uid(m), s.type_methodologies, delay=5, state = s.methodologies)
+	keyboard = types.InlineKeyboardMarkup()
+	agree_btn = types.InlineKeyboardButton(text = s.agree_btn, callback_data = s.agree)			
+	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)			
+	keyboard.add(agree_btn, disagree_btn)
+	send_message_delay(uid(m), s.any_methodologies, delay=5, state = s.any_methodologies_st, reply_markup=keyboard)
+
+
+def what_methodologies(u, c):
+	u.state = s.what_methodologies_st
+	u.save()
+	bot.send_message(cid(c), s.what_methodologies)
 
 
 def most_difficult(u, m):
@@ -381,9 +391,10 @@ def why_fat_again(u, m):
 	bot.send_message(uid(m), s.type_why_fat_again)	
 
 
-def waiting_from_you(u, m):
-	u.why_fat_again = m.text
-	u.save()
+def waiting_from_you(u, m=None, c=None):
+	if m is not None:
+		u.why_fat_again = m.text
+		u.save()
 	# u.state = s.waiting_materials
 	# u.save()
 
@@ -395,18 +406,10 @@ def waiting_from_you(u, m):
 	# устанавливаем отправку сообщения на 21.00
 	dt = datetime.now()
 	dt = dt.replace(hour = 21, minute = 0)
-	schedule(dt, "thanks_for_efforts", user_id = uid(m))
+	schedule(dt, "thanks_for_efforts", user_id = u.user_id)
 	dt = dt.replace(minute = 30)
-	schedule(dt, "waiting_sticker", user_id = uid(m))
-	# send_message_delay(uid(m), s.thanks_for_efforts, delay = 15)
+	schedule(dt, "waiting_sticker", user_id = u.user_id)
 
-	# keyboard = types.InlineKeyboardMarkup()
-	# agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
-	# keyboard.add(agree_btn)
-	# send_message_delay(uid(m), s.food_romance, delay = 15, state = s.waiting_materials, reply_markup = keyboard)
-
-# def measurements(u, c):
-	# u.state = s.measurements
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
 	keyboard.add(agree_btn)
@@ -741,7 +744,7 @@ def action(m):
 	except Exception as e:
 		Error.create(message = m.text, state = u.state, exception = e)
 		print(e)
-	
+
 
 def save_photo(message): # системная функция, не вызывает отправку сообщения в ТГ
 	user_id = message.from_user.id
