@@ -24,7 +24,7 @@
 				<label for="password">Пароль</label>
 				<input type="password" name="password" class="form-control input-lg " id="password" placeholder="Введите пароль">
 				{% if incorrect_password %}
-					<span style="color: #a94442;">Неверный пароль </span><a href="/reset-password?user={{ login }}" style="float: right;">Сбросить пароль</a>
+					<span style="color: #a94442;">Неверный пароль </span><a href="/reset-password?login={{ login }}" style="float: right;">Сбросить пароль</a>
 				{% endif %}
 			</div>
 			<div class="form-group">

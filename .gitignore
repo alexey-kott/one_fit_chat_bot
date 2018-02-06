@@ -1,5 +1,6 @@
 config.py
 __pycache__/
 bot/images/photo/
+bot/images/buffer/
 db.sqlite3
 venv/
