@@ -7,6 +7,7 @@ from multiprocessing import Process
 from time import sleep
 import re
 import ssl
+from random import randint
 from aiohttp import web
 from datetime import datetime, date, time, timedelta
 import json
@@ -39,8 +40,18 @@ from bot_models import Schedule
 #	c 		= call
 
 class TeleBot(telebot.TeleBot):
-	def send_message(self, chat_id, text, disable_web_page_preview=None, reply_to_message_id=None, reply_markup=None, parse_mode=None, disable_notification=None):
+	def send_message(self, chat_id, text, disable_web_page_preview=None, reply_to_message_id=None, reply_markup=None, parse_mode=None, disable_notification=None, user = None, state=None, delay=None):
 		Message.create(sender = bot_id, sender_type = "bot", receiver = chat_id, text = text)
+		if reply_markup is None:
+			super().send_chat_action(chat_id, 'typing')
+			if delay is not None:
+				sleep(delay)
+			else:
+				sleep(randint(7, 15))
+
+		if state is not None:
+			user.state=state
+			user.save()
 		super().send_message(chat_id, text, disable_web_page_preview, reply_to_message_id, reply_markup, parse_mode, disable_notification)
 
 		# print('RESPONSE:')
@@ -136,12 +147,12 @@ def three_days_importance(u, c):
 
 
 def confirm_name(u, c):
-	u.state = s.lets_confirm_name
+	# u.state = s.lets_confirm_name
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.my_name_is_btn.format(u.first_name), callback_data = s.agree)
 	keyboard.add(agree_btn)
-	bot.send_message(cid(c), s.confirm_name.format(u.first_name), reply_markup = keyboard)
+	bot.send_message(cid(c), s.confirm_name.format(u.first_name), reply_markup = keyboard, user=u, state=s.lets_confirm_name)
 
 
 def confirm_last_name(u, m = None, c = None): # получает имя (текстом) или подтверждение того, что мы правильно записали его имя
@@ -152,15 +163,15 @@ def confirm_last_name(u, m = None, c = None): # получает имя (тек�
 		bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
 	else:
 		chat_id = cid(c)
-	u.state = s.lets_confirm_last_name
+	# u.state = s.lets_confirm_last_name
 	u.save()	
 	keyboard = types.InlineKeyboardMarkup()
 	if u.last_name != None:
 		agree_btn = types.InlineKeyboardButton(text = s.my_last_name_is_btn.format(u.last_name), callback_data = s.agree)
 		keyboard.add(agree_btn)
-		bot.send_message(chat_id, s.confirm_last_name.format(u.last_name), reply_markup = keyboard)
+		bot.send_message(chat_id, s.confirm_last_name.format(u.last_name), reply_markup = keyboard, user=u, state=s.lets_confirm_last_name)
 		return
-	bot.send_message(chat_id, s.type_last_name.format(u.last_name), reply_markup = keyboard)
+	bot.send_message(chat_id, s.type_last_name.format(u.last_name), reply_markup = keyboard, user=u, state=s.lets_confirm_last_name)
 
 
 def select_sex(u, m = None, c = None):
@@ -175,13 +186,13 @@ def select_sex(u, m = None, c = None):
 			pass
 	else:
 		chat_id = cid(c)
-	u.state = s.sex
+	# u.state = s.sex
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	male_btn = types.InlineKeyboardButton(text = s.male_btn, callback_data = s.male)
 	female_btn = types.InlineKeyboardButton(text = s.female_btn, callback_data = s.female)
 	keyboard.add(male_btn, female_btn)
-	bot.send_message(chat_id, s.male_or_female, reply_markup = keyboard)
+	bot.send_message(chat_id, s.male_or_female, reply_markup = keyboard, user=u, state = s.sex)
 
 
 def get_acquainted(u, c):
@@ -202,9 +213,9 @@ def get_acquainted(u, c):
 
 def type_age(u, c = None):
 	u.sex = c.data
-	u.state = s.age
+	# u.state = s.age
 	u.save()
-	bot.send_message(cid(c), s.type_age)
+	bot.send_message(cid(c), s.type_age, user=u, state=s.age)
 
 
 def incorrect_age(u, m):
@@ -216,9 +227,9 @@ def type_email(u, m):
 		incorrect_age(u, m)
 		return False
 	u.age = check.age(m.text)
-	u.state = s.email
+	# u.state = s.email
 	u.save()
-	bot.send_message(uid(m), s.type_email)
+	bot.send_message(uid(m), s.type_email, user=u, state=s.email)
 
 
 def incorrect_email(m):
@@ -230,10 +241,10 @@ def video_intro(u, m):
 		incorrect_email(m)
 		return False
 	u.email = check.email(m.text)
-	u.state = s.video_intro
+	# u.state = s.video_intro
 	u.save()
 
-	bot.send_message(uid(m), s.what_to_do) 
+	bot.send_message(uid(m), s.what_to_do, user=u, state=s.video_intro) 
 	video = open('videos/first_three_days.mp4', 'rb')
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
@@ -248,12 +259,12 @@ def video_intro(u, m):
 																 # и через 5 минут -- продолжаем
 
 def are_we_continue(u, c):
-	u.state = s.after_intro	
-	u.save()											 
+	# u.state = s.after_intro	
+	# u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.agree_btn, callback_data = s.agree)			
 	keyboard.add(agree_btn)						
-	bot.send_message(cid(c), s.are_we_continue, reply_markup = keyboard)
+	bot.send_message(cid(c), s.are_we_continue, reply_markup = keyboard, user=u, state=s.after_intro)
 
 
 def present_trainer(u, c):
@@ -268,19 +279,19 @@ def present_trainer(u, c):
 	photo = open("images/trainers/{}".format(t.photo), 'rb')
 	bot.send_photo(cid(c), photo, s.your_trainer.format(t.first_name, t.last_name))
 
-	u.state = s.ready
+	# u.state = s.ready
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.agree_btn, callback_data = s.agree)			
 	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)			
 	keyboard.add(agree_btn, disagree_btn)	
-	bot.send_message(cid(c), s.are_you_ready, reply_markup = keyboard, disable_notification = True) # "Вы готовы?"
+	bot.send_message(cid(c), s.are_you_ready, reply_markup = keyboard, disable_notification = True, user=u, state=s.ready) # "Вы готовы?"
 
 
 def not_ready(u, c):
-	u.state = s.canceled
-	u.save()
-	bot.send_message(u.user_id, s.canceled_course)
+	# u.state = s.canceled
+	# u.save()
+	bot.send_message(u.user_id, s.canceled_course, user=u, state=s.canceled)
 
 
 def remind_1(u, c):
@@ -305,23 +316,23 @@ def remind_1(u, c):
 
 
 def city(u, c):
-	u.state = s.city
+	# u.state = s.city
 	u.save()
-	bot.send_message(cid(c), s.type_city)
+	bot.send_message(cid(c), s.type_city, user=u, state=s.city)
 
 
 def job(u, m):
 	u.city = m.text
-	u.state = s.job
+	# u.state = s.job
 	u.save()
-	bot.send_message(uid(m), s.type_job)
+	bot.send_message(uid(m), s.type_job, user=u, state=s.job)
 
 
 def height(u, m):
 	u.job = m.text
-	u.state = s.height
+	# u.state = s.height
 	u.save()
-	bot.send_message(uid(m), s.type_height)
+	bot.send_message(uid(m), s.type_height, user=u, state=s.height)
 
 
 def incorrect_height(chat_id):
@@ -333,9 +344,9 @@ def weight(u, m):
 		incorrect_height(uid(m))
 		return False
 	u.height = check.height(m.text)
-	u.state = s.weight
+	# u.state = s.weight
 	u.save()
-	bot.send_message(uid(m), s.type_weight)
+	bot.send_message(uid(m), s.type_weight, user=u, state=s.weight)
 
 
 def incorrect_weight(chat_id):
@@ -346,10 +357,10 @@ def target_weight(u, m):
 	if not check.weight(m.text):
 		incorrect_weight(uid(m))
 		return False
-	u.state = s.target_weight
+	# u.state = s.target_weight
 	u.weight = m.text
 	u.save()
-	bot.send_message(uid(m), s.type_target_weight)
+	bot.send_message(uid(m), s.type_target_weight, user=u, state=s.target_weight)
 
 
 def any_methodologies(u, m):
@@ -365,35 +376,35 @@ def any_methodologies(u, m):
 
 
 def what_methodologies(u, c):
-	u.state = s.what_methodologies_st
+	# u.state = s.what_methodologies_st
 	u.save()
-	bot.send_message(cid(c), s.what_methodologies)
+	bot.send_message(cid(c), s.what_methodologies, user=u, state=s.what_methodologies_st)
 
 
 def most_difficult(u, m):
 	u.methodologies = m.text
-	u.state = s.most_difficult
+	# u.state = s.most_difficult
 	u.save()
-	bot.send_message(uid(m), s.type_most_difficult)
+	bot.send_message(uid(m), s.type_most_difficult, user=u, state=s.most_difficult)
 
 
 def was_result(u, m):
 	u.most_difficult = m.text
-	u.state = s.was_result
+	# u.state = s.was_result
 	u.save()
-	bot.send_message(uid(m), s.type_was_result)
+	bot.send_message(uid(m), s.type_was_result, user=u, state=s.was_result)
 
 
 def why_fat_again(u, m):
 	u.was_result = m.text
-	u.state = s.why_fat_again
+	# u.state = s.why_fat_again
 	u.save()
-	bot.send_message(uid(m), s.type_why_fat_again)	
+	bot.send_message(uid(m), s.type_why_fat_again, user=u, state=s.why_fat_again)
 
 
 def waiting_from_you(u, m=None, c=None):
 	if m is not None:
-		u.why_fat_again = m.text
+		# u.why_fat_again = m.text
 		u.save()
 	# u.state = s.waiting_materials
 	# u.save()
@@ -401,7 +412,7 @@ def waiting_from_you(u, m=None, c=None):
 	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
 	# bot.send_photo(uid(m), img)
 	# поменяли напоминалку на картинке на текстовую
-	bot.send_message(u.user_id, s.waiting_from_you)
+	bot.send_message(u.user_id, s.waiting_from_you, user=u, state=s.why_fat_again)
 
 	# устанавливаем отправку сообщения на 21.00
 	dt = datetime.now()
@@ -688,7 +699,7 @@ def start(m):
 	# print(u, m)
 	u = User.cog(user_id = uid(m), username = m.from_user.username, first_name = m.from_user.first_name, last_name = m.from_user.last_name)
 	u.clear()
-	u.state = s.default
+	# u.state = s.default
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.agree_btn, callback_data = s.agree)
@@ -697,7 +708,7 @@ def start(m):
 	keyboard.add(agree_btn)
 	keyboard.add(disagree_btn)
 	keyboard.add(more_btn)
-	bot.send_message(uid(m), s.greeting, reply_markup = keyboard, parse_mode = "Markdown")
+	bot.send_message(uid(m), s.greeting, reply_markup = keyboard, parse_mode = "Markdown", user=u, state=s.default)
 
 
 @bot.callback_query_handler(func=lambda call: True)
