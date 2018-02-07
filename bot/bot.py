@@ -85,6 +85,7 @@ def delay(func): # отсылка сообщений с задержкой
 @delay
 def send_message_delay(chat_id, m, state=None, delay = 0, reply_markup=None, disable_notification=None, parse_mode = 'Markdown'):
 	u = User.get(user_id = chat_id)
+	bot.send_chat_action(chat_id, 'typing')
 	if state != None:
 		u.state = state
 	u.save()
@@ -268,13 +269,13 @@ def present_trainer(u, c):
 	photo = open("images/trainers/{}".format(t.photo), 'rb')
 	bot.send_photo(cid(c), photo, s.your_trainer.format(t.first_name, t.last_name))
 
-	u.state = s.ready
+	# u.state = s.ready
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.agree_btn, callback_data = s.agree)			
 	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)			
 	keyboard.add(agree_btn, disagree_btn)	
-	bot.send_message(cid(c), s.are_you_ready, reply_markup = keyboard, disable_notification = True) # "Вы готовы?"
+	send_message_delay(cid(c), s.are_you_ready, state=s.ready, reply_markup = keyboard, disable_notification = True, delay=5) # "Вы готовы?"
 
 
 def not_ready(u, c):
@@ -786,9 +787,16 @@ class Watcher:
 			hour_ago = now - timedelta(hours=1)
 
 			# проверка на запланированное действие в расписании
-			for row in Schedule.select(Schedule.timestamp == now):
-				if row.timestamp == now:
-					eval(row.action)(**json.loads(row.arguments))
+			actions = Schedule.select().where(
+					(Schedule.timestamp >= now) &
+					(Schedule.timestamp < now + timedelta(seconds=1))
+				)
+			for action in actions:
+				eval(action.action)(**json.loads(action.arguments))
+
+			# for row in Schedule.select(Schedule.timestamp == now):
+			# 	if row.timestamp == now:
+			# 		eval(row.action)(**json.loads(row.arguments))
 
 			# проверка на last_activity
 			users = User.select().where(
