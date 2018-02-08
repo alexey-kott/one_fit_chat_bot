@@ -313,9 +313,10 @@ def city(u, c):
 
 def job(u, m):
 	u.city = m.text
-	u.state = s.job
+	# u.state = s.job
 	u.save()
-	bot.send_message(uid(m), s.type_job)
+	bot.send_chat_action(uid(m), 'typing')
+	send_message_delay(uid(m), s.type_job, state=s.job, delay=15)
 
 
 def height(u, m):
@@ -373,23 +374,23 @@ def what_methodologies(u, c):
 
 def most_difficult(u, m):
 	u.methodologies = m.text
-	u.state = s.most_difficult
+	# u.state = s.most_difficult
 	u.save()
-	bot.send_message(uid(m), s.type_most_difficult)
+	send_message_delay(uid(m), s.type_most_difficult, state=s.most_difficult, delay=15)
 
 
 def was_result(u, m):
 	u.most_difficult = m.text
-	u.state = s.was_result
+	# u.state = s.was_result
 	u.save()
-	bot.send_message(uid(m), s.type_was_result)
+	send_message_delay(uid(m), s.type_was_result, state=s.was_result, delay=15)
 
 
 def why_fat_again(u, m):
 	u.was_result = m.text
-	u.state = s.why_fat_again
+	# u.state = s.why_fat_again
 	u.save()
-	bot.send_message(uid(m), s.type_why_fat_again)	
+	send_message_delay(uid(m), s.type_why_fat_again, state=s.why_fat_again, delay=15)
 
 
 def waiting_from_you(u, m=None, c=None):
