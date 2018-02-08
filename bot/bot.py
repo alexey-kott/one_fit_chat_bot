@@ -438,40 +438,44 @@ def day_2(user_id):
 	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
 	# bot.send_photo(user_id, img)
 	send_message_delay(user_id, s.day_2_start.format(u.first_name), state = s.day_2, delay = 1)
-	# send_message_delay(user_id, s.waiting_from_you, delay = 6)
+	bot.send_chat_action(user_id, 'typing')
 	send_message_delay(user_id, "Продолжайте присылать фото всего, что Вы едите и пьёте", delay = 6)
 
-def tolerancy(u, m):
-	u.state = s.tolerancy
-	u.save()
-	keyboard = types.InlineKeyboardMarkup()
-	looked_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
-	keyboard.add(looked_btn)
-	bot.send_message(uid(m), s.tolerancy_movie, reply_markup = keyboard)
+# def tolerancy(u, m):
+# 	# u.state = s.tolerancy
+# 	u.save()
+# 	keyboard = types.InlineKeyboardMarkup()
+# 	looked_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
+# 	keyboard.add(looked_btn)
+# 	bot.send_chat_action(uid(m), 'typing')
+# 	send_message_delay(uid(m), s.tolerancy_movie, reply_markup = keyboard, delay=10, state=s.tolerancy)
 
 def when_start_fat(u, m = None, c = None):
 	if m:
 		chat_id = uid(m)
 	else:
 		chat_id = cid(c)
-	u.state = s.start_fat
-	u.save()
-	bot.send_message(chat_id, s.when_start_fat)
+	# u.state = s.start_fat
+	# u.save()
+	bot.send_chat_action(chat_id, 'typing')
+	send_message_delay(chat_id, s.when_start_fat, delay=15, state=s.start_fat)
 
 def why_fat_now(u, m):
 	u.state = s.why_fat
 	u.start_fat = m.text
 	u.save()
-	bot.send_message(uid(m), s.why_fat_now)
+	bot.send_chat_action(uid(m), 'typing')
+	send_message_delay(uid(m), s.why_fat_now, state=s.why_fat, delay=15)
 
 def hormonals(u, m):
-	u.state = s.hormonals
+	# u.state = s.hormonals
 	u.why_fat_now = m.text
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)
 	keyboard.add(disagree_btn)
-	bot.send_message(uid(m), s.hormonal_acception, reply_markup = keyboard)
+	bot.send_chat_action(uid(m), 'typing')
+	send_message_delay(uid(m), s.hormonal_acception, state=s.hormonals, reply_markup = keyboard, delay=15)
 
 def last_analyzes(u, m = None, c = None):
 	if m != None:
@@ -482,28 +486,32 @@ def last_analyzes(u, m = None, c = None):
 		except Exception as e:
 			# print(e)
 			pass
-	u.state = s.last_analyzes
+	# u.state = s.last_analyzes
 	u.save()
-	bot.send_message(u.user_id, s.last_analyzes_and_what)
+	bot.send_chat_action(u.user_id, 'typing')
+	send_message_delay(u.user_id, s.last_analyzes_and_what, state=s.last_analyzes, delay=15)
 
 def not_eat(u, m):
 	u.analyzes = m.text
-	u.state = s.not_eat
+	# u.state = s.not_eat
 	u.save()
-	bot.send_message(uid(m), s.not_eat_products)
+	bot.send_chat_action(uid(m), 'typing')
+	send_message_delay(uid(m), s.not_eat_products, state=s.not_eat, delay=15)
 
 def allergy(u, m):
 	u.not_eat = m.text
-	u.state = s.allergy
+	# u.state = s.allergy
 	u.save()
-	bot.send_message(uid(m), s.any_allergies)
+	bot.send_chat_action(uid(m), 'typing')
+	send_message_delay(uid(m), s.any_allergies, state=s.allergy, delay=15)
 
 
 def last_2_day_answer(u, m):
 	u.allergy = m.text
-	u.state = s.pause 
+	# u.state = s.pause 
 	u.save()
-	bot.send_message(uid(m), s.waiting_photo_1)
+	bot.send_chat_action(uid(m), 'typing')
+	send_message_delay(uid(m), s.waiting_photo_1, state=s.pause, delay=15)
 
 	dt = datetime.now()
 	dt = dt.replace(hour = 21, minute = 0)
@@ -802,7 +810,8 @@ class Watcher:
 			users = User.select().where(
 				(User.last_activity >= hour_ago) & 
 				(User.last_activity < hour_ago + timedelta(seconds=1)) & 
-				(User.state != s.canceled))
+				(User.state != s.canceled) &
+				(User.state != s.pause))
 			for user in users:
 				bot.send_message(user.user_id, s.one_hour_reminder)
 			sleep(1)
