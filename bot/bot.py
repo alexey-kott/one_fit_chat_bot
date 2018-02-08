@@ -544,22 +544,23 @@ def day_3(user_id):
 	send_message_delay(user_id, s.waiting_from_you, state = s.day_3, delay = 5)
 
 
-def miron_story(u, m): # "КАКОЙ-ТО ФИЛЬМ (история Мирона или ещё что-то)"
-	u.state = s.miron_story
-	u.save()
-	keyboard = types.InlineKeyboardMarkup()
-	looked_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
-	keyboard.add(looked_btn)
-	bot.send_message(uid(m), s.look_at_miron_story, reply_markup = keyboard)
+# def miron_story(u, m): # "КАКОЙ-ТО ФИЛЬМ (история Мирона или ещё что-то)"
+# 	u.state = s.miron_story
+# 	u.save()
+# 	keyboard = types.InlineKeyboardMarkup()
+# 	looked_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
+# 	keyboard.add(looked_btn)
+# 	bot.send_message(uid(m), s.look_at_miron_story, reply_markup = keyboard)
 
 
 def fats_in_family(u, m = None, c = None):
-	u.state = s.fats_in_family
+	# u.state = s.fats_in_family
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)
 	keyboard.add(disagree_btn)
-	bot.send_message(u.user_id, s.fats_in_your_family, reply_markup = keyboard)
+	bot.send_chat_action(u.user_id, 'typing')
+	send_message_delay(u.user_id, s.fats_in_your_family, state=s.fats_in_family, reply_markup = keyboard, delay=10)
 
 
 def fat_children(u, m = None, c = None):
@@ -571,12 +572,13 @@ def fat_children(u, m = None, c = None):
 		except Exception as e:
 			# print(e)
 			pass
-	u.state = s.fat_children
+	# u.state = s.fat_children
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	no_children_btn = types.InlineKeyboardButton(text = s.no_children_btn, callback_data = s.disagree)
 	keyboard.add(no_children_btn)
-	bot.send_message(u.user_id, s.your_fat_children, reply_markup = keyboard)
+	bot.send_chat_action(u.user_id, 'typing')
+	send_message_delay(u.user_id, s.your_fat_children, state=s.fat_children, reply_markup = keyboard, delay=15)
 
 
 def relatives_attitude(u, m = None, c = None):
@@ -587,14 +589,15 @@ def relatives_attitude(u, m = None, c = None):
 			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
 		except Exception as e:
 			print(e)
-	u.state = s.relatives_attitude
+	# u.state = s.relatives_attitude
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	support_btn = types.InlineKeyboardButton(text = s.support_btn, callback_data = s.support)
 	dissuade_btn = types.InlineKeyboardButton(text = s.dissuade_btn, callback_data = s.dissuade)
 	keyboard.add(support_btn)
 	keyboard.add(dissuade_btn)
-	bot.send_message(u.user_id, s.your_relatives_attitude, reply_markup = keyboard)
+	bot.send_chat_action(u.user_id, 'typing')
+	send_message_delay(u.user_id, s.your_relatives_attitude, state=s.relatives_attitude, reply_markup = keyboard, delay=15)
 
 
 def amount_of_walking(u, m = None, c = None):
@@ -607,7 +610,7 @@ def amount_of_walking(u, m = None, c = None):
 			print(e)
 	else:
 		u.relatives_attitude = c.data
-	u.state = s.amount_of_walking
+	# u.state = s.amount_of_walking
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	many_btn = types.InlineKeyboardButton(text = s.many_btn, callback_data = s.many)
@@ -616,7 +619,8 @@ def amount_of_walking(u, m = None, c = None):
 	keyboard.add(many_btn)
 	keyboard.add(few_btn)
 	keyboard.add(middling_btn)
-	bot.send_message(u.user_id, s.your_amount_of_walking, reply_markup = keyboard)
+	bot.send_chat_action(u.user_id, 'typing')
+	send_message_delay(u.user_id, s.your_amount_of_walking, state=s.amount_of_walking, reply_markup = keyboard, delay=15)
 
 
 def any_injuries(u, m = None, c = None):
@@ -629,12 +633,13 @@ def any_injuries(u, m = None, c = None):
 			print(e)
 	else:
 		u.amount_of_walking = c.data
-	u.state = s.any_injuries
+	# u.state = s.any_injuries
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)
 	keyboard.add(disagree_btn)
-	bot.send_message(u.user_id, s.your_injuries, reply_markup = keyboard)
+	bot.send_chat_action(u.user_id, 'typing')
+	send_message_delay(u.user_id, s.your_injuries, state=s.any_injuries, reply_markup = keyboard, delay=15)
 
 
 def motivation(u, m = None, c = None):
@@ -645,9 +650,10 @@ def motivation(u, m = None, c = None):
 			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
 		except Exception as e:
 			print(e)
-	u.state = s.motivation
+	# u.state = s.motivation
 	u.save()
-	bot.send_message(u.user_id, s.your_motivation)
+	bot.send_chat_action(u.user_id, 'typing')
+	send_message_delay(u.user_id, s.your_motivation, state=s.motivation, delay=15)
 
 
 def final_reminder(u, m):
@@ -655,6 +661,7 @@ def final_reminder(u, m):
 	u.state = s.final
 	u.save()
 	bot.send_message(uid(m), s.fill_table)
+	bot.send_chat_action(u.user_id, 'typing')
 	send_message_delay(uid(m), s.reminder, delay = 5)
 
 	dt = datetime.now()
