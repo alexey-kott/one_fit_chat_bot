@@ -114,7 +114,8 @@ def schedule(dt, action, **kwargs):
 # _____________ ACTIONS
 
 def idle(u, m = None, c = None):
-	pass
+	u.state = s.pause
+	u.save()
 
 
 def cancel(u, c = None, m = None):
@@ -662,7 +663,7 @@ def final_reminder(u, m):
 	u.save()
 	bot.send_message(uid(m), s.fill_table)
 	bot.send_chat_action(u.user_id, 'typing')
-	send_message_delay(uid(m), s.reminder, delay = 5)
+	send_message_delay(uid(m), s.reminder, delay = 5, state=s.pause)
 
 	dt = datetime.now()
 	dt = dt.replace(hour = 21, minute = 0)
