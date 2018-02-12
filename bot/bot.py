@@ -820,7 +820,8 @@ class Watcher:
 				(User.last_activity >= hour_ago) & 
 				(User.last_activity < hour_ago + timedelta(seconds=1)) & 
 				(User.state != s.canceled) &
-				(User.state != s.pause))
+				(User.state != s.pause) &
+				(User.state != s.stop))
 			for user in users:
 				bot.send_message(user.user_id, s.one_hour_reminder)
 			sleep(1)
