@@ -463,7 +463,7 @@ def when_start_fat(u, m = None, c = None):
 	send_message_delay(chat_id, s.when_start_fat, delay=15, state=s.start_fat)
 
 def why_fat_now(u, m):
-	u.state = s.why_fat
+	# u.state = s.why_fat
 	u.start_fat = m.text
 	u.save()
 	bot.send_chat_action(uid(m), 'typing')
