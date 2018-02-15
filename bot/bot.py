@@ -50,7 +50,6 @@ init_routing()
 bot = TeleBot(API_TOKEN)
 bot_id = API_TOKEN.split(":")[0]
 # db = SqliteDatabase('../db.sqlite3')
-# db = SqliteDatabase('bot.db')
 
 sid = lambda m: m.chat.id # лямбды для определения адреса ответа
 uid = lambda m: m.from_user.id
@@ -105,7 +104,6 @@ def schedule(dt, action, **kwargs):
 	try:
 		Schedule.create(timestamp = dt, action = action, arguments = json.dumps(kwargs))
 	except Exception as e:
-		# print(e)
 		pass
 
 
@@ -133,7 +131,6 @@ def three_days_importance(u, c):
 	keyboard.add(agree_btn)
 	bot.send_chat_action(cid(c), 'upload_video')
 	bot.send_video(cid(c), video, reply_markup=keyboard)
-	# bot.send_message(uid(m), s.who_we_are.format(s.intro_link), reply_markup = keyboard)
 
 
 
@@ -173,7 +170,6 @@ def select_sex(u, m = None, c = None):
 		try:
 			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
 		except Exception as e:
-			# print(e)
 			pass
 	else:
 		chat_id = cid(c)
@@ -243,11 +239,6 @@ def video_intro(u, m):
 	bot.send_chat_action(uid(m), 'upload_video')
 	bot.send_video(uid(m), video, reply_markup=keyboard)
 
-	# keyboard = types.InlineKeyboardMarkup()
-	# agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
-	# keyboard.add(agree_btn)
-	# bot.send_message(uid(m), s.who_we_are.format(s.intro_link), reply_markup = keyboard) # отправим видео
-																 # и через 5 минут -- продолжаем
 
 def are_we_continue(u, c):
 	u.state = s.after_intro	
@@ -262,7 +253,6 @@ def present_trainer(u, c):
 	tes = Trainer.select().where(Trainer.active == True).order_by(fn.Random()).limit(1)
 	for t in tes:
 		pass
-		# print(t.first_name)
 
 	u.trainer_id = t.id
 	u.state = s.trainer
@@ -270,8 +260,6 @@ def present_trainer(u, c):
 	photo = open("images/trainers/{}".format(t.photo), 'rb')
 	bot.send_photo(cid(c), photo, s.your_trainer.format(t.first_name, t.last_name))
 
-	# u.state = s.ready
-	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.agree_btn, callback_data = s.agree)			
 	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)			
@@ -288,8 +276,6 @@ def not_ready(u, c):
 def remind_1(u, c):
 	u.state = s.stop
 	u.save()
-	# img = open("images/system/img4.jpeg", "rb")
-	# bot.send_photo(cid(c), img)
 	bot.send_message(u.user_id, s.waiting_from_you)
 
 	files = ['files/Анализы.pdf', 'files/Анкета.docx', 'files/Анкета физактивность.docx']
@@ -314,7 +300,6 @@ def city(u, c):
 
 def job(u, m):
 	u.city = m.text
-	# u.state = s.job
 	u.save()
 	bot.send_chat_action(uid(m), 'typing')
 	send_message_delay(uid(m), s.type_job, state=s.job, delay=15)
@@ -356,7 +341,6 @@ def target_weight(u, m):
 
 
 def any_methodologies(u, m):
-	# u.state = s.methodologies
 	u.target_weight = m.text
 	u.save()
 	bot.send_message(uid(m), s.thanks_for_answers)
@@ -375,21 +359,18 @@ def what_methodologies(u, c):
 
 def most_difficult(u, m):
 	u.methodologies = m.text
-	# u.state = s.most_difficult
 	u.save()
 	send_message_delay(uid(m), s.type_most_difficult, state=s.most_difficult, delay=15)
 
 
 def was_result(u, m):
 	u.most_difficult = m.text
-	# u.state = s.was_result
 	u.save()
 	send_message_delay(uid(m), s.type_was_result, state=s.was_result, delay=15)
 
 
 def why_fat_again(u, m):
 	u.was_result = m.text
-	# u.state = s.why_fat_again
 	u.save()
 	send_message_delay(uid(m), s.type_why_fat_again, state=s.why_fat_again, delay=15)
 
@@ -398,12 +379,6 @@ def waiting_from_you(u, m=None, c=None):
 	if m is not None:
 		u.why_fat_again = m.text
 		u.save()
-	# u.state = s.waiting_materials
-	# u.save()
-
-	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
-	# bot.send_photo(uid(m), img)
-	# поменяли напоминалку на картинке на текстовую
 	bot.send_message(u.user_id, s.waiting_from_you)
 
 	# устанавливаем отправку сообщения на 21.00
@@ -436,41 +411,26 @@ def day_2(user_id):
 	u = User.get(user_id = user_id)
 	u.day = 2
 	u.save()
-	# bot.send_message(user_id, s.greeting_2)	
-	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
-	# bot.send_photo(user_id, img)
 	send_message_delay(user_id, s.day_2_start.format(u.first_name), state = s.day_2, delay = 1)
 	bot.send_chat_action(user_id, 'typing')
 	send_message_delay(user_id, "Продолжайте присылать фото всего, что Вы едите и пьёте", delay = 6)
 
-# def tolerancy(u, m):
-# 	# u.state = s.tolerancy
-# 	u.save()
-# 	keyboard = types.InlineKeyboardMarkup()
-# 	looked_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
-# 	keyboard.add(looked_btn)
-# 	bot.send_chat_action(uid(m), 'typing')
-# 	send_message_delay(uid(m), s.tolerancy_movie, reply_markup = keyboard, delay=10, state=s.tolerancy)
 
 def when_start_fat(u, m = None, c = None):
 	if m:
 		chat_id = uid(m)
 	else:
 		chat_id = cid(c)
-	# u.state = s.start_fat
-	# u.save()
 	bot.send_chat_action(chat_id, 'typing')
 	send_message_delay(chat_id, s.when_start_fat, delay=15, state=s.start_fat)
 
 def why_fat_now(u, m):
-	# u.state = s.why_fat
 	u.start_fat = m.text
 	u.save()
 	bot.send_chat_action(uid(m), 'typing')
 	send_message_delay(uid(m), s.why_fat_now, state=s.why_fat, delay=15)
 
 def hormonals(u, m):
-	# u.state = s.hormonals
 	u.why_fat_now = m.text
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
@@ -486,23 +446,19 @@ def last_analyzes(u, m = None, c = None):
 		try:
 			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
 		except Exception as e:
-			# print(e)
 			pass
-	# u.state = s.last_analyzes
 	u.save()
 	bot.send_chat_action(u.user_id, 'typing')
 	send_message_delay(u.user_id, s.last_analyzes_and_what, state=s.last_analyzes, delay=15)
 
 def not_eat(u, m):
 	u.analyzes = m.text
-	# u.state = s.not_eat
 	u.save()
 	bot.send_chat_action(uid(m), 'typing')
 	send_message_delay(uid(m), s.not_eat_products, state=s.not_eat, delay=15)
 
 def allergy(u, m):
 	u.not_eat = m.text
-	# u.state = s.allergy
 	u.save()
 	bot.send_chat_action(uid(m), 'typing')
 	send_message_delay(uid(m), s.any_allergies, state=s.allergy, delay=15)
@@ -510,7 +466,6 @@ def allergy(u, m):
 
 def last_2_day_answer(u, m):
 	u.allergy = m.text
-	# u.state = s.pause 
 	u.save()
 	bot.send_chat_action(uid(m), 'typing')
 	send_message_delay(uid(m), s.waiting_photo_1, state=s.pause, delay=15)
@@ -527,8 +482,6 @@ def day_2_end(user_id):
 	dt = dt.replace(hour = 10, minute = 0)
 	delta = timedelta(days = 1)
 	schedule(dt + delta, "day_3", user_id = user_id)
-	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
-	# send_photo_delay(uid(m), img, state = s.pause, delay = 2)
 	bot.send_message(user_id, s.day_2_end)
 
 
@@ -540,22 +493,10 @@ def day_3(user_id):
 	u.day = 3
 	u.save()
 	bot.send_message(user_id, s.greeting_3.format(u.first_name))
-	# img = open("images/system/img4.jpeg", "rb") # "напоминаем что ждём от вас"
-	# send_photo_delay(user_id, img, state = s.day_3, delay = 5)
 	send_message_delay(user_id, s.waiting_from_you, state = s.day_3, delay = 5)
 
 
-# def miron_story(u, m): # "КАКОЙ-ТО ФИЛЬМ (история Мирона или ещё что-то)"
-# 	u.state = s.miron_story
-# 	u.save()
-# 	keyboard = types.InlineKeyboardMarkup()
-# 	looked_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
-# 	keyboard.add(looked_btn)
-# 	bot.send_message(uid(m), s.look_at_miron_story, reply_markup = keyboard)
-
-
 def fats_in_family(u, m = None, c = None):
-	# u.state = s.fats_in_family
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)
@@ -571,9 +512,7 @@ def fat_children(u, m = None, c = None):
 		try:
 			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
 		except Exception as e:
-			# print(e)
 			pass
-	# u.state = s.fat_children
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	no_children_btn = types.InlineKeyboardButton(text = s.no_children_btn, callback_data = s.disagree)
@@ -590,7 +529,6 @@ def relatives_attitude(u, m = None, c = None):
 			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
 		except Exception as e:
 			print(e)
-	# u.state = s.relatives_attitude
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	support_btn = types.InlineKeyboardButton(text = s.support_btn, callback_data = s.support)
@@ -611,7 +549,6 @@ def amount_of_walking(u, m = None, c = None):
 			print(e)
 	else:
 		u.relatives_attitude = c.data
-	# u.state = s.amount_of_walking
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	many_btn = types.InlineKeyboardButton(text = s.many_btn, callback_data = s.many)
@@ -634,7 +571,6 @@ def any_injuries(u, m = None, c = None):
 			print(e)
 	else:
 		u.amount_of_walking = c.data
-	# u.state = s.any_injuries
 	u.save()
 	keyboard = types.InlineKeyboardMarkup()
 	disagree_btn = types.InlineKeyboardButton(text = s.disagree_btn, callback_data = s.disagree)
@@ -651,7 +587,6 @@ def motivation(u, m = None, c = None):
 			bot.edit_message_reply_markup(uid(m), message_id = int(m.message_id) - 1, reply_markup = keyboard)
 		except Exception as e:
 			print(e)
-	# u.state = s.motivation
 	u.save()
 	bot.send_chat_action(u.user_id, 'typing')
 	send_message_delay(u.user_id, s.your_motivation, state=s.motivation, delay=15)
@@ -676,11 +611,6 @@ def bye_day_3(user_id):
 	u.save()
 	bot.send_message(user_id, s.bye_day_3)
 
-
-
-
-
-	
 
 
 # _____________ END ACTIONS
@@ -789,8 +719,6 @@ def photo(m):
 				eval(r.action)(u = u, m = m)
 		except Exception as e:
 			Error.create(message = m.text, state = u.state, exception = e)
-			# print(e)
-			# print(m)
 	except Exception as e:
 		print(e)
 
@@ -811,9 +739,6 @@ class Watcher:
 			for action in actions:
 				eval(action.action)(**json.loads(action.arguments))
 
-			# for row in Schedule.select(Schedule.timestamp == now):
-			# 	if row.timestamp == now:
-			# 		eval(row.action)(**json.loads(row.arguments))
 
 			# проверка на last_activity
 			users = User.select().where(
