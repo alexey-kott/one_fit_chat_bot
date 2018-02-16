@@ -14,20 +14,22 @@
 
 # Deploy
 
-Компоненты (админка и бот) запускаются отдельно, но используют одно и то же виртуальное окружение и БД. Для начала нужно установить пакеты из requirements.txt и активировать виртуальное окружение. Админку можно запустить из отдельного окна screen (на проде она так и запущена) так же как и любое django-приложение: python manage.py runserver 0.0.0.0:80
+Компоненты (админка и бот) запускаются отдельно, но используют одно и то же виртуальное окружение и БД. Для начала нужно установить пакеты из requirements.txt и активировать виртуальное окружение. Админку можно запустить из отдельного окна screen (на проде она так и запущена) так же как и любое django-приложение: *python manage.py runserver 0.0.0.0:80*
 
 Для запуска бота нужно настроить конфиг-файл (определить следующие переменные):
-LAUNCH_MODE -- может принимать значения DEV и PROD. Разница в том, что если бот запущен в DEV-режиме, то для работы бота используется long_polling (т.е. можно запускать бота с локальной машины). PROD-режим использует для подключения вебхуки (т.е. нужен белый IP)
-API_TOKEN -- здесь и далее должно быть всё понятно, если что -- смотри документацию к BotAPI.
-WEBHOOK_HOST = '127.0.0.1'
-WEBHOOK_PORT = 443  # 443, 80, 88 or 8443 (port need to be 'open')
-WEBHOOK_LISTEN = '0.0.0.0'  # In some VPS you may need to put here the IP addr
+- LAUNCH_MODE -- может принимать значения DEV и PROD. Разница в том, что если бот запущен в DEV-режиме, то для работы бота используется long_polling (т.е. можно запускать бота с локальной машины). PROD-режим использует для подключения вебхуки (т.е. нужен белый IP)
+- API_TOKEN -- здесь и далее должно быть всё понятно, если что -- смотри документацию к BotAPI.
+- WEBHOOK_HOST = '127.0.0.1'
+- WEBHOOK_PORT = 443  # 443, 80, 88 or 8443 (port need to be 'open')
+- WEBHOOK_LISTEN = '0.0.0.0'  # In some VPS you may need to put here the IP addr
 
-WEBHOOK_SSL_CERT = '/home/user/certs/webhook_cert.pem'  # Path to the ssl certificate
-WEBHOOK_SSL_PRIV = '/home/user/certs/webhook_pkey.pem'  # Path to the ssl private key
+- WEBHOOK_SSL_CERT = '/home/user/certs/webhook_cert.pem'  # Path to the ssl certificate
+- WEBHOOK_SSL_PRIV = '/home/user/certs/webhook_pkey.pem'  # Path to the ssl private key
 
-WEBHOOK_URL_BASE = "https://{}:{}".format(WEBHOOK_HOST, WEBHOOK_PORT)
-WEBHOOK_URL_PATH = "/{}/".format(API_TOKEN)
+- WEBHOOK_URL_BASE = "https://{}:{}".format(WEBHOOK_HOST, WEBHOOK_PORT)
+- WEBHOOK_URL_PATH = "/{}/".format(API_TOKEN)
+
+На время разработки бота можно запускать просто с помощью *python bot.py* из папки ./bot/, однако на проде бот запускается с помощью service-файла по адресу /etc/systemd/system/fitchat_bot.service 
 
 # Немного о механике работы бота
 
