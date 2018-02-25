@@ -4,6 +4,7 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 from os.path import basename
 import re
+from datetime import datetime
 
 import sqlite3
 
@@ -58,3 +59,8 @@ def init_routing():
 		cursor.execute(route)
 		conn.commit()
 		conn.close()
+
+
+def log_routing_error(e):
+	with open("../log/routing_error.txt", "a") as f:
+		f.write("{} {}\n".format(datetime.now().strftime("%Y:%m:%d %H:%M:%S"), str(e)))

@@ -18,7 +18,7 @@ from playhouse.shortcuts import model_to_dict, dict_to_model # для сериа
 from config import *
 import strings as s # все строки хранятся здесь
 import check # различные проверки: правильно ли юзер ввёл рост/вес/etc
-from functions import send_mail, init_routing
+from functions import send_mail, init_routing, log_routing_error
 
 # импорт моделей
 from bot_models import User
@@ -666,7 +666,7 @@ def clbck(c):
 			print(s.action_not_defined)
 	except Exception as e:
 		Error.create(message = c.data, state = u.state, exception = e)
-		print(e)
+		log_routing_error(e)
 	
 
 
@@ -689,7 +689,7 @@ def action(m):
 			# print(m)
 	except Exception as e:
 		Error.create(message = m.text, state = u.state, exception = e)
-		print(e)
+		log_routing_error(e)
 
 
 def save_photo(message): # системная функция, не вызывает отправку сообщения в ТГ
