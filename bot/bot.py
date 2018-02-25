@@ -385,8 +385,6 @@ def waiting_from_you(u, m=None, c=None):
 	dt = datetime.now()
 	dt = dt.replace(hour = 21, minute = 0)
 	schedule(dt, "thanks_for_efforts", user_id = u.user_id)
-	dt = dt.replace(minute = 30)
-	schedule(dt, "waiting_sticker", user_id = u.user_id)
 
 	keyboard = types.InlineKeyboardMarkup()
 	agree_btn = types.InlineKeyboardButton(text = s.looked_btn, callback_data = s.agree)
