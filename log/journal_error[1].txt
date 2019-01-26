@@ -1,0 +1,34 @@
+мар 01 10:00:03 gantsele python3.6[21149]: peewee.OperationalError: database is locked
+мар 01 10:00:03 gantsele python3.6[21149]:     cursor.execute(sql, params or ())
+мар 01 10:00:03 gantsele python3.6[21149]:   File "/home/user/one_fit_chat_bot/venv/lib/python3.6/site-packages/peewee.py", line 3830, in execute_sql
+мар 01 10:00:03 gantsele python3.6[21149]:     raise value.with_traceback(tb)
+мар 01 10:00:03 gantsele python3.6[21149]:   File "/home/user/one_fit_chat_bot/venv/lib/python3.6/site-packages/peewee.py", line 135, in reraise
+мар 01 10:00:03 gantsele python3.6[21149]:     reraise(new_type, new_type(*exc_args), traceback)
+мар 01 10:00:03 gantsele python3.6[21149]:   File "/home/user/one_fit_chat_bot/venv/lib/python3.6/site-packages/peewee.py", line 3656, in __exit__
+мар 01 10:00:03 gantsele python3.6[21149]:     self.commit()
+мар 01 10:00:03 gantsele python3.6[21149]:   File "/home/user/one_fit_chat_bot/venv/lib/python3.6/site-packages/peewee.py", line 3837, in execute_sql
+мар 01 10:00:03 gantsele python3.6[21149]:     return self.database.execute_sql(sql, params, self.require_commit)
+мар 01 10:00:03 gantsele python3.6[21149]:   File "/home/user/one_fit_chat_bot/venv/lib/python3.6/site-packages/peewee.py", line 2939, in _execute
+мар 01 10:00:03 gantsele python3.6[21149]:     return self.database.rows_affected(self._execute())
+мар 01 10:00:03 gantsele python3.6[21149]:   File "/home/user/one_fit_chat_bot/venv/lib/python3.6/site-packages/peewee.py", line 3458, in execute
+мар 01 10:00:03 gantsele python3.6[21149]:     rows = self.update(**field_dict).where(self._pk_expr()).execute()
+мар 01 10:00:03 gantsele python3.6[21149]:   File "/home/user/one_fit_chat_bot/venv/lib/python3.6/site-packages/peewee.py", line 5165, in save
+мар 01 10:00:03 gantsele python3.6[21149]:     super().save(force_insert, only)
+мар 01 10:00:03 gantsele python3.6[21149]:   File "/home/user/one_fit_chat_bot/bot/bot_models.py", line 57, in save
+мар 01 10:00:03 gantsele python3.6[21149]:     u.save()
+мар 01 10:00:03 gantsele python3.6[21149]:   File "/home/user/one_fit_chat_bot/bot/bot.py", line 78, in delayed
+мар 01 10:00:03 gantsele python3.6[21149]:     send_message_delay(user_id, "Продолжайте присылать фото всего, что Вы едите и пьёте", delay = 6)
+мар 01 10:00:03 gantsele python3.6[21149]:   File "/home/user/one_fit_chat_bot/bot/bot.py", line 414, in day_2
+мар 01 10:00:03 gantsele python3.6[21149]:     eval(action.action)(**json.loads(action.arguments))
+мар 01 10:00:03 gantsele python3.6[21149]:   File "/home/user/one_fit_chat_bot/bot/bot.py", line 738, in __call__
+мар 01 10:00:03 gantsele python3.6[21149]:     self._target(*self._args, **self._kwargs)
+мар 01 10:00:03 gantsele python3.6[21149]:   File "/usr/lib/python3.6/multiprocessing/process.py", line 93, in run
+мар 01 10:00:03 gantsele python3.6[21149]:     self.run()
+мар 01 10:00:03 gantsele python3.6[21149]:   File "/usr/lib/python3.6/multiprocessing/process.py", line 258, in _bootstrap
+мар 01 10:00:03 gantsele python3.6[21149]: Traceback (most recent call last):
+мар 01 10:00:03 gantsele python3.6[21149]: During handling of the above exception, another exception occurred:
+мар 01 10:00:03 gantsele python3.6[21149]: sqlite3.OperationalError: database is locked
+мар 01 10:00:03 gantsele python3.6[21149]:     cursor.execute(sql, params or ())
+мар 01 10:00:03 gantsele python3.6[21149]:   File "/home/user/one_fit_chat_bot/venv/lib/python3.6/site-packages/peewee.py", line 3830, in execute_sql
+мар 01 10:00:03 gantsele python3.6[21149]: Traceback (most recent call last):
+мар 01 10:00:03 gantsele python3.6[21149]: Process Process-1:

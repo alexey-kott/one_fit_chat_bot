@@ -1,0 +1,54 @@
+2018:02:26 00:31:17 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'three_days_importance']
+2018:02:26 00:31:18 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'three_days_importance']
+2018:02:26 00:31:18 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'three_days_importance']
+2018:02:26 00:31:18 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'three_days_importance']
+2018:02:26 00:31:18 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'three_days_importance']
+2018:02:26 00:31:18 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'three_days_importance']
+2018:02:26 00:31:18 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'three_days_importance']
+2018:02:26 00:31:31 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'three_days_importance']
+2018:02:26 00:31:31 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'three_days_importance']
+2018:02:26 00:31:31 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'three_days_importance']
+2018:02:26 00:31:36 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'default']
+2018:02:26 00:31:37 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'default']
+2018:02:26 00:31:37 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'default']
+2018:02:26 00:31:37 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'default']
+2018:02:26 00:31:38 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'default']
+2019:01:27 01:19:01 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'stop']
+2019:01:27 01:20:34 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'stop']
+2019:01:27 01:22:28 Instance matching query does not exist:
+SQL: SELECT "t1"."state", "t1"."decision", "t1"."action" FROM "routing" AS t1 WHERE (("t1"."decision" = ?) AND ("t1"."state" = ?))
+PARAMS: ['text', 'stop']
